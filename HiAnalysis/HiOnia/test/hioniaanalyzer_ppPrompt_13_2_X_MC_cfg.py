@@ -24,6 +24,8 @@ miniAOD        = True # whether the input file is in miniAOD format (default is 
 miniAOD_muonCuts = False # Apply the cuts used in the muon collections of miniAOD. Only has an effect with AOD.
 UsePropToMuonSt = True # whether to use L1 propagated muons (works only for miniAOD now)
 pdgId = 443 # J/Psi : 443, Y(1S) : 553
+useMomFormat = "vector" # default "array" for TClonesArray of TLorentzVector. Use "vector" for std::vector<float> of pt, eta, phi, M
+
 #----------------------------------------------------------------------------
 
 # Print Onia Tree settings:
@@ -66,91 +68,24 @@ options.parseArguments()
 triggerList    = {
 		# Double Muon Trigger List
 		'DoubleMuonTrigger' : cms.vstring(
-			"HLT_HIL1DoubleMuOpen_v1",#0
-			"HLT_HIL1DoubleMuOpen_OS_Centrality_40_100_v1", #1
-			"HLT_HIL1DoubleMuOpen_Centrality_50_100_v1", #2
-			"HLT_HIL1DoubleMu10_v1", #3
-			"HLT_HIL2_L1DoubleMu10_v1",#4
-			"HLT_HIL3_L1DoubleMu10_v1", #5
-			"HLT_HIL2DoubleMuOpen_v1", #6
-			"HLT_HIL3DoubleMuOpen_v1", #7
-			"HLT_HIL3DoubleMuOpen_M60120_v1", #8
-			"HLT_HIL3DoubleMuOpen_JpsiPsi_v1", #9
-			"HLT_HIL3DoubleMuOpen_Upsi_v1", #10
-			"HLT_HIL3Mu0_L2Mu0_v1", #11
-			"HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_v1",#12
-			"HLT_HIL3Mu2p5NHitQ10_L2Mu2_M7toinf_v1",#13
-                        "HLT_HIL3Mu3_L1TripleMuOpen_v1",#14
-                        "HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_v1_L1step",#15
-                        "HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_v1_L2step",#16
-                        "HLT_HIL3Mu0NHitQ10_L2Mu0_MAXdR3p5_M1to5_v1_L3step",#17
-                        ),
-		# Double Muon Filter List
-		'DoubleMuonFilter'  : cms.vstring(
-			"hltL1fL1sL1DoubleMuOpenL1Filtered0",
-			"hltL1fL1sL1DoubleMuOpenOSCentrality40100L1Filtered0",
-			"hltL1fL1sL1DoubleMuOpenCentrality50100L1Filtered0",
-			"hltL1fL1sL1DoubleMu10L1Filtered0",
-			"hltL2fL1sL1DoubleMu10L1f0L2Filtered0",
-			"hltDoubleMuOpenL1DoubleMu10Filtered",
-			"hltL2fL1sL1DoubleMuOpenL1f0L2Filtered0",
-			"hltL3fL1DoubleMuOpenL3Filtered0",
-			"hltL3fL1DoubleMuOpenL3FilteredM60120",
-			"hltL3fL1DoubleMuOpenL3FilteredPsi",
-			"hltL3fL1DoubleMuOpenL3FilteredUpsi",
-			"hltL3f0L3Mu0L2Mu0Filtered0",
-                        "hltL3f0L3Mu0L2Mu0DR3p5FilteredNHitQ10M1to5",
-			"hltL3f0L3Mu2p5NHitQ10L2Mu2FilteredM7toinf",
-                        "hltL3fL1sL1DoubleMuOpenL1fN3L2f0L3Filtered3",
-                        "hltL1fL1sL1DoubleMuOpenMAXdR3p5L1Filtered0",#L1 step for Jpsi trigger
-                        "hltL2fDoubleMuOpenL2DR3p5PreFiltered0",#L2 step
-                        "hltL3f0L3Mu0L2Mu0DR3p5FilteredNHitQ10M1to5"#"hltL3f0DR3p5L3FilteredNHitQ10"#L3 step
-			),
-                # Single Muon Trigger List
-                'SingleMuonTrigger' : cms.vstring(
-                        "HLT_HIL1MuOpen_Centrality_70_100_v1",
-                        "HLT_HIL1MuOpen_Centrality_80_100_v1",
-                        "HLT_HIL2Mu3_NHitQ15_v1",
-                        "HLT_HIL2Mu5_NHitQ15_v1",
-                        "HLT_HIL2Mu7_NHitQ15_v1",
-                        "HLT_HIL3Mu3_NHitQ10_v1",
-                        "HLT_HIL3Mu5_NHitQ10_v1",
-                        "HLT_HIL3Mu7_NHitQ10_v1",
-                        "HLT_HIL3Mu12_v1",
-                        "HLT_HIL3Mu15_v1",
-                        "HLT_HIL3Mu20_v1",
-                        "HLT_HIL2Mu3_NHitQ15_v2",
-                        "HLT_HIL2Mu5_NHitQ15_v2",
-                        "HLT_HIL2Mu7_NHitQ15_v2",
-                        "HLT_HIL3Mu3_NHitQ10_v2",
-                        "HLT_HIL3Mu5_NHitQ10_v2",
-                        "HLT_HIL3Mu7_NHitQ10_v2",
-                        "HLT_HIL3Mu12_v2",
-                        "HLT_HIL3Mu15_v2",
-                        "HLT_HIL3Mu20_v2",
-			),
-	        # Single Muon Filter List
-	        'SingleMuonFilter'  : cms.vstring(
-                        "hltL1fL1sL1MuOpenCentrality70100L1Filtered0",
-                        "hltL1fL1sL1MuOpenCentrality80100L1Filtered0",
-                        "hltL2fL1sMuOpenL1f0L2Filtered3NHitQ15",
-                        "hltL2fL1sMuOpenL1f0L2Filtered5NHitQ15",
-                        "hltL2fL1sMuOpenL1f0L2Filtered7NHitQ15",
-                        "hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered3NHitQ10",
-                        "hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered5NHitQ10",
-                        "hltL3fL1sL1SingleMuOpenL1f0L2f0L3Filtered7NHitQ10",
-                        "hltL3fL1sL1SingleMuOpenL1f7L2f0L3Filtered12",
-                        "hltL3fL1sL1SingleMuOpenL1f7L2f0L3Filtered15",
-                        "hltL3fL1sL1SingleMuOpenL1f7L2f0L3Filtered20",
-                        "hltL2fL1sMu3OpenL1f0L2Filtered3NHitQ15",
-                        "hltL2fL1sMu3OpenL1f0L2Filtered5NHitQ15",
-                        "hltL2fL1sMu3OpenL1f0L2Filtered7NHitQ15",
-                        "hltL3fL1sL1SingleMu3OpenL1f0L2f0L3Filtered3NHitQ10",
-                        "hltL3fL1sL1SingleMu3OpenL1f0L2f0L3Filtered5NHitQ10",
-                        "hltL3fL1sL1SingleMu3OpenL1f0L2f0L3Filtered7NHitQ10",
-                        "hltL3fL1sL1SingleMu3OpenL1f7L2f0L3Filtered12",
-                        "hltL3fL1sL1SingleMu3OpenL1f7L2f0L3Filtered15",
-                        "hltL3fL1sL1SingleMu3OpenL1f7L2f0L3Filtered20",
+			"HLT_PPRefL1DoubleMu0_v1",
+            "HLT_PPRefL2DoubleMu0_v1",
+            "HLT_PPRefL3DoubleMu0_v1"
+            ),
+        # Single Muon Trigger List
+        'SingleMuonTrigger' : cms.vstring(
+            "HLT_PPRefL1SingleMu7_v1",
+            "HLT_PPRefL1SingleMu12_v1",
+            "HLT_PPRefL2SingleMu7_v1",
+            "HLT_PPRefL2SingleMu12_v1",
+            "HLT_PPRefL2SingleMu15_v1",
+            "HLT_PPRefL2SingleMu20_v1",
+            "HLT_PPRefL3SingleMu3_v1",
+            "HLT_PPRefL3SingleMu5_v1",
+            "HLT_PPRefL3SingleMu7_v1",
+            "HLT_PPRefL3SingleMu12_v1",
+            "HLT_PPRefL3SingleMu15_v1",
+            "HLT_PPRefL3SingleMu20_v1",
 			)
                 }
 
@@ -180,8 +115,7 @@ process.GlobalTag = GlobalTag(process.GlobalTag, globalTag, '')
 from HiAnalysis.HiOnia.oniaTreeAnalyzer_cff import oniaTreeAnalyzer
 oniaTreeAnalyzer(process,
                  muonTriggerList=triggerList, #HLTProName=HLTProcess,
-                 muonSelection=muonSelection, L1Stage=2, isMC=isMC, pdgID=pdgId, outputFileName=options.outputFile, doTrimu=doTrimuons,
-                 miniAOD=miniAOD, miniAODcuts=miniAOD_muonCuts#, OnlySingleMuons=True
+                 muonSelection=muonSelection, L1Stage=2, isMC=isMC, pdgID=pdgId, outputFileName=options.outputFile, doTrimu=doTrimuons
 )
 
 #process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("8 < mass && mass < 14 && charge==0 && abs(daughter('muon1').innerTrack.dz - daughter('muon2').innerTrack.dz) < 25")
@@ -202,6 +136,7 @@ process.hionia.applyCuts        = cms.bool(applyCuts)
 process.hionia.AtLeastOneCand   = cms.bool(atLeastOneCand)
 process.hionia.OneMatchedHLTMu  = cms.int32(OneMatchedHLTMu)
 process.hionia.checkTrigNames   = cms.bool(False)#change this to get the event-level trigger info in hStats output (but creates lots of warnings when fake trigger names are used)
+process.hionia.mom4format       = cms.string(useMomFormat)
 process.hionia.isHI = cms.untracked.bool(False)
 '''
 #----------------------------------------------------------------------------
@@ -244,22 +179,18 @@ if saveHLT:
   process.oniaTreeAna = cms.Path(process.hltbitanalysis * process.hltobject * process.oniaTreeAna )
 '''
 
-# Event filters identical to 2017 pp ref
-
-process.NoScraping = cms.EDFilter("FilterOutScraping",
-                          applyfilter = cms.untracked.bool(True),
-                          debugOn = cms.untracked.bool(False),
-                          numtrack = cms.untracked.uint32(10),
-                          thresh = cms.untracked.double(0.25)
-                          )
-process.primaryVertexFilter = cms.EDFilter("VertexSelector",
-                                   src = cms.InputTag("offlinePrimaryVertices"),
-                                   cut = cms.string("!isFake && abs(z) <= 25 && position.Rho <= 2 && tracksSize >= 2"), 
-                                   filter = cms.bool(True),   # otherwise it won't filter the events
-                                   )
-
 if applyEventSel:
-    process.oniaTreeAna.replace(process.hionia, process.primaryVertexFilter * process.NoScraping * process.hionia )
+    # Offline event filters
+    process.load('HeavyIonsAnalysis.EventAnalysis.collisionEventSelection_cff')
+
+    # HLT trigger firing events
+    import HLTrigger.HLTfilters.hltHighLevel_cfi
+    process.hltHI = HLTrigger.HLTfilters.hltHighLevel_cfi.hltHighLevel.clone()
+    process.hltHI.HLTPaths = ["HLT_PPRefL*SingleMu*_v*"]
+    process.hltHI.throw = False
+    process.hltHI.andOr = True
+    process.oniaTreeAna.replace(process.patMuonSequence, process.primaryVertexFilter * process.hltHI * process.patMuonSequence )
+
 
 if atLeastOneCand:
   if doTrimuons:

@@ -206,3 +206,26 @@ def changeToMiniAOD(process):
     process = massReplaceInputTag(process,"offlinePrimaryVertices","unpackedTracksAndVertices")
     process = massReplaceInputTag(process,"generalTracks","unpackedTracksAndVertices")
     process = massReplaceInputTag(process,"genParticles","prunedGenParticles")
+
+def changeToMiniAOD_pp(process):
+
+    if hasattr(process, "patMuonsWithTrigger"):
+        from MuonAnalysis.MuonAssociators.patMuonsWithTrigger_cff import useExistingPATMuons
+        useExistingPATMuons(process, newPatMuonTag=cms.InputTag("unpackedMuons"), addL1Info=False)
+
+        process.patTriggerFull = cms.EDProducer("PATTriggerObjectStandAloneUnpacker",
+            patTriggerObjectsStandAlone = cms.InputTag('slimmedPatTrigger'),
+            triggerResults              = cms.InputTag('TriggerResults::HLT'),
+            unpackFilterLabels          = cms.bool(True)
+        )
+        process.load('HiAnalysis.HiOnia.unpackedTracksAndVertices_cfi')
+        process.patMuonSequence.insert(0, process.unpackedTracksAndVertices)
+        process.load('HiAnalysis.HiOnia.unpackedMuons_cfi')
+        process.unpackedMuons.muonSelectors = []
+        process.patMuonSequence.insert(1, process.unpackedMuons)
+
+        process.outOnia2MuMu.outputCommands.append('drop patMuons_patMuonsWith*_*_*')
+
+    from HLTrigger.Configuration.CustomConfigs import massReplaceInputTag
+    process = massReplaceInputTag(process,"offlinePrimaryVertices","offlineSlimmedPrimaryVertices")
+    process = massReplaceInputTag(process,"generalTracks","unpackedTracksAndVertices")
