@@ -401,8 +401,9 @@ private:
   bool Reco_mu_isTracker[Max_mu_size];
   bool Reco_mu_isGlobal[Max_mu_size];
   bool Reco_mu_isSoftCutBased[Max_mu_size];
+  bool Reco_mu_softMvaRun3Value[Max_mu_size];
   bool Reco_mu_isHybridSoft[Max_mu_size];
-  bool Reco_mu_isMedium[Max_mu_size];
+  bool Reco_mu_isMediumCutBased[Max_mu_size];
   bool Reco_mu_isTightCutBased[Max_mu_size];
   bool Reco_mu_InTightAcc[Max_mu_size];  // Is in the tight acceptance for global muons
   bool Reco_mu_InLooseAcc[Max_mu_size];  // Is in the loose acceptance for global muons

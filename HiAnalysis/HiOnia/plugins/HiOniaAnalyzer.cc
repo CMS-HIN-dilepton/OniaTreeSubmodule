@@ -516,7 +516,7 @@ void HiOniaAnalyzer::fillTreeMuon(const pat::Muon* muon, int iType, ULong64_t tr
       Reco_mu_isTracker[Reco_mu_size] = muon->isTrackerMuon();
       Reco_mu_isGlobal[Reco_mu_size] = muon->isGlobalMuon();
       Reco_mu_isSoftCutBased[Reco_mu_size] = muon->passed(reco::Muon::SoftCutBasedId);
-      Reco_mu_softMvaRun3Value[Reco_mu_size] = muon->softMvaRun3Value();
+      //Reco_mu_softMvaRun3Value[Reco_mu_size] = muon->softMvaRun3Value();
       Reco_mu_isHybridSoft[Reco_mu_size] = isHybridSoftMuon(muon);
       Reco_mu_isMediumCutBased[Reco_mu_size] = muon->passed(reco::Muon::CutBasedIdMedium);
       Reco_mu_isTightCutBased[Reco_mu_size] = muon->passed(reco::Muon::CutBasedIdTight);
@@ -1520,7 +1520,7 @@ void HiOniaAnalyzer::InitTree() {
     myTree->Branch("Reco_mu_isTracker", Reco_mu_isTracker, "Reco_mu_isTracker[Reco_mu_size]/O");
     myTree->Branch("Reco_mu_isGlobal", Reco_mu_isGlobal, "Reco_mu_isGlobal[Reco_mu_size]/O");
     myTree->Branch("Reco_mu_isSoftCutBased", Reco_mu_isSoftCutBased, "Reco_mu_isSoftCutBased[Reco_mu_size]/O");
-    myTree->Branch("Reco_mu_softMvaRun3Value", Reco_mu_softMvaRun3Value, "Reco_mu_softMvaRun3Value[Reco_mu_size]/F");
+    //myTree->Branch("Reco_mu_softMvaRun3Value", Reco_mu_softMvaRun3Value, "Reco_mu_softMvaRun3Value[Reco_mu_size]/F");
     myTree->Branch("Reco_mu_isHybridSoft", Reco_mu_isHybridSoft, "Reco_mu_isHybridSoft[Reco_mu_size]/O");
     myTree->Branch("Reco_mu_isMediumCutBased", Reco_mu_isMediumCutBased, "Reco_mu_isMediumCutBased[Reco_mu_size]/O");
     myTree->Branch("Reco_mu_isTightCutBased", Reco_mu_isTightCutBased, "Reco_mu_isTightCutBased[Reco_mu_size]/O");
