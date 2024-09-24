@@ -138,6 +138,8 @@ process.hionia.OneMatchedHLTMu  = cms.int32(OneMatchedHLTMu)
 process.hionia.checkTrigNames   = cms.bool(False)#change this to get the event-level trigger info in hStats output (but creates lots of warnings when fake trigger names are used)
 process.hionia.mom4format       = cms.string(useMomFormat)
 process.hionia.isHI = cms.untracked.bool(False)
+process.hionia.genealogyInfo    = cms.bool(True)
+
 '''
 #----------------------------------------------------------------------------
 
@@ -221,5 +223,7 @@ process.TFileService = cms.Service("TFileService",
 		)
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxEvents) )
 process.options   = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
+
+process.options.numberOfThreads = 4
 
 process.schedule  = cms.Schedule( process.oniaTreeAna )

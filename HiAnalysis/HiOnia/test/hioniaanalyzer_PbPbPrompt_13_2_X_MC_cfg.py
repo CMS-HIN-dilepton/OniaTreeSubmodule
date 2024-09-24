@@ -55,7 +55,7 @@ options = VarParsing.VarParsing ('analysis')
 options.outputFile = "Oniatree_MC_miniAOD.root"
 options.secondaryOutputFile = "Jpsi_DataSet.root"
 options.inputFiles =[
-  '/store/user/fdamas/PbPbRun2023/JpsiEmbeddedMC_Realistic2022BS_13_2_5_patch1/step3_RECO_MINIAOD/231008_081235/0000/step3_100.root'
+  '/store/mc/HINPbPbSpring23MiniAOD/PromptJPsiToMuMu_Pthat2_TuneCP5_HydjetDrumMB_5p36TeV_pythia8/MINIAODSIM/132X_mcRun3_2023_realistic_HI_v9-v2/130000/0c311838-da71-4010-b4f9-313c7fef7745.root'
 ]
 options.maxEvents = 100 # -1 means all events
 
@@ -159,6 +159,7 @@ process.hionia.AtLeastOneCand   = cms.bool(atLeastOneCand)
 process.hionia.OneMatchedHLTMu  = cms.int32(OneMatchedHLTMu)
 process.hionia.checkTrigNames   = cms.bool(False)#change this to get the event-level trigger info in hStats output (but creates lots of warnings when fake trigger names are used)
 process.hionia.mom4format       = cms.string(useMomFormat)
+process.hionia.genealogyInfo    = cms.bool(True)
 
 '''
 #----------------------------------------------------------------------------
@@ -237,5 +238,7 @@ process.TFileService = cms.Service("TFileService",
 		)
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxEvents) )
 process.options   = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
+
+process.options.numberOfThreads = 4
 
 process.schedule  = cms.Schedule( process.oniaTreeAna )
