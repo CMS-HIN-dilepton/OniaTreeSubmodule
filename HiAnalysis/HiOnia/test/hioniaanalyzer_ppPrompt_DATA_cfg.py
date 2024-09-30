@@ -4,11 +4,11 @@ from Configuration.StandardSequences.Eras import eras
 
 #----------------------------------------------------------------------------
 
-# Setup Settings for ONIA TREE: 2023 pp MC
+# Setup Settings for ONIA TREE: 2024 pp ref data
 
 HLTProcess     = "HLT" # Name of HLT process
-isMC           = True # if input is MONTECARLO: True or if it's DATA: False
-muonSelection  = "All" # Single muon selection: All, Glb(isGlobal), GlbTrk(isGlobal&&isTracker), Trk(isTracker), GlbOrTrk, TwoGlbAmongThree (which requires two isGlobal for a trimuon, and one isGlobal for a dimuon) are available
+isMC           = False # if input is MONTECARLO: True or if it's DATA: False
+muonSelection  = "Glb" # Single muon selection: All, Glb(isGlobal), GlbTrk(isGlobal&&isTracker), Trk(isTracker), GlbOrTrk, TwoGlbAmongThree (which requires two isGlobal for a trimuon, and one isGlobal for a dimuon) are available
 applyEventSel  = True # Only apply Event Selection if the required collections are present
 OnlySoftMuons  = False # Keep only isSoftMuon's (without highPurity, and without isGlobal which should be put in 'muonSelection' parameter) from the beginning of HiSkim. If you want the full SoftMuon selection, set this flag false and add 'isSoftMuon' in lowerPuritySelection. In any case, if applyCuts=True, isSoftMuon is required at HiAnalysis level for muons of selected dimuons.
 applyCuts      = False # At HiAnalysis level, apply kinematic acceptance cuts + identification cuts (isSoftMuon (without highPurity) or isTightMuon, depending on TightGlobalMuon flag) for muons from selected di(tri)muons + hard-coded cuts on the di(tri)muon that you would want to add (but recommended to add everything in LateDimuonSelection, applied at the end of HiSkim)
@@ -21,7 +21,6 @@ OneMatchedHLTMu = -1   # Keep only di(tri)muons of which the one(two) muon(s) ar
 #############################################################################
 keepExtraColl  = False # General Tracks + Stand Alone Muons + Converted Photon collections
 miniAOD        = True # whether the input file is in miniAOD format (default is AOD)
-miniAOD_muonCuts = False # Apply the cuts used in the muon collections of miniAOD. Only has an effect with AOD.
 UsePropToMuonSt = True # whether to use L1 propagated muons (works only for miniAOD now)
 pdgId = 443 # J/Psi : 443, Y(1S) : 553
 useMomFormat = "vector" # default "array" for TClonesArray of TLorentzVector. Use "vector" for std::vector<float> of pt, eta, phi, M
@@ -44,7 +43,6 @@ print( "[INFO] doDimuonTrk          = " + ("True" if doDimuonTrk else "False") )
 print( "[INFO] atLeastOneCand       = " + ("True" if atLeastOneCand else "False") )
 print( "[INFO] OneMatchedHLTMu      = " + ("True" if OneMatchedHLTMu else "False") )
 print( "[INFO] miniAOD              = " + ("True" if miniAOD else "False") )
-print( "[INFO] miniAOD_muonCuts     = " + ("True" if miniAOD_muonCuts else "False") )
 print( "[INFO] UsePropToMuonSt      = " + ("True" if UsePropToMuonSt else "False") )
 print( " " )
 
@@ -55,12 +53,16 @@ process = cms.Process("HIOnia", eras.Run3)
 options = VarParsing.VarParsing ('analysis')
 
 # Input and Output File Name
-options.outputFile = "Oniatree_MC_miniAOD.root"
+options.outputFile = "Oniatree_ppData2024_miniAOD.root"
 options.secondaryOutputFile = "Jpsi_DataSet.root"
 options.inputFiles =[
-  '/store/group/phys_heavyions/dileptons/junseok/RECO_MINIAOD_MC_JPsiPU_forPPRef_CMSSW_13_2_0_pre1_13Jul2023_v1/MB_TuneCP5_5p36TeV_ppref_NOTPU-pythia8/RECO_MINIAOD_MC_JPsiPU_forPPRef_CMSSW_13_2_0_pre1_13Jul2023_v1/230713_042413/0000/step3_RAW2DIGI_L1Reco_RECO_RECOSIM_PAT_1.root'
+  '/store/data/Run2023F/PPRefDoubleMuon1/MINIAOD/PromptReco-v1/000/373/710/00000/1f07f64a-12c6-41a8-9440-317c201cb3b1.root',
+  '/store/data/Run2023F/PPRefDoubleMuon1/MINIAOD/PromptReco-v1/000/373/710/00000/b13150ae-54e0-4a80-8d7f-2203a6773140.root',
+  '/store/data/Run2023F/PPRefDoubleMuon3/MINIAOD/PromptReco-v1/000/373/710/00000/b72132ca-d17b-4682-a211-996dfe06b528.root',
+  '/store/data/Run2023F/PPRefDoubleMuon3/MINIAOD/PromptReco-v1/000/373/710/00000/d5d569e1-632d-4991-87c4-d67571def74e.root',
+  '/store/data/Run2023F/PPRefDoubleMuon2/MINIAOD/PromptReco-v1/000/373/710/00000/95ac62f6-da92-4f81-ad5b-7aaeb6dcca0c.root'
 ]
-options.maxEvents = 100 # -1 means all events
+options.maxEvents = -1 # -1 means all events
 
 # Get and parse the command line arguments
 options.parseArguments()
@@ -89,11 +91,11 @@ triggerList    = {
 			)
                 }
 
-## Global tag
+# Global tag, see https://github.com/cms-sw/cmssw/blob/master/Configuration/AlCa/python/autoCond.py
 if isMC:
   globalTag = 'auto:phase1_2023_realistic' #for Run3 MC : phase1_2023_realistic
 else:
-  globalTag = 'auto:run3_data_prompt' # for Run3 data (test run) : 124X_dataRun3_Prompt_v10
+  globalTag = 'auto:run3_data'
 
 #----------------------------------------------------------------------------
 
@@ -115,10 +117,10 @@ process.GlobalTag = GlobalTag(process.GlobalTag, globalTag, '')
 from HiAnalysis.HiOnia.oniaTreeAnalyzer_cff import oniaTreeAnalyzer
 oniaTreeAnalyzer(process,
                  muonTriggerList=triggerList, #HLTProName=HLTProcess,
-                 muonSelection=muonSelection, L1Stage=2, isMC=isMC, pdgID=pdgId, outputFileName=options.outputFile, doTrimu=doTrimuons
+                 muonSelection=muonSelection, L1Stage=2, isMC=isMC, pdgID=pdgId, outputFileName=options.outputFile, doTrimu=doTrimuons#, OnlySingleMuons=True
 )
 
-#process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("8 < mass && mass < 14 && charge==0 && abs(daughter('muon1').innerTrack.dz - daughter('muon2').innerTrack.dz) < 25")
+#process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 2 && charge==0 && abs(daughter('muon1').innerTrack.dz - daughter('muon2').innerTrack.dz) < 25")
 #process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 5 || isPFMuon || (pt>1.2 && (isGlobalMuon || isStandAloneMuon)) || (isTrackerMuon && track.quality('highPurity'))")
 #process.onia2MuMuPatGlbGlb.higherPuritySelection = cms.string("") ## No need to repeat lowerPuritySelection in there, already included
 if applyCuts:
@@ -138,8 +140,6 @@ process.hionia.OneMatchedHLTMu  = cms.int32(OneMatchedHLTMu)
 process.hionia.checkTrigNames   = cms.bool(False)#change this to get the event-level trigger info in hStats output (but creates lots of warnings when fake trigger names are used)
 process.hionia.mom4format       = cms.string(useMomFormat)
 process.hionia.isHI = cms.untracked.bool(False)
-process.hionia.genealogyInfo    = cms.bool(True)
-
 '''
 #----------------------------------------------------------------------------
 
@@ -181,6 +181,8 @@ if saveHLT:
   process.oniaTreeAna = cms.Path(process.hltbitanalysis * process.hltobject * process.oniaTreeAna )
 '''
 
+
+
 if applyEventSel:
     # Offline event filters
     process.load('HeavyIonsAnalysis.EventAnalysis.collisionEventSelection_cff')
@@ -192,7 +194,6 @@ if applyEventSel:
     process.hltHI.throw = False
     process.hltHI.andOr = True
     process.oniaTreeAna.replace(process.patMuonSequence, process.primaryVertexFilter * process.hltHI * process.patMuonSequence )
-
 
 if atLeastOneCand:
   if doTrimuons:
@@ -208,8 +209,8 @@ if atLeastOneCand:
 
 process.oniaTreeAna = cms.Path(process.oniaTreeAna)
 if miniAOD:
-  from HiSkim.HiOnia2MuMu.onia2MuMuPAT_cff import changeToMiniAOD
-  changeToMiniAOD(process)
+  from HiSkim.HiOnia2MuMu.onia2MuMuPAT_cff import changeToMiniAOD_pp
+  changeToMiniAOD_pp(process)
   process.unpackedMuons.addPropToMuonSt = cms.bool(UsePropToMuonSt)
 
 #----------------------------------------------------------------------------
