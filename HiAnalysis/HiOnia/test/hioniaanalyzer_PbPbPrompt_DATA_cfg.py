@@ -58,7 +58,7 @@ options.inputFiles = [
     '/store/hidata/HIRun2023A/HIPhysicsRawPrime13/MINIAOD/PromptReco-v2/000/374/730/00000/05ee12dc-0ce8-407a-8b13-e310e3678400.root',
 ]
 
-options.outputFile = 'Oniatree_2023PbPbPromptRecoData_141X_miniAOD.root'
+options.outputFile = 'Oniatree_2024PbPbPromptRecoData_141X_miniAOD.root'
 options.secondaryOutputFile = "Jpsi_Dataset.root"
 
 options.maxEvents = -1 # -1 means all events
@@ -104,7 +104,7 @@ triggerList    = {
 
 # Global tag, see https://github.com/cms-sw/cmssw/blob/master/Configuration/AlCa/python/autoCond.py
 if isMC:
-  globalTag = 'auto:phase1_2023_realistic_hi' #for Run3 MC : phase1_2023_realistic_hi
+  globalTag = 'auto:phase1_2024_realistic_hi' #for Run3 MC : phase1_2023_realistic_hi
 else:
   globalTag = 'auto:run3_data_prompt'
 

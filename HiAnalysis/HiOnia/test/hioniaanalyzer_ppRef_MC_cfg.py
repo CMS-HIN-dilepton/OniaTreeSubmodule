@@ -68,7 +68,7 @@ options.parseArguments()
 triggerList    = {
 		# Double Muon Trigger List
 		'DoubleMuonTrigger' : cms.vstring(
-			"HLT_PPRefL1DoubleMu0_v1",
+			      "HLT_PPRefL1DoubleMu0_v1",
             "HLT_PPRefL2DoubleMu0_v1",
             "HLT_PPRefL3DoubleMu0_v1"
             ),
@@ -91,9 +91,9 @@ triggerList    = {
 
 ## Global tag
 if isMC:
-  globalTag = 'auto:phase1_2023_realistic'
+  globalTag = 'auto:phase1_2024_realistic_ppRef5TeV'
 else:
-  globalTag = 'auto:run3_data_prompt'
+  globalTag = 'auto:run3_data'
 
 #----------------------------------------------------------------------------
 

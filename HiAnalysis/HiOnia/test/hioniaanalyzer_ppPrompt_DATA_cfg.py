@@ -70,7 +70,7 @@ options.parseArguments()
 triggerList    = {
 		# Double Muon Trigger List
 		'DoubleMuonTrigger' : cms.vstring(
-			"HLT_PPRefL1DoubleMu0_v1",
+			      "HLT_PPRefL1DoubleMu0_v1",
             "HLT_PPRefL2DoubleMu0_v1",
             "HLT_PPRefL3DoubleMu0_v1"
             ),
@@ -93,7 +93,7 @@ triggerList    = {
 
 # Global tag, see https://github.com/cms-sw/cmssw/blob/master/Configuration/AlCa/python/autoCond.py
 if isMC:
-  globalTag = 'auto:phase1_2023_realistic' #for Run3 MC : phase1_2023_realistic
+  globalTag = 'auto:phase1_2024_realistic_ppRef5TeV' #for Run3 MC : phase1_2023_realistic
 else:
   globalTag = 'auto:run3_data'
 

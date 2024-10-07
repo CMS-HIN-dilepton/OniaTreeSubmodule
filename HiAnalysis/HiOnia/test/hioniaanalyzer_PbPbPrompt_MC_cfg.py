@@ -100,7 +100,7 @@ triggerList    = {
 
 ## Global tag
 if isMC:
-  globalTag = 'auto:phase1_2023_realistic_hi' #for Run3 MC : phase1_2023_realistic_hi
+  globalTag = 'auto:phase1_2024_realistic_hi' #for Run3 MC : phase1_2023_realistic_hi
 else:
   globalTag = '132X_dataRun3_Prompt_v7' # 'auto:run3_data_prompt'
 
