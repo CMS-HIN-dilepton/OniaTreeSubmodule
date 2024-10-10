@@ -1777,7 +1777,7 @@ void HiOniaAnalyzer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetu
       continue;
     const auto& m = hltConfig.moduleLabels(hltConfig.triggerIndex(p.second));
     for (int j = m.size() - 1; j >= 0; j--)
-      if (m[j].rfind("hltL", 0) == 0 && m[j].rfind("Filtered") != std::string::npos) {
+      if ( (m[j].rfind("hltL", 0) == 0 && m[j].rfind("Filtered") != std::string::npos) || (m[j].rfind("hltL1s", 0) == 0) ) {
         filterNameMap.at(p.first) = m[j];
         break;
       }
