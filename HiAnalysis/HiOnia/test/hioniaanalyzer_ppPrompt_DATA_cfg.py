@@ -8,7 +8,7 @@ from Configuration.StandardSequences.Eras import eras
 
 HLTProcess     = "HLT" # Name of HLT process
 isMC           = False # if input is MONTECARLO: True or if it's DATA: False
-muonSelection  = "Glb" # Single muon selection: All, Glb(isGlobal), GlbTrk(isGlobal&&isTracker), Trk(isTracker), GlbOrTrk, TwoGlbAmongThree (which requires two isGlobal for a trimuon, and one isGlobal for a dimuon) are available
+muonSelection  = "Trk" # Single muon selection: All, Glb(isGlobal), GlbTrk(isGlobal&&isTracker), Trk(isTracker), GlbOrTrk, TwoGlbAmongThree (which requires two isGlobal for a trimuon, and one isGlobal for a dimuon) are available
 applyEventSel  = True # Only apply Event Selection if the required collections are present
 OnlySoftMuons  = False # Keep only isSoftMuon's (without highPurity, and without isGlobal which should be put in 'muonSelection' parameter) from the beginning of HiSkim. If you want the full SoftMuon selection, set this flag false and add 'isSoftMuon' in lowerPuritySelection. In any case, if applyCuts=True, isSoftMuon is required at HiAnalysis level for muons of selected dimuons.
 applyCuts      = False # At HiAnalysis level, apply kinematic acceptance cuts + identification cuts (isSoftMuon (without highPurity) or isTightMuon, depending on TightGlobalMuon flag) for muons from selected di(tri)muons + hard-coded cuts on the di(tri)muon that you would want to add (but recommended to add everything in LateDimuonSelection, applied at the end of HiSkim)
@@ -41,13 +41,13 @@ print( "[INFO] onlySoftMuons        = " + ("True" if OnlySoftMuons else "False")
 print( "[INFO] doTrimuons           = " + ("True" if doTrimuons else "False") )
 print( "[INFO] doDimuonTrk          = " + ("True" if doDimuonTrk else "False") )
 print( "[INFO] atLeastOneCand       = " + ("True" if atLeastOneCand else "False") )
-print( "[INFO] OneMatchedHLTMu      = " + ("True" if OneMatchedHLTMu else "False") )
+print( "[INFO] OneMatchedHLTMu      = " + (OneMatchedHLTMu if OneMatchedHLTMu > -1 else "False") )
 print( "[INFO] miniAOD              = " + ("True" if miniAOD else "False") )
 print( "[INFO] UsePropToMuonSt      = " + ("True" if UsePropToMuonSt else "False") )
 print( " " )
 
 # set up process
-process = cms.Process("HIOnia", eras.Run3)
+process = cms.Process("HIOnia", eras.Run3_2024_ppRef)
 
 # setup 'analysis'  options
 options = VarParsing.VarParsing ('analysis')
@@ -70,24 +70,24 @@ options.parseArguments()
 triggerList    = {
 		# Double Muon Trigger List
 		'DoubleMuonTrigger' : cms.vstring(
-			      "HLT_PPRefL1DoubleMu0_v1",
-            "HLT_PPRefL2DoubleMu0_v1",
-            "HLT_PPRefL3DoubleMu0_v1"
+			      "HLT_PPRefL1DoubleMu0_v",
+            "HLT_PPRefL2DoubleMu0_v",
+            "HLT_PPRefL3DoubleMu0_v"
             ),
         # Single Muon Trigger List
         'SingleMuonTrigger' : cms.vstring(
-            "HLT_PPRefL1SingleMu7_v1",
-            "HLT_PPRefL1SingleMu12_v1",
-            "HLT_PPRefL2SingleMu7_v1",
-            "HLT_PPRefL2SingleMu12_v1",
-            "HLT_PPRefL2SingleMu15_v1",
-            "HLT_PPRefL2SingleMu20_v1",
-            "HLT_PPRefL3SingleMu3_v1",
-            "HLT_PPRefL3SingleMu5_v1",
-            "HLT_PPRefL3SingleMu7_v1",
-            "HLT_PPRefL3SingleMu12_v1",
-            "HLT_PPRefL3SingleMu15_v1",
-            "HLT_PPRefL3SingleMu20_v1",
+            "HLT_PPRefL1SingleMu7_v",
+            "HLT_PPRefL1SingleMu12_v",
+            "HLT_PPRefL2SingleMu7_v",
+            "HLT_PPRefL2SingleMu12_v",
+            "HLT_PPRefL2SingleMu15_v",
+            "HLT_PPRefL2SingleMu20_v",
+            "HLT_PPRefL3SingleMu3_v",
+            "HLT_PPRefL3SingleMu5_v",
+            "HLT_PPRefL3SingleMu7_v",
+            "HLT_PPRefL3SingleMu12_v",
+            "HLT_PPRefL3SingleMu15_v",
+            "HLT_PPRefL3SingleMu20_v",
 			)
                 }
 
@@ -190,7 +190,7 @@ if applyEventSel:
     # HLT trigger firing events
     import HLTrigger.HLTfilters.hltHighLevel_cfi
     process.hltHI = HLTrigger.HLTfilters.hltHighLevel_cfi.hltHighLevel.clone()
-    process.hltHI.HLTPaths = ["HLT_PPRefL*SingleMu*_v*"]
+    process.hltHI.HLTPaths = ["HLT_PPRefL*DoubleMu*_v*","HLT_PPRefL*SingleMu*_v*"]
     process.hltHI.throw = False
     process.hltHI.andOr = True
     process.oniaTreeAna.replace(process.patMuonSequence, process.primaryVertexFilter * process.hltHI * process.patMuonSequence )
@@ -209,8 +209,8 @@ if atLeastOneCand:
 
 process.oniaTreeAna = cms.Path(process.oniaTreeAna)
 if miniAOD:
-  from HiSkim.HiOnia2MuMu.onia2MuMuPAT_cff import changeToMiniAOD_pp
-  changeToMiniAOD_pp(process)
+  from HiSkim.HiOnia2MuMu.onia2MuMuPAT_cff import changeToMiniAOD
+  changeToMiniAOD(process)
   process.unpackedMuons.addPropToMuonSt = cms.bool(UsePropToMuonSt)
 
 #----------------------------------------------------------------------------

@@ -21,7 +21,6 @@ OneMatchedHLTMu = -1   # Keep only di(tri)muons of which the one(two) muon(s) ar
 #############################################################################
 keepExtraColl  = False # General Tracks + Stand Alone Muons + Converted Photon collections
 miniAOD        = True # whether the input file is in miniAOD format (default is AOD)
-miniAOD_muonCuts = False # Apply the cuts used in the muon collections of miniAOD. Only has an effect with AOD.
 UsePropToMuonSt = True # whether to use L1 propagated muons (works only for miniAOD now)
 pdgId = 443 # J/Psi : 443, Y(1S) : 553
 useMomFormat = "vector" # default "array" for TClonesArray of TLorentzVector. Use "vector" for std::vector<float> of pt, eta, phi, M
@@ -42,14 +41,13 @@ print( "[INFO] onlySoftMuons        = " + ("True" if OnlySoftMuons else "False")
 print( "[INFO] doTrimuons           = " + ("True" if doTrimuons else "False") )
 print( "[INFO] doDimuonTrk          = " + ("True" if doDimuonTrk else "False") )
 print( "[INFO] atLeastOneCand       = " + ("True" if atLeastOneCand else "False") )
-print( "[INFO] OneMatchedHLTMu      = " + ("True" if OneMatchedHLTMu else "False") )
+print( "[INFO] OneMatchedHLTMu      = " + (OneMatchedHLTMu if OneMatchedHLTMu > -1 else "False") )
 print( "[INFO] miniAOD              = " + ("True" if miniAOD else "False") )
-print( "[INFO] miniAOD_muonCuts     = " + ("True" if miniAOD_muonCuts else "False") )
 print( "[INFO] UsePropToMuonSt      = " + ("True" if UsePropToMuonSt else "False") )
 print( " " )
 
 # set up process
-process = cms.Process("HIOnia", eras.Run3)
+process = cms.Process("HIOnia", eras.Run3_2024_ppRef)
 
 # setup 'analysis'  options
 options = VarParsing.VarParsing ('analysis')
@@ -68,24 +66,24 @@ options.parseArguments()
 triggerList    = {
 		# Double Muon Trigger List
 		'DoubleMuonTrigger' : cms.vstring(
-			      "HLT_PPRefL1DoubleMu0_v1",
-            "HLT_PPRefL2DoubleMu0_v1",
-            "HLT_PPRefL3DoubleMu0_v1"
+			      "HLT_PPRefL1DoubleMu0_v",
+            "HLT_PPRefL2DoubleMu0_v",
+            "HLT_PPRefL3DoubleMu0_v"
             ),
         # Single Muon Trigger List
         'SingleMuonTrigger' : cms.vstring(
-            "HLT_PPRefL1SingleMu7_v1",
-            "HLT_PPRefL1SingleMu12_v1",
-            "HLT_PPRefL2SingleMu7_v1",
-            "HLT_PPRefL2SingleMu12_v1",
-            "HLT_PPRefL2SingleMu15_v1",
-            "HLT_PPRefL2SingleMu20_v1",
-            "HLT_PPRefL3SingleMu3_v1",
-            "HLT_PPRefL3SingleMu5_v1",
-            "HLT_PPRefL3SingleMu7_v1",
-            "HLT_PPRefL3SingleMu12_v1",
-            "HLT_PPRefL3SingleMu15_v1",
-            "HLT_PPRefL3SingleMu20_v1",
+            "HLT_PPRefL1SingleMu7_v",
+            "HLT_PPRefL1SingleMu12_v",
+            "HLT_PPRefL2SingleMu7_v",
+            "HLT_PPRefL2SingleMu12_v",
+            "HLT_PPRefL2SingleMu15_v",
+            "HLT_PPRefL2SingleMu20_v",
+            "HLT_PPRefL3SingleMu3_v",
+            "HLT_PPRefL3SingleMu5_v",
+            "HLT_PPRefL3SingleMu7_v",
+            "HLT_PPRefL3SingleMu12_v",
+            "HLT_PPRefL3SingleMu15_v",
+            "HLT_PPRefL3SingleMu20_v",
 			)
                 }
 
