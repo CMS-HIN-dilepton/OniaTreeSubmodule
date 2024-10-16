@@ -8,7 +8,7 @@ from Configuration.StandardSequences.Eras import eras
 
 HLTProcess     = "HLT" # Name of HLT process
 isMC           = False # if input is MONTECARLO: True or if it's DATA: False
-muonSelection  = "All" # Single muon selection: All, Glb(isGlobal), GlbTrk(isGlobal&&isTracker), Trk(isTracker), GlbOrTrk, TwoGlbAmongThree (which requires two isGlobal for a trimuon, and one isGlobal for a dimuon) are available
+muonSelection  = "Trk" # Single muon selection: All, Glb(isGlobal), GlbTrk(isGlobal&&isTracker), Trk(isTracker), GlbOrTrk, TwoGlbAmongThree (which requires two isGlobal for a trimuon, and one isGlobal for a dimuon) are available
 applyEventSel  = True # Only apply Event Selection if the required collections are present
 OnlySoftMuons  = False # Keep only isSoftMuon's (without highPurity, and without isGlobal which should be put in 'muonSelection' parameter) from the beginning of HiSkim. If you want the full SoftMuon selection, set this flag false and add 'isSoftMuon' in lowerPuritySelection. In any case, if applyCuts=True, isSoftMuon is required at HiAnalysis level for muons of selected dimuons.
 applyCuts      = False # At HiAnalysis level, apply kinematic acceptance cuts + identification cuts (isSoftMuon (without highPurity) or isTightMuon, depending on TightGlobalMuon flag) for muons from selected di(tri)muons + hard-coded cuts on the di(tri)muon that you would want to add (but recommended to add everything in LateDimuonSelection, applied at the end of HiSkim)
@@ -77,28 +77,39 @@ triggerList    = {
                         "HLT_HIL2DoubleMu2p8_M1p5to6_Open_v",#5
                         "HLT_HIL2DoubleMu0_M7to15_Open_v",#6
                         "HLT_HIL2DoubleMu3_M7to15_Open_v",#7
-                        "HLT_HIL3DoubleMu0_M0toInf_Open_v",#8
-                        "HLT_HIL3DoubleMu0_Quarkonia_Open_v",#9
-                        "HLT_HIL3DoubleMu2_Quarkonia_Open_v",#10
-                        "HLT_HIL3DoubleMu0_M2to4p5_Open_v",#11
-                        "HLT_HIL3DoubleMu2_M2to4p5_Open_v",#12
-                        "HLT_HIL3DoubleMu0_M7to15_Open_v",#13
-                        "HLT_HIL3DoubleMu2_M7to15_Open_v",#14
+                        "HLT_HIL2DoubleMu0_SQ_v",#8
+                        "HLT_HIL2DoubleMuOpen_Centrality40to100_v",#9
+                        "HLT_HIL2DoubleMuOpen_OS_v",#10
+                        "HLT_HIL2DoubleMuOpen_SS_v",#11
+                        #"HLT_HIL3DoubleMu0_M0toInf_Open_v",#8
+                        #"HLT_HIL3DoubleMu0_Quarkonia_Open_v",#9
+                        #"HLT_HIL3DoubleMu2_Quarkonia_Open_v",#10
+                        #"HLT_HIL3DoubleMu0_M2to4p5_Open_v",#11
+                        #"HLT_HIL3DoubleMu2_M2to4p5_Open_v",#12
+                        #"HLT_HIL3DoubleMu0_M7to15_Open_v",#13
+                        #"HLT_HIL3DoubleMu2_M7to15_Open_v",#14
                         ),
                 # Single Muon Trigger List
                 'SingleMuonTrigger' : cms.vstring(
-                        "HLT_HIL1SingleMu0_Open_v",#15
-                        "HLT_HIL1SingleMu0_v",#16
+                        "HLT_HIL1SingleMu0_Open_v",#12
+                        "HLT_HIL1SingleMu0_v",#13
+                        "HLT_HIL1SingleMu0_Centrality40to100_v",#14
+                        "HLT_HIL1SingleMu0_Centrality30to100_v",#15
+                        "HLT_HIL1SingleMuOpen_Centrality30to100_v",#16
                         "HLT_HIL2SingleMu3_Open_v",#17
                         "HLT_HIL2SingleMu5_v",#18
                         "HLT_HIL2SingleMu7_v",#19
-                        "HLT_HIL3SingleMu3_Open_v",#20
-                        "HLT_HIL3SingleMu5_v",#21
-                        "HLT_HIL3SingleMu7_v",#22
-                        "HLT_HIL3SingleMu12_v",#23
-                        "HLT_HIMinimumBiasHF1AND_v", #24
-                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #25
-                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #26
+                        "HLT_HIL2SingleMu12_v",#20
+                        "HLT_HIL2SingleMu0_Centrality40to100_v",#21
+                        "HLT_HIL2SingleMu0_Centrality30to100_v",#22
+                        "HLT_HIL2SingleMuOpen_Centrality30to100_v",#23
+                        #"HLT_HIL3SingleMu3_Open_v",#24
+                        #"HLT_HIL3SingleMu5_v",#25
+                        #"HLT_HIL3SingleMu7_v",#26
+                        #"HLT_HIL3SingleMu12_v",#27
+                        "HLT_HIMinimumBiasHF1AND_v", #28
+                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #29
+                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #30
 			)
                 }
 

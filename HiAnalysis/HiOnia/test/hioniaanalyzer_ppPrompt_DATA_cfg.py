@@ -70,8 +70,14 @@ options.parseArguments()
 triggerList    = {
 		# Double Muon Trigger List
 		'DoubleMuonTrigger' : cms.vstring(
-			      "HLT_PPRefL1DoubleMu0_v",
+			      "HLT_PPRefL1DoubleMu0_Open_v",
+            "HLT_PPRefL1DoubleMu0_v",
+            "HLT_PPRefL1DoubleMu0_SQ_v",
+            "HLT_PPRefL1DoubleMu2_v",
+            "HLT_PPRefL1DoubleMu2_SQ_v",
+            "HLT_PPRefL2DoubleMu0_Open_v",
             "HLT_PPRefL2DoubleMu0_v",
+            "HLT_PPRefL3DoubleMu0_Open_v",
             "HLT_PPRefL3DoubleMu0_v"
             ),
         # Single Muon Trigger List
