@@ -1,10 +1,11 @@
 import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 from Configuration.StandardSequences.Eras import eras
+import os
 
 #----------------------------------------------------------------------------
 
-# Setup Settings for ONIA TREE: 2024 PbPb data
+# Setup Settings for ONIA TREE: 2024 PbPb data, PAG's reco of streamer files
 
 HLTProcess     = "HLT" # Name of HLT process
 isMC           = False # if input is MONTECARLO: True or if it's DATA: False
@@ -53,12 +54,27 @@ options = VarParsing.VarParsing ('analysis')
 
 # Input and Output File Name
 
-options.inputFiles = [
-  '/store/backfill/1/hidata/Tier0_HIREPLAY_2024/HIPhysicsRawPrime14/MINIAOD/PromptReco-v2154550/000/374/951/00000/b889932f-01b9-4420-8e6b-8a82652a7fcf.root'
-]
+runNb = 387506
 
-options.outputFile = 'Oniatree_2023PbPbPromptRecoDataReplay_141X_miniAOD.root'
-options.secondaryOutputFile = "Jpsi_Dataset.root"
+PDname = 'HIPhysicsRawPrime0'
+
+recoFormat = 'mini' # simply '' for AOD
+
+inputPath = f'/eos/cms/store/group/phys_heavyions/wangj/RECO2024/{recoFormat}aod_{PDname}_{runNb}'
+
+
+fileList = [f"file:{os.path.join(inputPath, f)}" for f in os.listdir(inputPath) if f.endswith(".root")]
+
+
+options.inputFiles = fileList
+
+
+options.maxEvents = -1 # -1 means all events
+
+
+outputName = f'Oniatree_{PDname}_Run{runNb}_{recoFormat}AOD'
+
+options.outputFile = f"/eos/cms/store/group/phys_heavyions/dileptons/Data2024/PbPb/FastOniatrees/{outputName}.root"
 
 options.maxEvents = -1 # -1 means all events
 
@@ -116,7 +132,7 @@ triggerList    = {
 if isMC:
   globalTag = 'auto:phase1_2024_realistic_hi' #for Run3 MC : phase1_2023_realistic_hi
 else:
-  globalTag = '141X_dataRun3_Prompt_v3'
+  globalTag = '141X_dataRun3_Express_v3'
 
 #----------------------------------------------------------------------------
 
