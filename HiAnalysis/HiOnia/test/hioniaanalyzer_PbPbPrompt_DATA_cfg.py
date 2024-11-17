@@ -23,7 +23,7 @@ keepExtraColl  = False # General Tracks + Stand Alone Muons + Converted Photon c
 miniAOD        = True # whether the input file is in miniAOD format (default is AOD)
 UsePropToMuonSt = True # whether to use L1 propagated muons (works only for miniAOD now)
 pdgId = 443 # J/Psi : 443, Y(1S) : 553
-useMomFormat = "vector" # default "array" for TClonesArray of TLorentzVector. Use "vector" for std::vector<float> of pt, eta, phi, M
+useMomFormat = "array" # default "array" for TClonesArray of TLorentzVector. Use "vector" for std::vector<float> of pt, eta, phi, M
 #----------------------------------------------------------------------------
 
 # Print Onia Tree settings:
@@ -54,10 +54,12 @@ options = VarParsing.VarParsing ('analysis')
 # Input and Output File Name
 
 options.inputFiles = [
-  '/store/backfill/1/hidata/Tier0_HIREPLAY_2024/HIPhysicsRawPrime14/MINIAOD/PromptReco-v2154550/000/374/951/00000/b889932f-01b9-4420-8e6b-8a82652a7fcf.root'
+  '/store/hidata/HIRun2024A/HIPhysicsRawPrime0/MINIAOD/PromptReco-v1/000/387/879/00000/7e0923e7-cb0c-4be3-8d0f-5d93cc3e880e.root',
+  '/store/hidata/HIRun2024A/HIPhysicsRawPrime0/MINIAOD/PromptReco-v1/000/387/939/00000/ccae3ab3-d57b-462b-b69b-f77fa16cbf72.root',
+  '/store/hidata/HIRun2024A/HIPhysicsRawPrime3/MINIAOD/PromptReco-v1/000/387/879/00000/60bf4d21-c62f-47ca-b368-0fa9984e018b.root'
 ]
 
-options.outputFile = 'Oniatree_2023PbPbPromptRecoDataReplay_141X_miniAOD.root'
+options.outputFile = 'Oniatree_PbPb2024PromptRecoData_141X_miniAOD.root'
 options.secondaryOutputFile = "Jpsi_Dataset.root"
 
 options.maxEvents = -1 # -1 means all events
@@ -155,8 +157,11 @@ oniaTreeAnalyzer(process,
                  OnlySingleMuons=False
 )
 
-if applyCuts:
-  process.onia2MuMuPatGlbGlb.LateDimuonSel = cms.string("userFloat(\"vProb\")>0.01")
+process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 2.4 && charge==0 && abs(daughter('muon1').innerTrack.dz - daughter('muon2').innerTrack.dz) < 25")
+process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 1. && abs(eta) < 2.4")
+
+#if applyCuts:
+process.onia2MuMuPatGlbGlb.LateDimuonSel = cms.string("userFloat(\"vProb\")>0.01")
 process.onia2MuMuPatGlbGlb.onlySoftMuons = cms.bool(OnlySoftMuons)
 process.hionia.minimumFlag      = cms.bool(keepExtraColl)           #for Reco_trk_*
 process.hionia.useGeTracks      = cms.untracked.bool(keepExtraColl) #for Reco_trk_*
@@ -205,7 +210,7 @@ if applyEventSel:
 
   process.dimuonSelection = cms.EDProducer("CandViewShallowCloneCombiner",
                                     checkCharge = cms.bool(True),
-                                    cut = cms.string("mass > 2"),
+                                    cut = cms.string("mass > 2.4"),
                                     decay = cms.string("muonSelector@+ muonSelector@-")
                                     )
 
@@ -246,6 +251,11 @@ process.TFileService = cms.Service("TFileService",
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxEvents) )
 process.options   = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 
+import FWCore.PythonUtilities.LumiList as LumiList
+jsonFile = '/eos/cms/store/group/phys_heavyions/sayan/HIN_run3_pseudo_JSON/HIPhysicsRawPrime_2024/Golden_387853_continue_L1DeadTimeCut10percent.txt'
+process.source.lumisToProcess = LumiList.LumiList(filename = jsonFile).getVLuminosityBlockRange()
+
 process.options.numberOfThreads = 4
+
 
 process.schedule  = cms.Schedule( process.oniaTreeAna )
