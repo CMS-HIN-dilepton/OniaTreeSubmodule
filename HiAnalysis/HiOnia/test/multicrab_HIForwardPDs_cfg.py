@@ -15,7 +15,7 @@ config.General.transferLogs = False
 
 config.section_("JobType")
 config.JobType.pluginName = "Analysis"
-config.JobType.psetName = "hioniaanalyzer_UPC_DATA_cfg.py"
+config.JobType.psetName = "hioniaanalyzer_UPC2024_PromptReco_cfg.py"
 config.JobType.maxMemoryMB = 2000         # request high memory machines.
 config.JobType.numCores = 2
 config.JobType.allowUndistributedCMSSW = True #Problems with slc7
@@ -25,13 +25,13 @@ config.section_("Data")
 config.Data.inputDBS = 'global'
 #config.Data.totalUnits = -1
 config.Data.splitting = "EventAwareLumiBased"
-config.Data.unitsPerJob = 500
+config.Data.unitsPerJob = 100000000
 
 config.Data.allowNonValidInputDataset = True
 config.Data.publication = False
-config.Data.runRange = '387853-388390'
+config.Data.runRange = '387853-389000'
 #config.Data.lumiMask = 'https://cms-service-dqmdc.web.cern.ch/CAF/certification/Collisions23HI/Cert_Collisions2023HI_374288_375823_Muon.json'
-#config.Data.lumiMask = '/eos/cms/store/group/phys_heavyions/sayan/HIN_run3_pseudo_JSON/HIPhysicsRawPrime_2024/Muon_387853_387969_noL1DeadTimeCut.txt'
+config.Data.lumiMask = '/eos/cms/store/group/phys_heavyions/sayan/HIN_run3_pseudo_JSON/HIPhysicsRawPrime_2024/Golden_387853_continue_L1DeadTimeCut10percent.txt'
 
 config.section_("Site")
 config.Site.storageSite = "T3_CH_CERNBOX"
@@ -49,11 +49,18 @@ def submit(config):
 
 # Submit the jobs: 20 HIForward PDs, ~140k files each, average of 100k events/file
 
-for i in range(20):
-    config.General.requestName = f'Forward{i}'
-    config.Data.inputDataset = f"/HIForward{i}/HIRun2024A-PromptReco-v1/MINIAOD"
-    config.Data.outputDatasetTag = config.General.requestName
-    config.Data.outLFNDirBase = '/store/user/fdamas/PbPb2024/'
+config.Data.outLFNDirBase = '/store/user/fdamas/PbPb2024/UPC/'
 
-    print("Submitting CRAB job for: "+ config.Data.inputDataset)
-    submit(config)
+eras = "AB"
+
+for i in range(20):
+
+    # for each era
+    for era in eras:
+        config.General.requestName = f'Era{era}_Forward{i}'
+        config.Data.inputDataset = f"/HIForward{i}/HIRun2024{era}-PromptReco-v1/MINIAOD"
+        config.Data.outputDatasetTag = f"Era{era}"
+    
+
+        print("Submitting CRAB job for: "+ config.Data.inputDataset)
+        submit(config)

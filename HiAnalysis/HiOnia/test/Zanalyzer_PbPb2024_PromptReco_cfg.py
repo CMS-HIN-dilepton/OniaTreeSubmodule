@@ -189,7 +189,7 @@ oniaTreeAnalyzer(process,
 
 #if applyCuts:
 
-process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 50 && charge==0")
+process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 60 && charge==0")
 process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 15. && isPFMuon && isGlobalMuon && abs(eta) < 2.4 && (globalTrack().normalizedChi2() < 10) && (globalTrack().hitPattern().numberOfValidMuonHits()>0) && (numberOfMatchedStations() > 1) && (innerTrack().hitPattern().numberOfValidPixelHits() > 0)")
 
 process.onia2MuMuPatGlbGlb.LateDimuonSel = cms.string("userFloat(\"vProb\")>0.001")
@@ -216,15 +216,8 @@ if applyEventSel:
   process.load('HeavyIonsAnalysis.EventAnalysis.hffilter_cfi')
   #process.oniaTreeAna.replace(process.hionia, process.phfCoincFilter2Th4 * process.primaryVertexFilter * process.clusterCompatibilityFilter * process.hionia )
 
-  # HLT trigger firing events
-  import HLTrigger.HLTfilters.hltHighLevel_cfi
-  process.hltHI = HLTrigger.HLTfilters.hltHighLevel_cfi.hltHighLevel.clone()
-  process.hltHI.HLTPaths = ["HLT_HIL*SingleMu*_v*", "HLT_HIMinimumBiasHF1AND*_v*"]
-  process.hltHI.throw = False
-  process.hltHI.andOr = True
-
   # Muon filtering
-  SuperLooseMuonCut = "(isGlobalMuon) && pt > 15. && abs(eta) < 2.4 && isPFMuon && (globalTrack().hitPattern().numberOfValidMuonHits()>0)"
+  SuperLooseMuonCut = "isGlobalMuon && pt > 15. && abs(eta) < 2.4 && isPFMuon && (globalTrack().hitPattern().numberOfValidMuonHits()>0)"
 
   MUONCUT = SuperLooseMuonCut
   
@@ -239,7 +232,7 @@ if applyEventSel:
                                  minNumber = cms.uint32(2)
                                  )
 
-  
+  # PV and trigger filters already applied to the PbPbZMu skim
   process.oniaTreeAna.replace(process.patMuonSequence, process.muonSelector * process.atLeastTwoMuons  * process.clusterCompatibilityFilter * process.patMuonSequence )
 
 if atLeastOneCand:

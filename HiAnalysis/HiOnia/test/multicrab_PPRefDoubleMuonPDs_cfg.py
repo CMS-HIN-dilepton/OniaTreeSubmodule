@@ -16,7 +16,7 @@ config.General.transferLogs = False
 config.section_("JobType")
 config.JobType.pluginName = "Analysis"
 config.JobType.psetName = "hioniaanalyzer_ppRef2024_PromptReco_cfg.py"
-config.JobType.maxMemoryMB = 2400         # request high memory machines.
+config.JobType.maxMemoryMB = 2000         # request high memory machines.
 config.JobType.numCores = 2 # must match the number of threads enabled in the hioniaanalyzer config file!
 config.JobType.allowUndistributedCMSSW = True #Problems with slc7
 config.JobType.maxJobRuntimeMin = 2000 # max = 2750
@@ -25,12 +25,12 @@ config.section_("Data")
 config.Data.inputDBS = 'global'
 #config.Data.totalUnits = -1
 config.Data.splitting = "EventAwareLumiBased"
-config.Data.unitsPerJob = 350
+config.Data.unitsPerJob = 5000000
 
 config.Data.allowNonValidInputDataset = True
 config.Data.publication = False
-config.Data.runRange = '387505-387221'
-#config.Data.lumiMask = 'https://cms-service-dqmdc.web.cern.ch/CAF/certification/Collisions23HI/Cert_Collisions2023HI_374288_375823_Muon.json'
+config.Data.runRange = '387474-387221'
+config.Data.lumiMask = 'https://cms-service-dqmdc.web.cern.ch/CAF/certification/Collisions24/Cert_Collisions2024_ppref_387474_387721_Muon.json'
 
 config.section_("Site")
 config.Site.storageSite = "T3_CH_CERNBOX"

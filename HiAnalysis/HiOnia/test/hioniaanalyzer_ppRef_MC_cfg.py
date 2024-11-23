@@ -23,7 +23,7 @@ keepExtraColl  = False # General Tracks + Stand Alone Muons + Converted Photon c
 miniAOD        = True # whether the input file is in miniAOD format (default is AOD)
 UsePropToMuonSt = True # whether to use L1 propagated muons (works only for miniAOD now)
 pdgId = 443 # J/Psi : 443, Y(1S) : 553
-useMomFormat = "vector" # default "array" for TClonesArray of TLorentzVector. Use "vector" for std::vector<float> of pt, eta, phi, M
+useMomFormat = "array" # default "array" for TClonesArray of TLorentzVector. Use "vector" for std::vector<float> of pt, eta, phi, M
 
 #----------------------------------------------------------------------------
 
@@ -53,12 +53,14 @@ process = cms.Process("HIOnia", eras.Run3_2024_ppRef)
 options = VarParsing.VarParsing ('analysis')
 
 # Input and Output File Name
-options.outputFile = "Oniatree_MC_miniAOD.root"
+options.outputFile = "Oniatree_promptJpsi_ppRefMC_141X.root"
 options.secondaryOutputFile = "Jpsi_DataSet.root"
+
 options.inputFiles =[
-  '/store/group/phys_heavyions/dileptons/junseok/RECO_MINIAOD_MC_JPsiPU_forPPRef_CMSSW_13_2_0_pre1_13Jul2023_v1/MB_TuneCP5_5p36TeV_ppref_NOTPU-pythia8/RECO_MINIAOD_MC_JPsiPU_forPPRef_CMSSW_13_2_0_pre1_13Jul2023_v1/230713_042413/0000/step3_RAW2DIGI_L1Reco_RECO_RECOSIM_PAT_1.root'
+  '/store/user/fdamas/RunPrep2024/Jpsi_pTHatMin4/jpsi_pileupAverage5_RECOMINIAOD/241015_115034/0000/miniAOD_101.root',
+  '/store/user/fdamas/RunPrep2024/Jpsi_pTHatMin4/jpsi_pileupAverage5_RECOMINIAOD/241015_115034/0000/miniAOD_122.root'
 ]
-options.maxEvents = 100 # -1 means all events
+options.maxEvents = -1 # -1 means all events
 
 # Get and parse the command line arguments
 options.parseArguments()
@@ -83,7 +85,7 @@ triggerList    = {
             "HLT_PPRefL2SingleMu7_v",
             "HLT_PPRefL2SingleMu12_v",
             "HLT_PPRefL2SingleMu15_v",
-            "HLT_PPRefL2SingleMu20_v",
+            #"HLT_PPRefL2SingleMu20_v",
             "HLT_PPRefL3SingleMu3_v",
             "HLT_PPRefL3SingleMu5_v",
             "HLT_PPRefL3SingleMu7_v",
@@ -95,7 +97,7 @@ triggerList    = {
 
 ## Global tag
 if isMC:
-  globalTag = 'auto:phase1_2024_realistic_ppRef5TeV'
+  globalTag = '141X_mcRun3_2024_realistic_ppRef5TeV_v5'
 else:
   globalTag = 'auto:run3_data'
 
@@ -195,7 +197,8 @@ if applyEventSel:
     process.hltHI.HLTPaths = ["HLT_PPRefL*SingleMu*_v*"]
     process.hltHI.throw = False
     process.hltHI.andOr = True
-    process.oniaTreeAna.replace(process.patMuonSequence, process.primaryVertexFilter * process.patMuonSequence )
+    
+    process.oniaTreeAna.replace(process.patMuonSequence, process.primaryVertexFilter * process.clusterCompatibilityFilter * process.patMuonSequence )
 
 
 if atLeastOneCand:
@@ -227,7 +230,5 @@ process.TFileService = cms.Service("TFileService",
 		)
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxEvents) )
 process.options   = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
-
-process.options.numberOfThreads = 4
 
 process.schedule  = cms.Schedule( process.oniaTreeAna )

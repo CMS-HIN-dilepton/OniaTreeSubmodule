@@ -19,13 +19,13 @@ config.JobType.psetName = "Zanalyzer_PbPb2024_PromptReco_cfg.py"
 config.JobType.maxMemoryMB = 1400         # request high memory machines.
 #config.JobType.numCores = 4
 config.JobType.allowUndistributedCMSSW = True #Problems with slc7
-config.JobType.maxJobRuntimeMin = 500 # max = 2750
+config.JobType.maxJobRuntimeMin = 1200 # max = 2750
 
 config.section_("Data")
 config.Data.inputDBS = 'global'
 #config.Data.totalUnits = -1
 config.Data.splitting = "FileBased"
-config.Data.unitsPerJob = 100
+config.Data.unitsPerJob = 80
 
 config.Data.allowNonValidInputDataset = True
 config.Data.publication = False
@@ -49,11 +49,23 @@ def submit(config):
 
 # Submit the jobs: 32 HIRawPrime PDs, ~5.5k files each, average of 100k events/file
 
+config.Data.outLFNDirBase = '/store/user/fdamas/PbPb2024/ZMuSkims/'
+
+
 for i in range(15):
-    config.General.requestName = f'ZMuRawPrime{i}'
+
+    config.General.requestName = f'EraA_ZMuRawPrime{i}'
     config.Data.inputDataset = f"/HIPhysicsRawPrime{i}/HIRun2024A-PbPbZMu-PromptReco-v1/RAW-RECO"
-    config.Data.outputDatasetTag = config.General.requestName
-    config.Data.outLFNDirBase = '/store/user/fdamas/PbPb2024/'
+    config.Data.outputDatasetTag = 'EraA'
+
+    print("Submitting CRAB job for: "+ config.Data.inputDataset)
+    submit(config)
+
+for i in range(60):
+
+    config.General.requestName = f'EraB_ZMuRawPrime{i}'
+    config.Data.inputDataset = f"/HIPhysicsRawPrime{i}/HIRun2024B-PbPbZMu-PromptReco-v1/RAW-RECO"
+    config.Data.outputDatasetTag = 'EraB'
 
     print("Submitting CRAB job for: "+ config.Data.inputDataset)
     submit(config)
