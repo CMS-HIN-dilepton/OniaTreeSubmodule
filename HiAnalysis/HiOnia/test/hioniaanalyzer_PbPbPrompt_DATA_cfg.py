@@ -187,7 +187,7 @@ if applyEventSel:
   # HLT trigger firing events
   import HLTrigger.HLTfilters.hltHighLevel_cfi
   process.hltHI = HLTrigger.HLTfilters.hltHighLevel_cfi.hltHighLevel.clone()
-  process.hltHI.HLTPaths = ["HLT_HIL*SingleMu*_v*", "HLT_HIL*DoubleMu*_v*", "HLT_HIMinimumBiasHF1AND*_v*"]
+  process.hltHI.HLTPaths = ["HLT_HIL*SingleMu*_v*", "HLT_HIMinimumBiasHF1AND*_v*"]
   process.hltHI.throw = False
   process.hltHI.andOr = True
 
@@ -250,10 +250,6 @@ process.TFileService = cms.Service("TFileService",
 		)
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxEvents) )
 process.options   = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
-
-import FWCore.PythonUtilities.LumiList as LumiList
-jsonFile = '/eos/cms/store/group/phys_heavyions/sayan/HIN_run3_pseudo_JSON/HIPhysicsRawPrime_2024/Golden_387853_continue_L1DeadTimeCut10percent.txt'
-process.source.lumisToProcess = LumiList.LumiList(filename = jsonFile).getVLuminosityBlockRange()
 
 process.options.numberOfThreads = 4
 

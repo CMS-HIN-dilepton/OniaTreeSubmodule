@@ -17,7 +17,7 @@ config.JobType.allowUndistributedCMSSW = True #Problems with slc7
 #config.JobType.maxJobRuntimeMin = 1000 #2750    # request longer runtime, ~48 hours.
 
 config.section_("Data")
-config.Data.inputDataset = '/HIPhysicsRawPrime0/HIRun2023A-PromptReco-v2/MINIAOD'
+config.Data.inputDataset = '/HIPhysicsRawPrime0/HIRun2024A-PromptReco-v2/MINIAOD'
 config.Data.inputDBS = 'global'
 config.Data.unitsPerJob = 50
 #config.Data.totalUnits = -1
@@ -26,8 +26,8 @@ config.Data.allowNonValidInputDataset = True
 
 config.Data.outLFNDirBase = '/store/user/fdamas/%s' % (config.General.requestName)
 config.Data.publication = False
-config.Data.runRange = '374345-375828'
-config.Data.lumiMask = 'https://cms-service-dqmdc.web.cern.ch/CAF/certification/Collisions23HI/Cert_Collisions2023HI_374288_375823_Muon.json'
+config.Data.runRange = '387853-388784'
+config.Data.lumiMask = 'https://cms-service-dqmdc.web.cern.ch/CAF/certification/Collisions24HI/Cert_Collisions2024_HI_387853_388784_Muon.json'
 
 config.section_("Site")
 config.Site.storageSite = "T2_FR_GRIF_LLR"

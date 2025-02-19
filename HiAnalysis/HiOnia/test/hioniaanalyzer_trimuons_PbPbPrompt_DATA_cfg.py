@@ -110,7 +110,7 @@ triggerList    = {
 if isMC:
   globalTag = '132X_mcRun3_2023_realistic_HI_v10' #for Run3 MC : phase1_2023_realistic_hi
 else:
-  globalTag = 'auto:run3_data_prompt'
+  globalTag = 'auto:phase1_2024_realistic_hi'
 
 #----------------------------------------------------------------------------
 
@@ -180,7 +180,7 @@ if applyEventSel:
   # HLT trigger firing events
   import HLTrigger.HLTfilters.hltHighLevel_cfi
   process.hltHI = HLTrigger.HLTfilters.hltHighLevel_cfi.hltHighLevel.clone()
-  process.hltHI.HLTPaths = ["HLT_HIL*SingleMu*_v*", "HLT_HIL*DoubleMu*_v*", "HLT_HIMinimumBiasHF1AND*_v*"]
+  process.hltHI.HLTPaths = ["HLT_HIMinimumBiasHF1AND*_v*"]
   process.hltHI.throw = False
   process.hltHI.andOr = True
   

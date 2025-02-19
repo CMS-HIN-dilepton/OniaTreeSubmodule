@@ -29,8 +29,8 @@ config.Data.unitsPerJob = 600
 
 config.Data.allowNonValidInputDataset = True
 config.Data.publication = False
-config.Data.runRange = '387853-399999'
-config.Data.lumiMask = '/eos/cms/store/group/phys_heavyions/sayan/HIN_run3_pseudo_JSON/HIPhysicsRawPrime_2024/Golden_387853_continue_L1DeadTimeCut10percent.txt'
+config.Data.runRange = '387853-388784'
+config.Data.lumiMask = 'https://cms-service-dqmdc.web.cern.ch/CAF/certification/Collisions24HI/Cert_Collisions2024_HI_387853_388784_Muon.json'
 
 
 config.section_("Site")
@@ -48,12 +48,21 @@ def submit(config):
         print("Failed submitting task: %s" % (cle))
 
 # Submit the jobs: 60 HIRawPrime PDs, ~140k files each, average of 100k events/file
+config.Data.outLFNDirBase = '/store/user/fdamas/PbPb2024/'
 
 for i in range(16):
-    config.General.requestName = f'RawPrime{i}'
+    config.General.requestName = f'EraA_RawPrime{i}'
     config.Data.inputDataset = f"/HIPhysicsRawPrime{i}/HIRun2024A-PromptReco-v1/MINIAOD"
     config.Data.outputDatasetTag = config.General.requestName
-    config.Data.outLFNDirBase = '/store/user/fdamas/PbPb2024/'
+
+    print("Submitting CRAB job for: "+ config.Data.inputDataset)
+    submit(config)
+
+for i in range(60):
+
+    config.General.requestName = f'EraB_RawPrime{i}'
+    config.Data.inputDataset = f"/HIPhysicsRawPrime{i}/HIRun2024B-PromptReco-v1/MINIAOD"
+    config.Data.outputDatasetTag = 'EraB'
 
     print("Submitting CRAB job for: "+ config.Data.inputDataset)
     submit(config)
