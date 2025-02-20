@@ -167,7 +167,7 @@ def onia2MuMuPAT(process, GlobalTag, MC=False, HLT='HLT', Filter=True, useL1Stag
     )
 
 
-def changeToMiniAOD(process):
+def changeToMiniAOD(process, addIsolation=False):
 
     if hasattr(process, "patMuonsWithTrigger"):
         from MuonAnalysis.MuonAssociators.patMuonsWithTrigger_cff import useExistingPATMuons
@@ -182,6 +182,17 @@ def changeToMiniAOD(process):
         process.patMuonSequence.insert(0, process.unpackedTracksAndVertices)
         process.load('HiAnalysis.HiOnia.unpackedMuons_cfi')
         process.patMuonSequence.insert(1, process.unpackedMuons)
+        if addIsolation:
+            process.load('RecoHI.HiJetAlgos.HiRecoPFJets_cff')
+            process.load('HiAnalysis.HiOnia.hiIsoMuons_cfi')
+            from HeavyIonsAnalysis.Configuration.hiFJRhoProducer import hiFJRhoProducerFinerBins
+            process.hiFJRhoProducerFinerBins = hiFJRhoProducerFinerBins.clone()
+            process.kt4PFJetsForRho.src = "packedPFCandidates"
+            process.hiIsoMuons.muons = "slimmedMuons"
+            process.unpackedMuons.muons = "hiIsoMuons"
+            process.hiRecoPFJetsTask.add(process.hiFJRhoProducerFinerBins)
+            process.hiRecoPFJetsTask.add(process.hiIsoMuons)
+            process.patMuonSequence.associate(process.hiRecoPFJetsTask)
 
         process.outOnia2MuMu.outputCommands.append('keep *Vert*_unpackedTracksAndVertices_*_*')
         process.outOnia2MuMu.outputCommands.append('keep patMuons_unpackedMuons_*_*')

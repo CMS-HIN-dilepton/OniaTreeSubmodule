@@ -430,6 +430,7 @@ private:
   float Reco_mu_ptErr_global[Max_mu_size];     // pT error for global muons
   float Reco_mu_pTrue[Max_mu_size];  // P of the associated generated muon, used to match the Reco_mu with the Gen_mu
   float Reco_mu_validFraction[Max_mu_size];
+  float Reco_mu_iso[Max_mu_size];
   int Reco_mu_simExtType[Max_Bc_size];  //
 
   Short_t muType;  // type of muon (GlbTrk=0, Trk=1, Glb=2, none=-1)
