@@ -562,6 +562,8 @@ void HiOniaAnalyzer::fillTreeMuon(const pat::Muon* muon, int iType, ULong64_t tr
         //Reco_mu_pt_global[Reco_mu_size] = -1;
         //Reco_mu_ptErr_global[Reco_mu_size] = -1;
       }
+
+      Reco_mu_iso[Reco_mu_size] = muon->hasUserFloat("hiIso") ? muon->userFloat("hiIso") : -1.;
     }
 
     if (_isMC) {
@@ -1552,6 +1554,7 @@ void HiOniaAnalyzer::InitTree() {
     // myTree->Branch("Reco_mu_pt_global",Reco_mu_pt_global, "Reco_mu_pt_global[Reco_mu_size]/F");
     myTree->Branch("Reco_mu_ptErr_inner", Reco_mu_ptErr_inner, "Reco_mu_ptErr_inner[Reco_mu_size]/F");
     // myTree->Branch("Reco_mu_ptErr_global",Reco_mu_ptErr_global, "Reco_mu_ptErr_global[Reco_mu_size]/F");
+    myTree->Branch("Reco_mu_iso", Reco_mu_iso, "Reco_mu_iso[Reco_mu_size]/F");
   }
 
   if (_useGeTracks && _fillRecoTracks) {
