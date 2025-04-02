@@ -65,6 +65,7 @@ HiOniaAnalyzer::HiOniaAnalyzer(const edm::ParameterSet& iConfig)
       _BcPDG(iConfig.getParameter<int>("BcPDG")),
       _OneMatchedHLTMu(iConfig.getParameter<int>("OneMatchedHLTMu")),
       _checkTrigNames(iConfig.getParameter<bool>("checkTrigNames")),
+      _genOnly(iConfig.getParameter<bool>("genOnly")),
       hltPrescaleProvider(iConfig, consumesCollector(), *this),
       _iConfig(iConfig) {
   usesResource(TFileService::kSharedResource);
@@ -201,9 +202,16 @@ void HiOniaAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
   eventNb = iEvent.id().event();
   lumiSection = iEvent.luminosityBlock();
 
+
   edm::Handle<reco::VertexCollection> privtxs;
   iEvent.getByToken(_thePVsToken, privtxs);
   reco::VertexCollection::const_iterator privtx;
+
+  edm::Handle<reco::Centrality> centrality;
+  edm::Handle<int> cbin_;
+
+  if(_genOnly) goto genOnly;
+
 
   if (privtxs.isValid()) {
     nPV = privtxs->size();
@@ -240,8 +248,7 @@ void HiOniaAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     trigPrescale[iTr - 1] = mapTriggerNameToPrescaleFac_[theTriggerNames.at(iTr)];
   }
 
-  edm::Handle<reco::Centrality> centrality;
-  edm::Handle<int> cbin_;
+  
   if (_isHI || _isPA) {
     iEvent.getByToken(_centralityTagToken, centrality);
     iEvent.getByToken(_centralityBinTagToken, cbin_);
@@ -391,7 +398,7 @@ void HiOniaAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       }
     }
   }
-
+ genOnly:
   if (_isMC) {
     //GEN info
     iEvent.getByToken(_genParticleToken, collGenParticles);
@@ -1326,6 +1333,7 @@ void HiOniaAnalyzer::InitTree() {
   myTree = fs->make<TTree>("myTree", "My TTree of dimuons");
 
   myTree->Branch("eventNb", &eventNb, "eventNb/i");
+  if(_genOnly) goto genOnly2;
   if (!_isMC) {
     myTree->Branch("runNb", &runNb, "runNb/i");
     myTree->Branch("LS", &lumiSection, "LS/i");
@@ -1517,7 +1525,7 @@ void HiOniaAnalyzer::InitTree() {
   if (!_theMinimumFlag) {
     myTree->Branch("Reco_mu_InTightAcc", Reco_mu_InTightAcc, "Reco_mu_InTightAcc[Reco_mu_size]/O");
     myTree->Branch("Reco_mu_InLooseAcc", Reco_mu_InLooseAcc, "Reco_mu_InLooseAcc[Reco_mu_size]/O");
-    //myTree->Branch("Reco_mu_highPurity", Reco_mu_highPurity, "Reco_mu_highPurity[Reco_mu_size]/O");
+    myTree->Branch("Reco_mu_highPurity", Reco_mu_highPurity, "Reco_mu_highPurity[Reco_mu_size]/O");
     myTree->Branch("Reco_mu_TMOneStaTight", Reco_mu_TMOneStaTight, "Reco_mu_TMOneStaTight[Reco_mu_size]/O");
     // myTree->Branch("Reco_mu_TrkMuArb", Reco_mu_TrkMuArb,   "Reco_mu_TrkMuArb[Reco_mu_size]/O");
     myTree->Branch("Reco_mu_isPF", Reco_mu_isPF, "Reco_mu_isPF[Reco_mu_size]/O");
@@ -1589,21 +1597,27 @@ void HiOniaAnalyzer::InitTree() {
     }
   }
 
+genOnly2: 
   if (_isMC) {
     if (_genealogyInfo) {
       myTree->Branch("Reco_mu_simExtType", Reco_mu_simExtType, "Reco_mu_simExtType[Reco_mu_size]/I");
     }
+    
     myTree->Branch("Gen_weight", &Gen_weight, "Gen_weight/F");
     myTree->Branch("Gen_pthat", &Gen_pthat, "Gen_pthat/F");
 
     if (!_onlySingleMuons) {
       myTree->Branch("Gen_QQ_size", &Gen_QQ_size, "Gen_QQ_size/S");
       //myTree->Branch("Gen_QQ_type",      Gen_QQ_type,    "Gen_QQ_type[Gen_QQ_size]/S");
-      myTree->Branch("Gen_QQ_4mom", "TClonesArray", &Gen_QQ_4mom, 32000, 0);
-      myTree->Branch("Gen_QQ_4mom_pt", &Gen_QQ_4mom_pt, 32000, 0);
-      myTree->Branch("Gen_QQ_4mom_eta", &Gen_QQ_4mom_eta, 32000, 0);
-      myTree->Branch("Gen_QQ_4mom_phi", &Gen_QQ_4mom_phi, 32000, 0);
-      myTree->Branch("Gen_QQ_4mom_m", &Gen_QQ_4mom_m, 32000, 0);
+      if (std::strcmp("array", _mom4format.c_str()) == 0) {
+	      myTree->Branch("Gen_QQ_4mom", "TClonesArray", &Gen_QQ_4mom, 32000, 0);
+      }
+      if (std::strcmp("vector", _mom4format.c_str()) == 0) {
+	      myTree->Branch("Gen_QQ_4mom_pt", &Gen_QQ_4mom_pt, 32000, 0);
+	      myTree->Branch("Gen_QQ_4mom_eta", &Gen_QQ_4mom_eta, 32000, 0);
+	      myTree->Branch("Gen_QQ_4mom_phi", &Gen_QQ_4mom_phi, 32000, 0);
+	      myTree->Branch("Gen_QQ_4mom_m", &Gen_QQ_4mom_m, 32000, 0);
+      }
       myTree->Branch("Gen_QQ_ctau", Gen_QQ_ctau, "Gen_QQ_ctau[Gen_QQ_size]/F");
       myTree->Branch("Gen_QQ_ctau3D", Gen_QQ_ctau3D, "Gen_QQ_ctau3D[Gen_QQ_size]/F");
       myTree->Branch("Gen_QQ_mupl_idx", Gen_QQ_mupl_idx, "Gen_QQ_mupl_idx[Gen_QQ_size]/S");

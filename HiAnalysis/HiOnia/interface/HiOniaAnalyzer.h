@@ -573,6 +573,7 @@ private:
   int _BcPDG;
   int _OneMatchedHLTMu;
   bool _checkTrigNames;
+  bool _genOnly;
 
   std::vector<unsigned int> _thePassedCats;
   std::vector<const pat::CompositeCandidate*> _thePassedCands;

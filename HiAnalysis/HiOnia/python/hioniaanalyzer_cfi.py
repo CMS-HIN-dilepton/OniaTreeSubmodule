@@ -60,6 +60,7 @@ hionia = cms.EDAnalyzer('HiOniaAnalyzer',
                         isPromptMC = cms.untracked.bool(True),
                         useEvtPlane = cms.untracked.bool(False),
                         useGeTracks = cms.untracked.bool(False),
+                        genOnly     = cms.bool(False),  # fill only generated info
 
                         #-- Histogram configuration
                         combineCategories = cms.bool(False),
