@@ -91,7 +91,7 @@ triggerList    = {
           "HLT_PAL3Mu12_v1",
           "HLT_PAL3Mu15_v1"
 			)
-                }
+  }
 
 # Global tag, see https://github.com/cms-sw/cmssw/blob/master/Configuration/AlCa/python/autoCond.py
 if isMC:
@@ -135,8 +135,9 @@ oniaTreeAnalyzer(process,
 process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 2 && charge==0 && abs(daughter('muon1').innerTrack.dz - daughter('muon2').innerTrack.dz) < 25")
 process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 1 && abs(eta) < 2.4 && isTrackerMuon && track.quality('highPurity')")
 #process.onia2MuMuPatGlbGlb.higherPuritySelection = cms.string("") ## No need to repeat lowerPuritySelection in there, already included
-if applyCuts:
-  process.onia2MuMuPatGlbGlb.LateDimuonSel         = cms.string("userFloat(\"vProb\")>0.005")
+#if applyCuts:
+
+process.onia2MuMuPatGlbGlb.LateDimuonSel         = cms.string("userFloat(\"vProb\")>0.005")
 
 process.onia2MuMuPatGlbGlb.onlySoftMuons         = cms.bool(OnlySoftMuons)
 process.hionia.minimumFlag      = cms.bool(keepExtraColl)           #for Reco_trk_*
@@ -192,25 +193,35 @@ if applyEventSel:
     process.hltHI.andOr = True
 
     # Muon filtering
-    SuperLooseMuonCut = "isTrackerMuon && pt > 1. && abs(eta) < 2.4"
+    SuperLooseMuonCut = "isTrackerMuon && pt > 1. && abs(eta) < 2.4 && track.quality('highPurity')"
 
     MUONCUT = SuperLooseMuonCut
   
     process.muonSelector = cms.EDFilter("PATMuonRefSelector",
                                         src = cms.InputTag("slimmedMuons"),
-    #cut = cms.string("((passed('SoftCutBasedId') && isGlobalMuon) || passed('CutBasedIdTight')) && abs(eta) < 2.4"),
                                         cut = cms.string(MUONCUT),
                                         filter = cms.bool(True)
     )
 
-    process.atLeastOneMuon = cms.EDFilter("MuonRefPatCount",
+    process.atLeastTwoMuons = cms.EDFilter("MuonRefPatCount",
                                  src = cms.InputTag("slimmedMuons"),
                                   cut = cms.string(MUONCUT),
-                                 minNumber = cms.uint32(1)
+                                 minNumber = cms.uint32(2)
                                  )
 
+    process.dimuonSelection = cms.EDProducer("CandViewShallowCloneCombiner",
+                                    checkCharge = cms.bool(True),
+                                    cut = cms.string("mass > 2.4"),
+                                    decay = cms.string("muonSelector@+ muonSelector@-")
+                                    )
+
+    process.atLeastOneDimuon = cms.EDFilter("CandViewCountFilter",
+                                        src = cms.InputTag("dimuonSelection"),
+                                        minNumber = cms.uint32(1)
+                                        )
+
     
-    process.oniaTreeAna.replace(process.patMuonSequence,process.muonSelector * process.atLeastOneMuon * process.primaryVertexFilter * process.clusterCompatibilityFilter * process.patMuonSequence )
+    process.oniaTreeAna.replace(process.patMuonSequence,process.muonSelector * process.atLeastTwoMuons * process.dimuonSelection * process.atLeastOneDimuon * process.primaryVertexFilter * process.patMuonSequence )
 
 if atLeastOneCand:
   if doTrimuons:
