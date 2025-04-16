@@ -230,7 +230,7 @@ if applyEventSel:
                                         minNumber = cms.uint32(1)
                                         )
     
-    process.oniaTreeAna.replace(process.patMuonSequence,process.muonSelector * process.atLeastTwoMuons * process.dimuonSelection * process.atLeastOneDimuon * process.primaryVertexFilter * process.clusterCompatibilityFilter *  process.patMuonSequence )
+    process.oniaTreeAna.replace(process.patMuonSequence,process.muonSelector * process.atLeastTwoMuons * process.dimuonSelection * process.atLeastOneDimuon * process.primaryVertexFilter *  process.patMuonSequence )
 
 if atLeastOneCand:
   if doTrimuons:
@@ -249,6 +249,9 @@ if miniAOD:
   from HiSkim.HiOnia2MuMu.onia2MuMuPAT_cff import changeToMiniAOD
   changeToMiniAOD(process)
   process.unpackedMuons.addPropToMuonSt = cms.bool(UsePropToMuonSt)
+
+  if applyEventSel:
+    process.oniaTreeAna.replace(process.hionia, process.beamScrapingFilter * process.hionia ) # must be called after unpacking
 
 #----------------------------------------------------------------------------
 #Options:

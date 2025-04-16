@@ -230,6 +230,9 @@ if miniAOD:
   changeToMiniAOD(process)
   process.unpackedMuons.addPropToMuonSt = cms.bool(UsePropToMuonSt)
 
+  if applyEventSel:
+    process.oniaTreeAna.replace(process.hionia, process.beamScrapingFilter * process.hionia ) # must be called after unpacking
+
 #----------------------------------------------------------------------------
 #Options:
 process.source = cms.Source("PoolSource",
