@@ -162,7 +162,7 @@ oniaTreeAnalyzer(process,
 )
 
 process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 2.4 && charge==0 && abs(daughter('muon1').innerTrack.dz - daughter('muon2').innerTrack.dz) < 25")
-process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 1. && abs(eta) < 2.4")
+process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 1. && abs(eta) < 2.4 && isTrackerMuon")
 
 #if applyCuts:
 process.onia2MuMuPatGlbGlb.LateDimuonSel = cms.string("userFloat(\"vProb\")>0.01")
@@ -189,8 +189,8 @@ if applyEventSel:
   # Offline event filters
   process.load('HeavyIonsAnalysis.EventAnalysis.collisionEventSelection_cff')
   process.load('HeavyIonsAnalysis.EventAnalysis.hffilter_cfi')
-  #process.oniaTreeAna.replace(process.hionia, process.phfCoincFilter2Th4 * process.primaryVertexFilter * process.clusterCompatibilityFilter * process.hionia )
-
+  process.load('HeavyIonsAnalysis.EventAnalysis.hffilterPF_cfi')
+  
   # HLT trigger firing events
   import HLTrigger.HLTfilters.hltHighLevel_cfi
   process.hltHI = HLTrigger.HLTfilters.hltHighLevel_cfi.hltHighLevel.clone()
