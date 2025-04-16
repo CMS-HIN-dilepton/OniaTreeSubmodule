@@ -159,7 +159,7 @@ process.hionia.useEvtPlane      = cms.untracked.bool(addEventPlane)
 
 process.oniaTreeAna.replace(process.hionia, process.centralityBin * process.hionia )
 
-if doEvtPlane:
+if addEventPlane:
   from RecoHI.HiEvtPlaneAlgos.HiEvtPlane_cfi import hiEvtPlane
   process.hiEvtPlane = hiEvtPlane.clone(
     vertexTag = "offlineSlimmedPrimaryVertices",
