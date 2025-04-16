@@ -24,7 +24,7 @@ miniAOD        = True # whether the input file is in miniAOD format (default is 
 UsePropToMuonSt = True # whether to use L1 propagated muons (works only for miniAOD now)
 pdgId = 443 # J/Psi : 443, Y(1S) : 553
 useMomFormat = "array" # default "array" for TClonesArray of TLorentzVector. Use "vector" for std::vector<float> of pt, eta, phi, M
-
+addEventPlane = True
 #----------------------------------------------------------------------------
 
 # Print Onia Tree settings:
@@ -44,6 +44,7 @@ print( "[INFO] atLeastOneCand       = " + ("True" if atLeastOneCand else "False"
 #print( "[INFO] OneMatchedHLTMu      = " + (OneMatchedHLTMu if OneMatchedHLTMu > -1 else "False") )
 print( "[INFO] miniAOD              = " + ("True" if miniAOD else "False") )
 print( "[INFO] UsePropToMuonSt      = " + ("True" if UsePropToMuonSt else "False") )
+print( "[INFO] addEventPlane        = " + ("True" if addEventPlane else "False") )
 print( " " )
 
 # set up process
@@ -153,48 +154,30 @@ process.hionia.checkTrigNames   = cms.bool(False)#change this to get the event-l
 process.hionia.mom4format       = cms.string(useMomFormat)
 process.hionia.isHI = cms.untracked.bool(False)
 process.hionia.isPA = cms.untracked.bool(True)
-'''
-#----------------------------------------------------------------------------
 
-# For HLTBitAnalyzer
-process.load("HLTrigger.HLTanalyzers.HLTBitAnalyser_cfi")
-process.hltbitanalysis.HLTProcessName              = HLTProcess
-process.hltbitanalysis.hltresults                  = cms.InputTag("TriggerResults","",HLTProcess)
-process.hltbitanalysis.l1tAlgBlkInputTag           = cms.InputTag("hltGtStage2Digis","",HLTProcess)
-process.hltbitanalysis.l1tExtBlkInputTag           = cms.InputTag("hltGtStage2Digis","",HLTProcess)
-process.hltbitanalysis.gObjectMapRecord            = cms.InputTag("hltGtStage2ObjectMap","",HLTProcess)
-process.hltbitanalysis.gmtStage2Digis              = cms.string("hltGtStage2Digis")
-process.hltbitanalysis.caloStage2Digis             = cms.string("hltGtStage2Digis")
-process.hltbitanalysis.UseL1Stage2                 = cms.untracked.bool(True)
-process.hltbitanalysis.getPrescales                = cms.untracked.bool(False)
-process.hltbitanalysis.getL1InfoFromEventSetup     = cms.untracked.bool(False)
-process.hltbitanalysis.UseTFileService             = cms.untracked.bool(True)
-process.hltbitanalysis.RunParameters.HistogramFile = cms.untracked.string(options.outputFile)
-process.hltbitanalysis.RunParameters.isData        = cms.untracked.bool(not isMC)
-process.hltbitanalysis.RunParameters.Monte         = cms.bool(isMC)
-process.hltbitanalysis.RunParameters.GenTracks     = cms.bool(False)
-if (HLTProcess == "HLT") :
-	process.hltbitanalysis.l1tAlgBlkInputTag = cms.InputTag("gtStage2Digis","","RECO")
-	process.hltbitanalysis.l1tExtBlkInputTag = cms.InputTag("gtStage2Digis","","RECO")
-	process.hltbitanalysis.gmtStage2Digis    = cms.string("gtStage2Digis")
-	process.hltbitanalysis.caloStage2Digis   = cms.string("gtStage2Digis")
-
-##----------------------------------------------------------------------------
-
-# For HLTObject Analyzer
-process.load("HeavyIonsAnalysis.EventAnalysis.hltobject_cfi")
-process.hltobject.processName = cms.string(HLTProcess)
-process.hltobject.treeName = cms.string(options.outputFile)
-process.hltobject.loadTriggersFromHLT = cms.untracked.bool(False)
-process.hltobject.triggerNames = triggerList['DoubleMuonTrigger'] + triggerList['SingleMuonTrigger']
-process.hltobject.triggerResults = cms.InputTag("TriggerResults","",HLTProcess)
-process.hltobject.triggerEvent   = cms.InputTag("hltTriggerSummaryAOD","",HLTProcess)
-
-if saveHLT:
-  process.oniaTreeAna = cms.Path(process.hltbitanalysis * process.hltobject * process.oniaTreeAna )
-'''
+process.hionia.useEvtPlane      = cms.untracked.bool(addEventPlane)
 
 process.oniaTreeAna.replace(process.hionia, process.centralityBin * process.hionia )
+
+if doEvtPlane:
+  from RecoHI.HiEvtPlaneAlgos.HiEvtPlane_cfi import hiEvtPlane
+  process.hiEvtPlane = hiEvtPlane.clone(
+    vertexTag = "offlineSlimmedPrimaryVertices",
+    trackTag = "packedPFCandidates",
+    dzdzerror_pix = 40.,
+    caloCentRef = -1,
+    caloCentRefWidth = -1,
+    cutEra = 0
+  )
+
+  from RecoHI.HiEvtPlaneAlgos.hiEvtPlaneFlat_cfi import hiEvtPlaneFlat
+  process.hiEvtPlaneFlat = hiEvtPlaneFlat.clone(
+    vertexTag = cms.InputTag("unpackedTracksAndVertices"),
+    inputPlanesTag = cms.InputTag("hiEvtPlane"),
+    trackTag = cms.InputTag("unpackedTracksAndVertices")
+  )
+
+  process.oniaTreeAna.replace(process.hionia, process.hiEvtPlane * process.hiEvtPlaneFlat * process.hionia )
 
 
 if applyEventSel:
