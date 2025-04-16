@@ -24,6 +24,8 @@ miniAOD        = True # whether the input file is in miniAOD format (default is 
 UsePropToMuonSt = True # whether to use L1 propagated muons (works only for miniAOD now)
 pdgId = 443 # J/Psi : 443, Y(1S) : 553
 useMomFormat = "array" # default "array" for TClonesArray of TLorentzVector. Use "vector" for std::vector<float> of pt, eta, phi, M
+
+addEventPlane = False
 #----------------------------------------------------------------------------
 
 # Print Onia Tree settings:
@@ -43,6 +45,8 @@ print( "[INFO] atLeastOneCand       = " + ("True" if atLeastOneCand else "False"
 print( "[INFO] OneMatchedHLTMu      = " + ("True" if OneMatchedHLTMu > -1 else "False") )
 print( "[INFO] miniAOD              = " + ("True" if miniAOD else "False") )
 print( "[INFO] UsePropToMuonSt      = " + ("True" if UsePropToMuonSt else "False") )
+print( "[INFO] addEventPlane        = " + ("True" if addEventPlane else "False") )
+
 print( " " )
 
 # set up process
@@ -162,6 +166,7 @@ process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 1. && abs(et
 
 #if applyCuts:
 process.onia2MuMuPatGlbGlb.LateDimuonSel = cms.string("userFloat(\"vProb\")>0.01")
+
 process.onia2MuMuPatGlbGlb.onlySoftMuons = cms.bool(OnlySoftMuons)
 process.hionia.minimumFlag      = cms.bool(keepExtraColl)           #for Reco_trk_*
 process.hionia.useGeTracks      = cms.untracked.bool(keepExtraColl) #for Reco_trk_*
@@ -175,6 +180,8 @@ process.hionia.AtLeastOneCand   = cms.bool(atLeastOneCand)
 process.hionia.OneMatchedHLTMu  = cms.int32(OneMatchedHLTMu)
 process.hionia.checkTrigNames   = cms.bool(False)#change this to get the event-level trigger info in hStats output (but creates lots of warnings when fake trigger names are used)
 process.hionia.mom4format       = cms.string(useMomFormat)
+
+process.hionia.useEvtPlane      = cms.untracked.bool(addEventPlane)
 
 process.oniaTreeAna.replace(process.hionia, process.centralityBin * process.hionia )
 

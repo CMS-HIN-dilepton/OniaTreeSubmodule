@@ -494,6 +494,9 @@ private:
   float rpAng[50];
   float rpCos[50];
   float rpSin[50];
+  float rpAng_origin[50];
+  float rpCos_origin[50];
+  float rpSin_origin[50];
 
   // handles
   edm::Handle<pat::CompositeCandidateCollection> collJpsi;
