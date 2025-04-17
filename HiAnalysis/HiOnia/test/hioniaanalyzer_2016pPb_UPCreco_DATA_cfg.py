@@ -58,7 +58,12 @@ options.outputFile = "Oniatree_pPbReReco.root"
 options.secondaryOutputFile = "Jpsi_DataSet.root"
 
 options.inputFiles =[
-  '/store/hidata/PARun2016C/PADoubleMuon/MINIAOD/16Dec2024-v1/110000/0a0f46a2-0825-49a6-9b15-bab20614e193.root'
+  '/store/hidata/PARun2016C/PADoubleMuon/MINIAOD/16Dec2024-v1/110000/0a0f46a2-0825-49a6-9b15-bab20614e193.root',
+  '/store/hidata/PARun2016C/PADoubleMuon/MINIAOD/16Dec2024-v1/2820000/ff6d2c1b-c721-447c-a8bd-ad0882f4cf93.root',
+  '/store/hidata/PARun2016C/PADoubleMuon/MINIAOD/16Dec2024-v1/110000/0875f5f5-565d-46f0-a2b8-477ec258d508.root',
+  '/store/hidata/PARun2016C/PADoubleMuon/MINIAOD/16Dec2024-v1/110000/0a0f46a2-0825-49a6-9b15-bab20614e193.root',
+  '/store/hidata/PARun2016C/PADoubleMuon/MINIAOD/16Dec2024-v1/110000/0b2ee483-bd1d-451e-8cbc-de962779d2d5.root',
+  '/store/hidata/PARun2016C/PADoubleMuon/MINIAOD/16Dec2024-v1/110000/0bb0a3e1-01d8-4435-a82e-4803ac6c9c21.root'
 ]
 options.maxEvents = -1 # -1 means all events
 
@@ -68,28 +73,28 @@ options.parseArguments()
 triggerList    = {
 		# Double Muon Trigger List
 		'DoubleMuonTrigger' : cms.vstring(
-			      "HLT_PAL1DoubleMuOpen_v1",
-                  "HLT_PAL1DoubleMuOpen_OS_v1",
-                  "HLT_PAL1DoubleMuOpen_SS_v1",
-                  "HLT_PAL1DoubleMu0_v1",
-                  "HLT_PAL1DoubleMu0_MGT1_v1",
-                  "HLT_PAL1DoubleMu0_HighQ_v1",
-                  "HLT_PAL2DoubleMu0_v1",
-                  "HLT_PAL3DoubleMu0_v1",
-                  "HLT_PAL3DoubleMu0_HIon_v1",
-                  "HLT_PAL1DoubleMu10_v1",
-                  "HLT_PAL2DoubleMu10_v1",
-                  "HLT_PAL3DoubleMu10_v1"
+			      "HLT_PAL1DoubleMuOpen_v",
+                  "HLT_PAL1DoubleMuOpen_OS_v",
+                  "HLT_PAL1DoubleMuOpen_SS_v",
+                  "HLT_PAL1DoubleMu0_v",
+                  "HLT_PAL1DoubleMu0_MGT1_v",
+                  "HLT_PAL1DoubleMu0_HighQ_v",
+                  "HLT_PAL2DoubleMu0_v",
+                  "HLT_PAL3DoubleMu0_v",
+                  "HLT_PAL3DoubleMu0_HIon_v",
+                  "HLT_PAL1DoubleMu10_v",
+                  "HLT_PAL2DoubleMu10_v",
+                  "HLT_PAL3DoubleMu10_v"
             ),
         # Single Muon Trigger List
         'SingleMuonTrigger' : cms.vstring(
-          "HLT_PAL2Mu12_v1",
-          "HLT_PAL2Mu15_v1",
-          "HLT_PAL3Mu3_v1",
-          "HLT_PAL3Mu5_v3",
-          "HLT_PAL3Mu7_v1",
-          "HLT_PAL3Mu12_v1",
-          "HLT_PAL3Mu15_v1"
+          "HLT_PAL2Mu12_v",
+          "HLT_PAL2Mu15_v",
+          "HLT_PAL3Mu3_v",
+          "HLT_PAL3Mu5_v",
+          "HLT_PAL3Mu7_v",
+          "HLT_PAL3Mu12_v",
+          "HLT_PAL3Mu15_v"
 			)
   }
 
@@ -132,7 +137,7 @@ oniaTreeAnalyzer(process,
                  muonSelection=muonSelection, L1Stage=2, isMC=isMC, pdgID=pdgId, outputFileName=options.outputFile, doTrimu=doTrimuons#, OnlySingleMuons=True
 )
 
-process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 2 && charge==0 && abs(daughter('muon1').innerTrack.dz - daughter('muon2').innerTrack.dz) < 25")
+process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 2.4 && mass < 4 && charge==0 && abs(daughter('muon1').innerTrack.dz - daughter('muon2').innerTrack.dz) < 25")
 process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 1 && abs(eta) < 2.4 && isTrackerMuon && track.quality('highPurity')")
 #process.onia2MuMuPatGlbGlb.higherPuritySelection = cms.string("") ## No need to repeat lowerPuritySelection in there, already included
 #if applyCuts:
@@ -140,7 +145,7 @@ process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 1 && abs(eta
 process.onia2MuMuPatGlbGlb.LateDimuonSel         = cms.string("userFloat(\"vProb\")>0.005")
 
 process.onia2MuMuPatGlbGlb.onlySoftMuons         = cms.bool(OnlySoftMuons)
-process.hionia.minimumFlag      = cms.bool(keepExtraColl)           #for Reco_trk_*
+process.hionia.minimumFlag      = cms.bool(False)           #for Reco_trk_*
 process.hionia.useGeTracks      = cms.untracked.bool(keepExtraColl) #for Reco_trk_*
 process.hionia.fillRecoTracks   = cms.bool(keepExtraColl)           #for Reco_trk_*
 process.hionia.CentralitySrc    = cms.InputTag("hiCentrality")
@@ -184,6 +189,7 @@ if addEventPlane:
 if applyEventSel:
     # Offline event filters
     process.load('HeavyIonsAnalysis.EventAnalysis.collisionEventSelection_cff')
+    process.load('HeavyIonsAnalysis.EventAnalysis.hffilter_cfi')
 
     # HLT trigger firing events
     import HLTrigger.HLTfilters.hltHighLevel_cfi
@@ -211,7 +217,7 @@ if applyEventSel:
 
     process.dimuonSelection = cms.EDProducer("CandViewShallowCloneCombiner",
                                     checkCharge = cms.bool(True),
-                                    cut = cms.string("mass > 2.4"),
+                                    cut = cms.string("mass > 2.4 && mass < 4"),
                                     decay = cms.string("muonSelector@+ muonSelector@-")
                                     )
 

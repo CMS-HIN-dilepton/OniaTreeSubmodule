@@ -440,6 +440,7 @@ private:
 
   Short_t Reco_trk_size;                  // Number of reconstructed tracks
   Short_t Reco_trk_charge[Max_trk_size];  // Vector of charge of tracks
+  bool Reco_trk_highPurity[Max_trk_size];
   Short_t Reco_trk_whichGenmu[Max_trk_size];
   bool Reco_trk_InLooseAcc[Max_trk_size];
   bool Reco_trk_InTightAcc[Max_trk_size];

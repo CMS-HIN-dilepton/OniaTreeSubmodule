@@ -1123,10 +1123,11 @@ void HiOniaAnalyzer::fillRecoTracks() {
         break;
       }
       TLorentzVector vTrack;
-      vTrack.SetPtEtaPhiM(track->pt(), track->eta(), track->phi(), 0.10566);  //0.13957018 for the pion
+      vTrack.SetPtEtaPhiM(track->pt(), track->eta(), track->phi(), 0.13957018);  //0.13957018 for the pion
 
-      Reco_trk_whichGenmu[Reco_trk_size] = -1;
       if (_isMC) {
+	Reco_trk_whichGenmu[Reco_trk_size] = -1;
+
         float dRmax = 0.05;  //dR max of the matching to gen muons//same than for reco-gen muon matching
         float dR;
         float dPtmax = 0.5;
@@ -1139,12 +1140,12 @@ void HiOniaAnalyzer::fillRecoTracks() {
             Reco_trk_whichGenmu[Reco_trk_size] = igen;
           }
         }
+
+	if (Reco_trk_whichGenmu[Reco_trk_size] == -1) continue;
       }
 
-      if (!_doDimuTrk && Reco_trk_whichGenmu[Reco_trk_size] == -1)
-        continue;
-
       Reco_trk_charge[Reco_trk_size] = track->charge();
+      Reco_trk_highPurity[Reco_trk_size] = track->qualityByName("highPurity");
 
       Reco_trk_originalAlgo[Reco_mu_size] = track->originalAlgo();
       Reco_trk_nPixWMea[Reco_mu_size] = track->hitPattern().pixelLayersWithMeasurement();
@@ -1154,6 +1155,9 @@ void HiOniaAnalyzer::fillRecoTracks() {
       Reco_trk_dxy[Reco_trk_size] = track->dxy(RefVtx);
       Reco_trk_dz[Reco_trk_size] = track->dz(RefVtx);
       Reco_trk_ptErr[Reco_trk_size] = track->ptError();
+
+      new ((*Reco_trk_vtx)[Reco_trk_size]) TVector3(RefVtx.X(), RefVtx.Y(), RefVtx.Z());
+
 
       mapTrkMomToIndex_[FloatToIntkey(vTrack.Pt())] = Reco_trk_size;
 
@@ -1579,6 +1583,7 @@ void HiOniaAnalyzer::InitTree() {
 
     myTree->Branch("Reco_trk_size", &Reco_trk_size, "Reco_trk_size/S");
     myTree->Branch("Reco_trk_charge", Reco_trk_charge, "Reco_trk_charge[Reco_trk_size]/S");
+    myTree->Branch("Reco_trk_highPurity", Reco_trk_highPurity, "Reco_trk_highPurity[Reco_trk_size]/O");
     myTree->Branch("Reco_trk_InLooseAcc", Reco_trk_InLooseAcc, "Reco_trk_InLooseAcc[Reco_trk_size]/O");
     myTree->Branch("Reco_trk_InTightAcc", Reco_trk_InTightAcc, "Reco_trk_InTightAcc[Reco_trk_size]/O");
     if (std::strcmp("array", _mom4format.c_str()) == 0) {
@@ -1589,15 +1594,16 @@ void HiOniaAnalyzer::InitTree() {
       myTree->Branch("Reco_trk_4mom_eta", &Reco_trk_4mom_eta, 32000, 0);
       myTree->Branch("Reco_trk_4mom_phi", &Reco_trk_4mom_phi, 32000, 0);
       myTree->Branch("Reco_trk_4mom_m", &Reco_trk_4mom_m, 32000, 0);
-      myTree->Branch("Reco_trk_dxyError", Reco_trk_dxyError, "Reco_trk_dxyError[Reco_trk_size]/F");
-      myTree->Branch("Reco_trk_dzError", Reco_trk_dzError, "Reco_trk_dzError[Reco_trk_size]/F");
-      myTree->Branch("Reco_trk_dxy", Reco_trk_dxy, "Reco_trk_dxy[Reco_trk_size]/F");
-      myTree->Branch("Reco_trk_dz", Reco_trk_dz, "Reco_trk_dz[Reco_trk_size]/F");
-      myTree->Branch("Reco_trk_ptErr", Reco_trk_ptErr, "Reco_trk_ptErr[Reco_trk_size]/F");
-      myTree->Branch("Reco_trk_originalAlgo", Reco_trk_originalAlgo, "Reco_trk_originalAlgo[Reco_trk_size]/I");
-      myTree->Branch("Reco_trk_nPixWMea", Reco_trk_nPixWMea, "Reco_trk_nPixWMea[Reco_trk_size]/I");
-      myTree->Branch("Reco_trk_nTrkWMea", Reco_trk_nTrkWMea, "Reco_trk_nTrkWMea[Reco_trk_size]/I");
     }
+    myTree->Branch("Reco_trk_vtx", "TClonesArray", &Reco_trk_vtx, 32000, 0);
+    myTree->Branch("Reco_trk_dxyError", Reco_trk_dxyError, "Reco_trk_dxyError[Reco_trk_size]/F");
+    myTree->Branch("Reco_trk_dzError", Reco_trk_dzError, "Reco_trk_dzError[Reco_trk_size]/F");
+    myTree->Branch("Reco_trk_dxy", Reco_trk_dxy, "Reco_trk_dxy[Reco_trk_size]/F");
+    myTree->Branch("Reco_trk_dz", Reco_trk_dz, "Reco_trk_dz[Reco_trk_size]/F");
+    myTree->Branch("Reco_trk_ptErr", Reco_trk_ptErr, "Reco_trk_ptErr[Reco_trk_size]/F");
+    //myTree->Branch("Reco_trk_originalAlgo", Reco_trk_originalAlgo, "Reco_trk_originalAlgo[Reco_trk_size]/I");
+    myTree->Branch("Reco_trk_nPixWMea", Reco_trk_nPixWMea, "Reco_trk_nPixWMea[Reco_trk_size]/I");
+    myTree->Branch("Reco_trk_nTrkWMea", Reco_trk_nTrkWMea, "Reco_trk_nTrkWMea[Reco_trk_size]/I");
     if (_isMC) {
       myTree->Branch("Reco_trk_whichGenmu", Reco_trk_whichGenmu, "Reco_trk_whichGenmu[Reco_trk_size]/S");
     }
