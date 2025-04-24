@@ -100,7 +100,7 @@ triggerList    = {
                         "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #25
                         "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #26
 			)
-                }
+}
 
 ## Global tag
 if isMC:
@@ -145,6 +145,10 @@ oniaTreeAnalyzer(process,
                  OnlySingleMuons=False
 )
 
+process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 7 && abs(daughter('muon1').innerTrack.dz - daughter('muon2').innerTrack.dz) < 20")
+
+process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 2.5 && abs(eta) < 2.4")
+
 if applyCuts:
   process.onia2MuMuPatGlbGlb.LateDimuonSel = cms.string("userFloat(\"vProb\")>0.01")
 process.onia2MuMuPatGlbGlb.onlySoftMuons = cms.bool(OnlySoftMuons)
@@ -172,11 +176,39 @@ if applyEventSel:
   # HLT trigger firing events
   import HLTrigger.HLTfilters.hltHighLevel_cfi
   process.hltHI = HLTrigger.HLTfilters.hltHighLevel_cfi.hltHighLevel.clone()
-  process.hltHI.HLTPaths = ["HLT_HIL*SingleMu*_v*", "HLT_HIL*DoubleMu*_v*", "HLT_HIMinimumBiasHF1AND*_v*"]
+  process.hltHI.HLTPaths = ["HLT_HIMinimumBiasHF1AND*_v*"]
   process.hltHI.throw = False
   process.hltHI.andOr = True
   
-  process.oniaTreeAna.replace(process.patMuonSequence, process.phfCoincFilter2Th4 * process.primaryVertexFilter * process.hltHI * process.clusterCompatibilityFilter * process.patMuonSequence )
+  # Muon filtering
+  SuperLooseMuonCut = "(isTrackerMuon || isGlobalMuon) && pt > 2.5 && abs(eta) < 2.4"
+
+  MUONCUT = SuperLooseMuonCut
+  
+  process.muonSelector = cms.EDFilter("PATMuonRefSelector",
+                                        src = cms.InputTag("slimmedMuons"),
+                                        cut = cms.string(MUONCUT),
+                                        filter = cms.bool(True)
+  )
+
+  process.atLeastTwoMuons = cms.EDFilter("MuonRefPatCount",
+                                 src = cms.InputTag("slimmedMuons"),
+                                  cut = cms.string(MUONCUT),
+                                 minNumber = cms.uint32(2)
+                                 )
+
+  process.dimuonSelection = cms.EDProducer("CandViewShallowCloneCombiner",
+                                    checkCharge = cms.bool(False),
+                                    cut = cms.string("mass > 7"),
+                                    decay = cms.string("muonSelector muonSelector")
+                                    )
+
+  process.atLeastOneDimuon = cms.EDFilter("CandViewCountFilter",
+                                        src = cms.InputTag("dimuonSelection"),
+                                        minNumber = cms.uint32(1)
+                                        )
+  
+  process.oniaTreeAna.replace(process.patMuonSequence,process.muonSelector * process.atLeastTwoMuons * process.dimuonSelection * process.atLeastOneDimuon * process.phfCoincFilter2Th4 * process.primaryVertexFilter * process.hltHI * process.clusterCompatibilityFilter * process.patMuonSequence )
 
 if atLeastOneCand:
   if doTrimuons:
