@@ -8,7 +8,7 @@ from Configuration.StandardSequences.Eras import eras
 
 HLTProcess     = "HLT" # Name of HLT process
 isMC           = False # if input is MONTECARLO: True or if it's DATA: False
-muonSelection  = "All" # Single muon selection: All, Glb(isGlobal), GlbTrk(isGlobal&&isTracker), Trk(isTracker), GlbOrTrk, TwoGlbAmongThree (which requires two isGlobal for a trimuon, and one isGlobal for a dimuon) are available
+muonSelection  = "GlbTrk" # Single muon selection: All, Glb(isGlobal), GlbTrk(isGlobal&&isTracker), Trk(isTracker), GlbOrTrk, TwoGlbAmongThree (which requires two isGlobal for a trimuon, and one isGlobal for a dimuon) are available
 applyEventSel  = True # Only apply Event Selection if the required collections are present
 OnlySoftMuons  = False # Keep only isSoftMuon's (without highPurity, and without isGlobal which should be put in 'muonSelection' parameter) from the beginning of HiSkim. If you want the full SoftMuon selection, set this flag false and add 'isSoftMuon' in lowerPuritySelection. In any case, if applyCuts=True, isSoftMuon is required at HiAnalysis level for muons of selected dimuons.
 applyCuts      = False # At HiAnalysis level, apply kinematic acceptance cuts + identification cuts (isSoftMuon (without highPurity) or isTightMuon, depending on TightGlobalMuon flag) for muons from selected di(tri)muons + hard-coded cuts on the di(tri)muon that you would want to add (but recommended to add everything in LateDimuonSelection, applied at the end of HiSkim)
@@ -24,6 +24,8 @@ miniAOD        = True # whether the input file is in miniAOD format (default is 
 UsePropToMuonSt = True # whether to use L1 propagated muons (works only for miniAOD now)
 pdgId = 443 # J/Psi : 443, Y(1S) : 553
 useMomFormat = "vector" # default "array" for TClonesArray of TLorentzVector. Use "vector" for std::vector<float> of pt, eta, phi, M
+
+addEventPlaneAngles = True
 #----------------------------------------------------------------------------
 
 # Print Onia Tree settings:
@@ -43,6 +45,7 @@ print( "[INFO] atLeastOneCand       = " + ("True" if atLeastOneCand else "False"
 print( "[INFO] OneMatchedHLTMu      = " + ("True" if OneMatchedHLTMu > -1 else "False") )
 print( "[INFO] miniAOD              = " + ("True" if miniAOD else "False") )
 print( "[INFO] UsePropToMuonSt      = " + ("True" if UsePropToMuonSt else "False") )
+print( "[INFO] addEventPlaneAngles  = " + ("True" if addEventPlaneAngles else "False") )
 print( " " )
 
 # set up process
@@ -145,14 +148,15 @@ oniaTreeAnalyzer(process,
                  OnlySingleMuons=False
 )
 
-process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 7 && abs(daughter('muon1').innerTrack.dz - daughter('muon2').innerTrack.dz) < 20")
+process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 2.5 && abs(daughter('muon1').innerTrack.dz - daughter('muon2').innerTrack.dz) < 20")
 
-process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 2.5 && abs(eta) < 2.4")
+process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 1.5 && abs(eta) < 2.4")
 
 if applyCuts:
   process.onia2MuMuPatGlbGlb.LateDimuonSel = cms.string("userFloat(\"vProb\")>0.01")
+
 process.onia2MuMuPatGlbGlb.onlySoftMuons = cms.bool(OnlySoftMuons)
-process.hionia.minimumFlag      = cms.bool(keepExtraColl)           #for Reco_trk_*
+process.hionia.minimumFlag      = cms.bool(False)           #for Reco_trk_*
 process.hionia.useGeTracks      = cms.untracked.bool(keepExtraColl) #for Reco_trk_*
 process.hionia.fillRecoTracks   = cms.bool(keepExtraColl)           #for Reco_trk_*
 process.hionia.CentralitySrc    = cms.InputTag("hiCentrality")
@@ -164,6 +168,8 @@ process.hionia.AtLeastOneCand   = cms.bool(atLeastOneCand)
 process.hionia.OneMatchedHLTMu  = cms.int32(OneMatchedHLTMu)
 process.hionia.checkTrigNames   = cms.bool(False)#change this to get the event-level trigger info in hStats output (but creates lots of warnings when fake trigger names are used)
 process.hionia.mom4format       = cms.string(useMomFormat)
+
+process.hionia.useEvtPlane      = cms.untracked.bool(addEventPlaneAngles)
 
 process.oniaTreeAna.replace(process.hionia, process.centralityBin * process.hionia )
 
@@ -181,7 +187,7 @@ if applyEventSel:
   process.hltHI.andOr = True
   
   # Muon filtering
-  SuperLooseMuonCut = "(isTrackerMuon || isGlobalMuon) && pt > 2.5 && abs(eta) < 2.4"
+  SuperLooseMuonCut = "(isTrackerMuon && isGlobalMuon) && pt > 1.5 && abs(eta) < 2.4"
 
   MUONCUT = SuperLooseMuonCut
   
@@ -199,7 +205,7 @@ if applyEventSel:
 
   process.dimuonSelection = cms.EDProducer("CandViewShallowCloneCombiner",
                                     checkCharge = cms.bool(False),
-                                    cut = cms.string("mass > 7"),
+                                    cut = cms.string("mass > 2.5"),
                                     decay = cms.string("muonSelector muonSelector")
                                     )
 

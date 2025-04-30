@@ -322,6 +322,9 @@ void HiOniaAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     iEvent.getByToken(_evtPlaneTagToken, flatEvtPlanes);
     if (flatEvtPlanes.isValid()) {
       for (reco::EvtPlaneCollection::const_iterator rp = flatEvtPlanes->begin(); rp != flatEvtPlanes->end(); rp++) {
+        rpAng_origin[nEP] = rp->angle(0);   // Using Event Plane Level 0 -> w/o recentering and w/o flattening. 
+        rpSin_origin[nEP] = rp->sumSin(0);  // Using Event Plane Level 0 -> w/o recentering and w/o flattening. 
+        rpCos_origin[nEP] = rp->sumCos(0);  // Using Event Plane Level 0 -> w/o recentering and w/o flattening.
         rpAng[nEP] = rp->angle(2);   // Using Event Plane Level 2 -> Includes recentering and flattening.
         rpSin[nEP] = rp->sumSin(2);  // Using Event Plane Level 2 -> Includes recentering and flattening.
         rpCos[nEP] = rp->sumCos(2);  // Using Event Plane Level 2 -> Includes recentering and flattening.
@@ -1115,10 +1118,11 @@ void HiOniaAnalyzer::fillRecoTracks() {
         break;
       }
       TLorentzVector vTrack;
-      vTrack.SetPtEtaPhiM(track->pt(), track->eta(), track->phi(), 0.10566);  //0.13957018 for the pion
+      vTrack.SetPtEtaPhiM(track->pt(), track->eta(), track->phi(), 0.13957018);  //0.13957018 for the pion
 
-      Reco_trk_whichGenmu[Reco_trk_size] = -1;
       if (_isMC) {
+        Reco_trk_whichGenmu[Reco_trk_size] = -1;
+
         float dRmax = 0.05;  //dR max of the matching to gen muons//same than for reco-gen muon matching
         float dR;
         float dPtmax = 0.5;
@@ -1133,7 +1137,7 @@ void HiOniaAnalyzer::fillRecoTracks() {
         }
       }
 
-      if (!_doDimuTrk && Reco_trk_whichGenmu[Reco_trk_size] == -1)
+      if (Reco_trk_whichGenmu[Reco_trk_size] == -1)
         continue;
 
       Reco_trk_charge[Reco_trk_size] = track->charge();
@@ -1146,6 +1150,8 @@ void HiOniaAnalyzer::fillRecoTracks() {
       Reco_trk_dxy[Reco_trk_size] = track->dxy(RefVtx);
       Reco_trk_dz[Reco_trk_size] = track->dz(RefVtx);
       Reco_trk_ptErr[Reco_trk_size] = track->ptError();
+
+      new ((*Reco_trk_vtx)[Reco_trk_size]) TVector3(RefVtx.X(), RefVtx.Y(), RefVtx.Z());
 
       mapTrkMomToIndex_[FloatToIntkey(vTrack.Pt())] = Reco_trk_size;
 
@@ -1363,6 +1369,9 @@ void HiOniaAnalyzer::InitTree() {
 
   if ((_isHI || _isPA) && _useEvtPlane) {
     myTree->Branch("nEP", &nEP, "nEP/I");
+    myTree->Branch("rpAng_origin", &rpAng_origin, "rpAng_origin[nEP]/F");
+    myTree->Branch("rpSin_origin", &rpSin_origin, "rpSin_origin[nEP]/F");
+    myTree->Branch("rpCos_origin", &rpCos_origin, "rpCos_origin[nEP]/F");
     myTree->Branch("rpAng", &rpAng, "rpAng[nEP]/F");
     myTree->Branch("rpSin", &rpSin, "rpSin[nEP]/F");
     myTree->Branch("rpCos", &rpCos, "rpCos[nEP]/F");
@@ -1579,15 +1588,16 @@ void HiOniaAnalyzer::InitTree() {
       myTree->Branch("Reco_trk_4mom_eta", &Reco_trk_4mom_eta, 32000, 0);
       myTree->Branch("Reco_trk_4mom_phi", &Reco_trk_4mom_phi, 32000, 0);
       myTree->Branch("Reco_trk_4mom_m", &Reco_trk_4mom_m, 32000, 0);
-      myTree->Branch("Reco_trk_dxyError", Reco_trk_dxyError, "Reco_trk_dxyError[Reco_trk_size]/F");
-      myTree->Branch("Reco_trk_dzError", Reco_trk_dzError, "Reco_trk_dzError[Reco_trk_size]/F");
-      myTree->Branch("Reco_trk_dxy", Reco_trk_dxy, "Reco_trk_dxy[Reco_trk_size]/F");
-      myTree->Branch("Reco_trk_dz", Reco_trk_dz, "Reco_trk_dz[Reco_trk_size]/F");
-      myTree->Branch("Reco_trk_ptErr", Reco_trk_ptErr, "Reco_trk_ptErr[Reco_trk_size]/F");
-      myTree->Branch("Reco_trk_originalAlgo", Reco_trk_originalAlgo, "Reco_trk_originalAlgo[Reco_trk_size]/I");
-      myTree->Branch("Reco_trk_nPixWMea", Reco_trk_nPixWMea, "Reco_trk_nPixWMea[Reco_trk_size]/I");
-      myTree->Branch("Reco_trk_nTrkWMea", Reco_trk_nTrkWMea, "Reco_trk_nTrkWMea[Reco_trk_size]/I");
     }
+    myTree->Branch("Reco_trk_vtx", "TClonesArray", &Reco_trk_vtx, 32000, 0);
+    myTree->Branch("Reco_trk_dxyError", Reco_trk_dxyError, "Reco_trk_dxyError[Reco_trk_size]/F");
+    myTree->Branch("Reco_trk_dzError", Reco_trk_dzError, "Reco_trk_dzError[Reco_trk_size]/F");
+    myTree->Branch("Reco_trk_dxy", Reco_trk_dxy, "Reco_trk_dxy[Reco_trk_size]/F");
+    myTree->Branch("Reco_trk_dz", Reco_trk_dz, "Reco_trk_dz[Reco_trk_size]/F");
+    myTree->Branch("Reco_trk_ptErr", Reco_trk_ptErr, "Reco_trk_ptErr[Reco_trk_size]/F");
+    //myTree->Branch("Reco_trk_originalAlgo", Reco_trk_originalAlgo, "Reco_trk_originalAlgo[Reco_trk_size]/I");
+    myTree->Branch("Reco_trk_nPixWMea", Reco_trk_nPixWMea, "Reco_trk_nPixWMea[Reco_trk_size]/I");
+    myTree->Branch("Reco_trk_nTrkWMea", Reco_trk_nTrkWMea, "Reco_trk_nTrkWMea[Reco_trk_size]/I");
     if (_isMC) {
       myTree->Branch("Reco_trk_whichGenmu", Reco_trk_whichGenmu, "Reco_trk_whichGenmu[Reco_trk_size]/S");
     }

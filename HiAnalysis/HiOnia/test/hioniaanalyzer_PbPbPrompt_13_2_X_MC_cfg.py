@@ -24,6 +24,8 @@ miniAOD        = True # whether the input file is in miniAOD format (default is 
 UsePropToMuonSt = True # whether to use L1 propagated muons (works only for miniAOD now)
 pdgId = 443 # J/Psi : 443, Y(1S) : 553
 useMomFormat = "vector" # default "array" for TClonesArray of TLorentzVector. Use "vector" for std::vector<float> of pt, eta, phi, M
+
+addEventPlaneAngles = True
 #----------------------------------------------------------------------------
 
 # Print Onia Tree settings:
@@ -43,6 +45,8 @@ print( "[INFO] atLeastOneCand       = " + ("True" if atLeastOneCand else "False"
 print( "[INFO] OneMatchedHLTMu      = " + ("True" if OneMatchedHLTMu > -1 else "False") )
 print( "[INFO] miniAOD              = " + ("True" if miniAOD else "False") )
 print( "[INFO] UsePropToMuonSt      = " + ("True" if UsePropToMuonSt else "False") )
+print( "[INFO] addEventPlaneAngles  = " + ("True" if addEventPlaneAngles else "False") )
+
 print( " " )
 
 # set up process
@@ -146,7 +150,7 @@ oniaTreeAnalyzer(process,
 if applyCuts:
   process.onia2MuMuPatGlbGlb.LateDimuonSel         = cms.string("userFloat(\"vProb\")>0.01")
 process.onia2MuMuPatGlbGlb.onlySoftMuons         = cms.bool(OnlySoftMuons)
-process.hionia.minimumFlag      = cms.bool(keepExtraColl)           #for Reco_trk_*
+process.hionia.minimumFlag      = cms.bool(False)           #for Reco_trk_*
 process.hionia.useGeTracks      = cms.untracked.bool(keepExtraColl) #for Reco_trk_*
 process.hionia.fillRecoTracks   = cms.bool(keepExtraColl)           #for Reco_trk_*
 process.hionia.CentralitySrc    = cms.InputTag("hiCentrality")
@@ -160,6 +164,8 @@ process.hionia.OneMatchedHLTMu  = cms.int32(OneMatchedHLTMu)
 process.hionia.checkTrigNames   = cms.bool(False)#change this to get the event-level trigger info in hStats output (but creates lots of warnings when fake trigger names are used)
 process.hionia.mom4format       = cms.string(useMomFormat)
 process.hionia.genealogyInfo    = cms.bool(True)
+
+process.hionia.useEvtPlane      = cms.untracked.bool(addEventPlaneAngles)
 
 '''
 #----------------------------------------------------------------------------

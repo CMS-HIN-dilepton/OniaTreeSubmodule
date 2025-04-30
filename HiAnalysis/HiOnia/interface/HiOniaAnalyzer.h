@@ -492,6 +492,9 @@ private:
   // Event Plane variables
   int nEP;  // number of event planes
   //float *hiEvtPlane;
+  float rpAng_origin[50];
+  float rpCos_origin[50];
+  float rpSin_origin[50];
   float rpAng[50];
   float rpCos[50];
   float rpSin[50];
