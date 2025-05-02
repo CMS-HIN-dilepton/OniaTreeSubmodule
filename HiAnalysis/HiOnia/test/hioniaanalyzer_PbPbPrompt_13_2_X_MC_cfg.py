@@ -100,7 +100,7 @@ triggerList    = {
                         "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #25
                         "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #26
 			)
-                }
+}
 
 ## Global tag
 if isMC:
@@ -163,50 +163,10 @@ process.hionia.AtLeastOneCand   = cms.bool(atLeastOneCand)
 process.hionia.OneMatchedHLTMu  = cms.int32(OneMatchedHLTMu)
 process.hionia.checkTrigNames   = cms.bool(False)#change this to get the event-level trigger info in hStats output (but creates lots of warnings when fake trigger names are used)
 process.hionia.mom4format       = cms.string(useMomFormat)
-process.hionia.genealogyInfo    = cms.bool(True)
+process.hionia.genealogyInfo    = cms.bool(False)
 
 process.hionia.useEvtPlane      = cms.untracked.bool(addEventPlaneAngles)
 
-'''
-#----------------------------------------------------------------------------
-
-# For HLTBitAnalyzer
-process.load("HLTrigger.HLTanalyzers.HLTBitAnalyser_cfi")
-process.hltbitanalysis.HLTProcessName              = HLTProcess
-process.hltbitanalysis.hltresults                  = cms.InputTag("TriggerResults","",HLTProcess)
-process.hltbitanalysis.l1tAlgBlkInputTag           = cms.InputTag("hltGtStage2Digis","",HLTProcess)
-process.hltbitanalysis.l1tExtBlkInputTag           = cms.InputTag("hltGtStage2Digis","",HLTProcess)
-process.hltbitanalysis.gObjectMapRecord            = cms.InputTag("hltGtStage2ObjectMap","",HLTProcess)
-process.hltbitanalysis.gmtStage2Digis              = cms.string("hltGtStage2Digis")
-process.hltbitanalysis.caloStage2Digis             = cms.string("hltGtStage2Digis")
-process.hltbitanalysis.UseL1Stage2                 = cms.untracked.bool(True)
-process.hltbitanalysis.getPrescales                = cms.untracked.bool(False)
-process.hltbitanalysis.getL1InfoFromEventSetup     = cms.untracked.bool(False)
-process.hltbitanalysis.UseTFileService             = cms.untracked.bool(True)
-process.hltbitanalysis.RunParameters.HistogramFile = cms.untracked.string(options.outputFile)
-process.hltbitanalysis.RunParameters.isData        = cms.untracked.bool(not isMC)
-process.hltbitanalysis.RunParameters.Monte         = cms.bool(isMC)
-process.hltbitanalysis.RunParameters.GenTracks     = cms.bool(False)
-if (HLTProcess == "HLT") :
-	process.hltbitanalysis.l1tAlgBlkInputTag = cms.InputTag("gtStage2Digis","","RECO")
-	process.hltbitanalysis.l1tExtBlkInputTag = cms.InputTag("gtStage2Digis","","RECO")
-	process.hltbitanalysis.gmtStage2Digis    = cms.string("gtStage2Digis")
-	process.hltbitanalysis.caloStage2Digis   = cms.string("gtStage2Digis")
-
-##----------------------------------------------------------------------------
-
-# For HLTObject Analyzer
-process.load("HeavyIonsAnalysis.EventAnalysis.hltobject_cfi")
-process.hltobject.processName = cms.string(HLTProcess)
-process.hltobject.treeName = cms.string(options.outputFile)
-process.hltobject.loadTriggersFromHLT = cms.untracked.bool(False)
-process.hltobject.triggerNames = triggerList['DoubleMuonTrigger'] + triggerList['SingleMuonTrigger']
-process.hltobject.triggerResults = cms.InputTag("TriggerResults","",HLTProcess)
-process.hltobject.triggerEvent   = cms.InputTag("hltTriggerSummaryAOD","",HLTProcess)
-
-if saveHLT:
-  process.oniaTreeAna = cms.Path(process.hltbitanalysis * process.hltobject * process.oniaTreeAna )
-'''
 
 process.oniaTreeAna.replace(process.hionia, process.centralityBin * process.hionia )
 

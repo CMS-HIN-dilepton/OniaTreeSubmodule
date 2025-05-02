@@ -1120,6 +1120,7 @@ void HiOniaAnalyzer::fillRecoTracks() {
       TLorentzVector vTrack;
       vTrack.SetPtEtaPhiM(track->pt(), track->eta(), track->phi(), 0.13957018);  //0.13957018 for the pion
 
+      /*
       if (_isMC) {
         Reco_trk_whichGenmu[Reco_trk_size] = -1;
 
@@ -1139,12 +1140,13 @@ void HiOniaAnalyzer::fillRecoTracks() {
 
       if (Reco_trk_whichGenmu[Reco_trk_size] == -1)
         continue;
+      */
 
       Reco_trk_charge[Reco_trk_size] = track->charge();
 
-      Reco_trk_originalAlgo[Reco_mu_size] = track->originalAlgo();
-      Reco_trk_nPixWMea[Reco_mu_size] = track->hitPattern().pixelLayersWithMeasurement();
-      Reco_trk_nTrkWMea[Reco_mu_size] = track->hitPattern().trackerLayersWithMeasurement();
+      Reco_trk_originalAlgo[Reco_trk_size] = track->originalAlgo();
+      Reco_trk_nPixWMea[Reco_trk_size] = track->hitPattern().pixelLayersWithMeasurement();
+      Reco_trk_nTrkWMea[Reco_trk_size] = track->hitPattern().trackerLayersWithMeasurement();
       Reco_trk_dxyError[Reco_trk_size] = track->dxyError();
       Reco_trk_dzError[Reco_trk_size] = track->dzError();
       Reco_trk_dxy[Reco_trk_size] = track->dxy(RefVtx);
@@ -1351,30 +1353,33 @@ void HiOniaAnalyzer::InitTree() {
   myTree->Branch("trigPrescale", trigPrescale, Form("trigPrescale[%d]/I", nTrig));
   myTree->Branch("HLTriggers", &HLTriggers, "HLTriggers/l");
 
-  if ((_isHI || _isPA) && _SumETvariables) {
-    myTree->Branch("SumET_HF", &SumET_HF, "SumET_HF/F");
-    myTree->Branch("SumET_HFplus", &SumET_HFplus, "SumET_HFplus/F");
-    myTree->Branch("SumET_HFminus", &SumET_HFminus, "SumET_HFminus/F");
-    myTree->Branch("SumET_HFplusEta4", &SumET_HFplusEta4, "SumET_HFplusEta4/F");
-    myTree->Branch("SumET_HFminusEta4", &SumET_HFminusEta4, "SumET_HFminusEta4/F");
-    myTree->Branch("SumET_ET", &SumET_ET, "SumET_ET/F");
-    myTree->Branch("SumET_EE", &SumET_EE, "SumET_EE/F");
-    myTree->Branch("SumET_EB", &SumET_EB, "SumET_EB/F");
-    myTree->Branch("SumET_EEplus", &SumET_EEplus, "SumET_EEplus/F");
-    myTree->Branch("SumET_EEminus", &SumET_EEminus, "SumET_EEminus/F");
-    myTree->Branch("SumET_ZDC", &SumET_ZDC, "SumET_ZDC/F");
-    myTree->Branch("SumET_ZDCplus", &SumET_ZDCplus, "SumET_ZDCplus/F");
-    myTree->Branch("SumET_ZDCminus", &SumET_ZDCminus, "SumET_ZDCminus/F");
-  }
+  if ((_isHI || _isPA)) {
 
-  if ((_isHI || _isPA) && _useEvtPlane) {
-    myTree->Branch("nEP", &nEP, "nEP/I");
-    myTree->Branch("rpAng_origin", &rpAng_origin, "rpAng_origin[nEP]/F");
-    myTree->Branch("rpSin_origin", &rpSin_origin, "rpSin_origin[nEP]/F");
-    myTree->Branch("rpCos_origin", &rpCos_origin, "rpCos_origin[nEP]/F");
-    myTree->Branch("rpAng", &rpAng, "rpAng[nEP]/F");
-    myTree->Branch("rpSin", &rpSin, "rpSin[nEP]/F");
-    myTree->Branch("rpCos", &rpCos, "rpCos[nEP]/F");
+    if (_SumETvariables){
+      myTree->Branch("SumET_HF", &SumET_HF, "SumET_HF/F");
+      myTree->Branch("SumET_HFplus", &SumET_HFplus, "SumET_HFplus/F");
+      myTree->Branch("SumET_HFminus", &SumET_HFminus, "SumET_HFminus/F");
+      myTree->Branch("SumET_HFplusEta4", &SumET_HFplusEta4, "SumET_HFplusEta4/F");
+      myTree->Branch("SumET_HFminusEta4", &SumET_HFminusEta4, "SumET_HFminusEta4/F");
+      myTree->Branch("SumET_ET", &SumET_ET, "SumET_ET/F");
+      myTree->Branch("SumET_EE", &SumET_EE, "SumET_EE/F");
+      myTree->Branch("SumET_EB", &SumET_EB, "SumET_EB/F");
+      myTree->Branch("SumET_EEplus", &SumET_EEplus, "SumET_EEplus/F");
+      myTree->Branch("SumET_EEminus", &SumET_EEminus, "SumET_EEminus/F");
+      myTree->Branch("SumET_ZDC", &SumET_ZDC, "SumET_ZDC/F");
+      myTree->Branch("SumET_ZDCplus", &SumET_ZDCplus, "SumET_ZDCplus/F");
+      myTree->Branch("SumET_ZDCminus", &SumET_ZDCminus, "SumET_ZDCminus/F");
+    }
+   
+    if (_useEvtPlane){
+      myTree->Branch("nEP", &nEP, "nEP/I");
+      myTree->Branch("rpAng_origin", &rpAng_origin, "rpAng_origin[nEP]/F");
+      myTree->Branch("rpSin_origin", &rpSin_origin, "rpSin_origin[nEP]/F");
+      myTree->Branch("rpCos_origin", &rpCos_origin, "rpCos_origin[nEP]/F");
+      myTree->Branch("rpAng", &rpAng, "rpAng[nEP]/F");
+      myTree->Branch("rpSin", &rpSin, "rpSin[nEP]/F");
+      myTree->Branch("rpCos", &rpCos, "rpCos[nEP]/F");
+    }
   }
 
   if (!_onlySingleMuons) {
@@ -1578,8 +1583,8 @@ void HiOniaAnalyzer::InitTree() {
 
     myTree->Branch("Reco_trk_size", &Reco_trk_size, "Reco_trk_size/S");
     myTree->Branch("Reco_trk_charge", Reco_trk_charge, "Reco_trk_charge[Reco_trk_size]/S");
-    myTree->Branch("Reco_trk_InLooseAcc", Reco_trk_InLooseAcc, "Reco_trk_InLooseAcc[Reco_trk_size]/O");
-    myTree->Branch("Reco_trk_InTightAcc", Reco_trk_InTightAcc, "Reco_trk_InTightAcc[Reco_trk_size]/O");
+    //myTree->Branch("Reco_trk_InLooseAcc", Reco_trk_InLooseAcc, "Reco_trk_InLooseAcc[Reco_trk_size]/O");
+    //myTree->Branch("Reco_trk_InTightAcc", Reco_trk_InTightAcc, "Reco_trk_InTightAcc[Reco_trk_size]/O");
     if (std::strcmp("array", _mom4format.c_str()) == 0) {
       myTree->Branch("Reco_trk_4mom", "TClonesArray", &Reco_trk_4mom, 32000, 0);
     }
@@ -1599,7 +1604,7 @@ void HiOniaAnalyzer::InitTree() {
     myTree->Branch("Reco_trk_nPixWMea", Reco_trk_nPixWMea, "Reco_trk_nPixWMea[Reco_trk_size]/I");
     myTree->Branch("Reco_trk_nTrkWMea", Reco_trk_nTrkWMea, "Reco_trk_nTrkWMea[Reco_trk_size]/I");
     if (_isMC) {
-      myTree->Branch("Reco_trk_whichGenmu", Reco_trk_whichGenmu, "Reco_trk_whichGenmu[Reco_trk_size]/S");
+      //myTree->Branch("Reco_trk_whichGenmu", Reco_trk_whichGenmu, "Reco_trk_whichGenmu[Reco_trk_size]/S");
     }
   }
 
