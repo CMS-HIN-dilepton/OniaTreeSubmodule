@@ -29,7 +29,7 @@ config.Data.unitsPerJob = 5000000
 
 config.Data.allowNonValidInputDataset = True
 config.Data.publication = False
-config.Data.runRange = '387474-387221'
+config.Data.runRange = '387474-387721'
 config.Data.lumiMask = 'https://cms-service-dqmdc.web.cern.ch/CAF/certification/Collisions24/Cert_Collisions2024_ppref_387474_387721_Muon.json'
 
 config.section_("Site")
