@@ -5,7 +5,7 @@ import os
 
 #----------------------------------------------------------------------------
 
-# Setup Settings for ONIA TREE: 2024 PbPb data, PAG's reco of streamer files
+# Setup Settings for ONIA TREE: 2025 pO data, PAG's reco of streamer files
 
 HLTProcess     = "HLT" # Name of HLT process
 isMC           = False # if input is MONTECARLO: True or if it's DATA: False
@@ -47,7 +47,7 @@ print( "[INFO] UsePropToMuonSt      = " + ("True" if UsePropToMuonSt else "False
 print( " " )
 
 # set up process
-process = cms.Process("HIOnia", eras.Run3_pp_on_PbPb_2024)
+process = cms.Process("HIOnia", eras.Run3_2025_OXY)
 
 # setup 'analysis'  options
 options = VarParsing.VarParsing ('analysis')
@@ -56,7 +56,7 @@ options = VarParsing.VarParsing ('analysis')
 
 runNb = 387973
 
-PDname = 'HIPhysicsRawPrime0'
+PDname = 'IonPhysics0'
 
 recoFormat = 'mini' # simply '' for AOD
 
@@ -75,7 +75,7 @@ options.maxEvents = -1 # -1 means all events
 
 outputName = f'Oniatree_{PDname}_Run{runNb}_{recoFormat}AOD'
 
-options.outputFile = f"/eos/cms/store/group/phys_heavyions/dileptons/Data2024/PbPb/FastOniatrees/{outputName}.root"
+options.outputFile = f"/eos/cms/store/group/phys_heavyions/dileptons/Data2025/pO/FastOniatrees/{outputName}.root"
 
 options.maxEvents = -1 # -1 means all events
 
@@ -85,55 +85,26 @@ options.parseArguments()
 triggerList    = {
 		# Double Muon Trigger List
 		'DoubleMuonTrigger' : cms.vstring(
-                        "HLT_HIL1DoubleMu0_MaxDr3p5_Open_v",#0
-                        "HLT_HIL1DoubleMu0_v",#1
-                        "HLT_HIL1DoubleMu0_SQ_v",#2
-                        "HLT_HIL2DoubleMu0_Open_v",#3
-                        "HLT_HIL2DoubleMu0_M1p5to6_Open_v",#4
-                        "HLT_HIL2DoubleMu2p8_M1p5to6_Open_v",#5
-                        "HLT_HIL2DoubleMu0_M7to15_Open_v",#6
-                        "HLT_HIL2DoubleMu3_M7to15_Open_v",#7
-                        "HLT_HIL2DoubleMu0_SQ_v",#8
-                        "HLT_HIL2DoubleMuOpen_Centrality40to100_v",#9
-                        "HLT_HIL2DoubleMuOpen_OS_v",#10
-                        "HLT_HIL2DoubleMuOpen_SS_v",#11
-                        #"HLT_HIL3DoubleMu0_M0toInf_Open_v",#8
-                        #"HLT_HIL3DoubleMu0_Quarkonia_Open_v",#9
-                        #"HLT_HIL3DoubleMu2_Quarkonia_Open_v",#10
-                        #"HLT_HIL3DoubleMu0_M2to4p5_Open_v",#11
-                        #"HLT_HIL3DoubleMu2_M2to4p5_Open_v",#12
-                        #"HLT_HIL3DoubleMu0_M7to15_Open_v",#13
-                        #"HLT_HIL3DoubleMu2_M7to15_Open_v",#14
+                        "HLT_OxyL1DoubleMuOpen_v",#0
+                        "HLT_OxyL1DoubleMu0_v",#1
                         ),
-                # Single Muon Trigger List
-                'SingleMuonTrigger' : cms.vstring(
-                        "HLT_HIL1SingleMu0_Open_v",#12
-                        "HLT_HIL1SingleMu0_v",#13
-                        "HLT_HIL1SingleMu0_Centrality40to100_v",#14
-                        "HLT_HIL1SingleMu0_Centrality30to100_v",#15
-                        "HLT_HIL1SingleMuOpen_Centrality30to100_v",#16
-                        "HLT_HIL2SingleMu3_Open_v",#17
-                        "HLT_HIL2SingleMu5_v",#18
-                        "HLT_HIL2SingleMu7_v",#19
-                        "HLT_HIL2SingleMu12_v",#20
-                        "HLT_HIL2SingleMu0_Centrality40to100_v",#21
-                        "HLT_HIL2SingleMu0_Centrality30to100_v",#22
-                        "HLT_HIL2SingleMuOpen_Centrality30to100_v",#23
-                        #"HLT_HIL3SingleMu3_Open_v",#24
-                        #"HLT_HIL3SingleMu5_v",#25
-                        #"HLT_HIL3SingleMu7_v",#26
-                        #"HLT_HIL3SingleMu12_v",#27
-                        "HLT_HIMinimumBiasHF1AND_v", #28
-                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #29
-                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #30
-			)
-                }
+    # Single Muon Trigger List
+    'SingleMuonTrigger' : cms.vstring(
+                        "HLT_OxyL1SingleMuOpen_v",#2
+                        "HLT_OxyL1SingleMu0_v",#3
+                        "HLT_OxyL1SingleMu3_v", #4
+                        "HLT_OxyL1SingleMu5_v", #5
+                        "HLT_OxyL1SingleMu7_v", #6
+                        "HLT_MinimumBiasHF_OR_BptxAND_v", #7
+                        "HLT_MinimumBiasHF_AND_BptxAND_v1", #8
+                        )
+}
 
 # Global tag, see https://github.com/cms-sw/cmssw/blob/master/Configuration/AlCa/python/autoCond.py
 if isMC:
   globalTag = 'auto:phase1_2024_realistic_hi' #for Run3 MC : phase1_2023_realistic_hi
 else:
-  globalTag = '141X_dataRun3_Express_v3'
+  globalTag = '150X_dataRun3_Prompt_v3'
 
 #----------------------------------------------------------------------------
 
