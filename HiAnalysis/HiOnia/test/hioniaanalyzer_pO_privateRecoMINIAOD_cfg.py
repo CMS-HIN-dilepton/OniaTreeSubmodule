@@ -9,8 +9,8 @@ import os
 
 HLTProcess     = "HLT" # Name of HLT process
 isMC           = False # if input is MONTECARLO: True or if it's DATA: False
-muonSelection  = "GlbOrTrk" # Single muon selection: All, Glb(isGlobal), GlbTrk(isGlobal&&isTracker), Trk(isTracker), GlbOrTrk, TwoGlbAmongThree (which requires two isGlobal for a trimuon, and one isGlobal for a dimuon) are available
-applyEventSel  = True # Only apply Event Selection if the required collections are present
+muonSelection  = "All" # Single muon selection: All, Glb(isGlobal), GlbTrk(isGlobal&&isTracker), Trk(isTracker), GlbOrTrk, TwoGlbAmongThree (which requires two isGlobal for a trimuon, and one isGlobal for a dimuon) are available
+applyEventSel  = False # Only apply Event Selection if the required collections are present
 OnlySoftMuons  = False # Keep only isSoftMuon's (without highPurity, and without isGlobal which should be put in 'muonSelection' parameter) from the beginning of HiSkim. If you want the full SoftMuon selection, set this flag false and add 'isSoftMuon' in lowerPuritySelection. In any case, if applyCuts=True, isSoftMuon is required at HiAnalysis level for muons of selected dimuons.
 applyCuts      = False # At HiAnalysis level, apply kinematic acceptance cuts + identification cuts (isSoftMuon (without highPurity) or isTightMuon, depending on TightGlobalMuon flag) for muons from selected di(tri)muons + hard-coded cuts on the di(tri)muon that you would want to add (but recommended to add everything in LateDimuonSelection, applied at the end of HiSkim)
 SumETvariables = True  # Whether to write out SumET-related variables
@@ -54,13 +54,12 @@ options = VarParsing.VarParsing ('analysis')
 
 # Input and Output File Name
 
-runNb = 387973
+runNb = 393767
 
 PDname = 'IonPhysics0'
 
-recoFormat = 'mini' # simply '' for AOD
 
-inputPath = f'/eos/cms/store/group/phys_heavyions/vavladim/RECO2024/CRAB_UserFiles/crab_{recoFormat}AOD_Physics{PDname}_{runNb}/241109_092437/0000/'
+inputPath = f'/eos/cms/store/group/phys_heavyions/wangj/RECO2025/miniaod_Physics{PDname}_{runNb}'
 
 print(inputPath)
 
@@ -73,9 +72,9 @@ options.inputFiles = fileList
 options.maxEvents = -1 # -1 means all events
 
 
-outputName = f'Oniatree_{PDname}_Run{runNb}_{recoFormat}AOD'
+outputName = f'Oniatree_{PDname}_Run{runNb}'
 
-options.outputFile = f"/eos/cms/store/group/phys_heavyions/dileptons/Data2025/pO/FastOniatrees/{outputName}.root"
+options.outputFile = 'testOniatree.root' # f"/eos/cms/store/group/phys_heavyions/dileptons/Data2025/pO/FastOniatrees/{outputName}.root"
 
 options.maxEvents = -1 # -1 means all events
 
@@ -95,8 +94,12 @@ triggerList    = {
                         "HLT_OxyL1SingleMu3_v", #4
                         "HLT_OxyL1SingleMu5_v", #5
                         "HLT_OxyL1SingleMu7_v", #6
-                        "HLT_MinimumBiasHF_OR_BptxAND_v", #7
-                        "HLT_MinimumBiasHF_AND_BptxAND_v1", #8
+                        "HLT_OxySingleMuCosmic_NotMBHF2AND_v", #7
+                        "HLT_OxySingleMuOpen_NotMBHF2AND_v", #v8
+                        "HLT_MinimumBiasHF_OR_BptxAND_v", #9
+                        "HLT_MinimumBiasHF_AND_BptxAND_v", #10
+                        "HLT_MinimumBiasZDC1n_OR_BptxAND_v", #11
+                        "HLT_MinimumBiasZDC1n_OR_MinimumBiasHF_AND_BptxAND_v" #12
                         )
 }
 
@@ -149,8 +152,8 @@ process.onia2MuMuPatGlbGlb.onlySoftMuons = cms.bool(OnlySoftMuons)
 process.hionia.minimumFlag      = cms.bool(keepExtraColl)           #for Reco_trk_*
 process.hionia.useGeTracks      = cms.untracked.bool(keepExtraColl) #for Reco_trk_*
 process.hionia.fillRecoTracks   = cms.bool(keepExtraColl)           #for Reco_trk_*
-process.hionia.CentralitySrc    = cms.InputTag("hiCentrality")
-process.hionia.CentralityBinSrc = cms.InputTag("centralityBin","HFtowers")
+#process.hionia.CentralitySrc    = cms.InputTag("hiCentrality")
+#process.hionia.CentralityBinSrc = cms.InputTag("centralityBin","HFtowers")
 process.hionia.SofterSgMuAcceptance = cms.bool(SofterSgMuAcceptance)
 process.hionia.SumETvariables   = cms.bool(SumETvariables)
 process.hionia.applyCuts        = cms.bool(applyCuts)
@@ -158,8 +161,10 @@ process.hionia.AtLeastOneCand   = cms.bool(atLeastOneCand)
 process.hionia.OneMatchedHLTMu  = cms.int32(OneMatchedHLTMu)
 process.hionia.checkTrigNames   = cms.bool(False)#change this to get the event-level trigger info in hStats output (but creates lots of warnings when fake trigger names are used)
 process.hionia.mom4format       = cms.string(useMomFormat)
+process.hionia.isHI = cms.untracked.bool(False)
 
-process.oniaTreeAna.replace(process.hionia, process.centralityBin * process.hionia )
+
+#process.oniaTreeAna.replace(process.hionia, process.centralityBin * process.hionia )
 
 if applyEventSel:
   # Offline event filters
@@ -170,7 +175,7 @@ if applyEventSel:
   # HLT trigger firing events
   import HLTrigger.HLTfilters.hltHighLevel_cfi
   process.hltHI = HLTrigger.HLTfilters.hltHighLevel_cfi.hltHighLevel.clone()
-  process.hltHI.HLTPaths = ["HLT_HIL*SingleMu*_v*", "HLT_HIL*DoubleMu*_v*", "HLT_HIMinimumBiasHF1AND*_v*"]
+  process.hltHI.HLTPaths = ["HLT_*Mu*", "HLT_MinimumBias*"]
   process.hltHI.throw = False
   process.hltHI.andOr = True
 
@@ -202,7 +207,7 @@ if applyEventSel:
                                         minNumber = cms.uint32(1)
                                         )
   
-  process.oniaTreeAna.replace(process.patMuonSequence,process.muonSelector * process.atLeastTwoMuons * process.dimuonSelection * process.atLeastOneDimuon * process.phfCoincFilter2Th4 * process.primaryVertexFilter * process.clusterCompatibilityFilter * process.patMuonSequence )
+  process.oniaTreeAna.replace(process.patMuonSequence,process.muonSelector * process.atLeastTwoMuons * process.dimuonSelection * process.atLeastOneDimuon * process.primaryVertexFilter * process.clusterCompatibilityFilter * process.patMuonSequence )
 
 if atLeastOneCand:
   if doTrimuons:
