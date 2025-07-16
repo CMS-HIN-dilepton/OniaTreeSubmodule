@@ -52,11 +52,11 @@ if collisionSystem == 'pO':
 
 elif collisionSystem == 'OO':
     config.Data.runRange = '394153-394217'
-    config.Data.lumiMask = 'DCSjsonOO.json' # preliminary json from DCS (local file)
+    config.Data.lumiMask = 'DCSjson_OO.json' # preliminary json from DCS (local file)
 
 elif collisionSystem == 'NeNe':
     config.Data.runRange = '394269-394272'
-    config.Data.lumiMask = 'DCSjsonNeNe.json' # preliminary json from DCS (local file)
+    config.Data.lumiMask = 'DCSjson_NeNe.json' # preliminary json from DCS (local file)
 
 else:
     print("This config script does not support CRAB job submission for collision name: %s. Check the settings!" % (collisionSystem))
