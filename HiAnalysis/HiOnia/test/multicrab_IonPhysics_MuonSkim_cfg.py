@@ -7,18 +7,26 @@ from http.client import HTTPException
 from CRABClient.UserUtilities import config
 config = config()
 
+
+##########################
+
+collisionSystem = 'OO' # pO, OO, or NeNe
+
+muonSkim = 'IonDimuon' # IonDimuon or IonHighPtMuon
+
+
 config.section_("General")
-#config.General.requestName = "HIPhysicsRawPrime5_PromptReco_v2"
 config.General.workArea = 'crab_projects'
 config.General.transferOutputs = True
 config.General.transferLogs = False
 
 config.section_("JobType")
 config.JobType.pluginName = "Analysis"
-config.JobType.psetName = "hioniaanalyzer_pO_privateRecoMINIAOD_cfg.py"
+config.JobType.psetName = "hioniaanalyzer_LightIon2025_DATA_cfg.py"
+
 config.JobType.maxMemoryMB = 2000         # request high memory machines.
-config.JobType.numCores = 4
-config.JobType.allowUndistributedCMSSW = True #Problems with slc7
+#config.JobType.numCores = 4
+config.JobType.allowUndistributedCMSSW = True
 config.JobType.maxJobRuntimeMin = 200 # max = 2750
 
 config.section_("Data")
@@ -29,12 +37,29 @@ config.Data.unitsPerJob = 50
 
 config.Data.allowNonValidInputDataset = True
 config.Data.publication = False
-config.Data.runRange = '393952-394007'
-config.Data.lumiMask = 'goodLSfromDCS.json' #temporary JSON file (local!!)
+
+config.Data.outLFNDirBase = f'/store/user/fdamas/LightIon2025/{collisionSystem}/' # !! modify it to your user case!!
+
 
 config.section_("Site")
 config.Site.storageSite = "T3_CH_CERNBOX"
 #config.Site.whitelist = ["T2_US_*","T2_CH_CERN","T1_US_*"]
+
+# settings based on collision system name
+if collisionSystem == 'pO':
+    config.Data.runRange = '393952-394007'
+    config.Data.lumiMask = 'https://cms-service-dqmdc.web.cern.ch/CAF/certification/Collisions25pO/pO_muon.json' # final muon json
+
+elif collisionSystem == 'OO':
+    config.Data.runRange = '394153-394217'
+    config.Data.lumiMask = 'DCSjsonOO.json' # preliminary json from DCS (local file)
+
+elif collisionSystem == 'NeNe':
+    config.Data.runRange = '394269-394272'
+    config.Data.lumiMask = 'DCSjsonNeNe.json' # preliminary json from DCS (local file)
+
+else:
+    print("This config script does not support CRAB job submission for collision name: %s. Check the settings!" % (collisionSystem))
 
 # Multi crab part
 
@@ -46,17 +71,13 @@ def submit(config):
     except ClientException as cle:
         print("Failed submitting task: %s" % (cle))
 
-# Submit the jobs: 20 HIForward PDs, ~140k files each, average of 100k events/file
-
-config.Data.outLFNDirBase = '/store/user/fdamas/LightIon2025/pO/'
-
+# Submit the jobs: 60 IonPhysics PDs
 
 for i in range(60):
 
-    config.General.requestName = f'DimuonSkim_{i}'
-    config.Data.inputDataset = f"/IonPhysics{i}/pORun2025-IonDimuon-PromptReco-v1/USER"
+    config.General.requestName = f'{collisionSystem}_{muonSkim}_{i}'
+    config.Data.inputDataset = f"/IonPhysics{i}/{collisionSystem}Run2025-{muonSkim}-PromptReco-v1/USER"
     config.Data.outputDatasetTag = config.General.requestName
-
 
     print("Submitting CRAB job for: "+ config.Data.inputDataset)
     submit(config)
