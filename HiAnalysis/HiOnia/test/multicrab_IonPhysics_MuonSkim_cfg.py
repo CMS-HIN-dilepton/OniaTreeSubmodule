@@ -7,6 +7,8 @@ from http.client import HTTPException
 from CRABClient.UserUtilities import config
 config = config()
 
+from CRABClient.UserUtilities import getUsername
+username = getUsername()
 
 ##########################
 
@@ -38,7 +40,7 @@ config.Data.unitsPerJob = 50
 config.Data.allowNonValidInputDataset = True
 config.Data.publication = False
 
-config.Data.outLFNDirBase = f'/store/user/fdamas/LightIon2025/{collisionSystem}/' # !! modify it to your user case!!
+config.Data.outLFNDirBase = '/store/user/' + username + '/LightIon2025/' + collisionSystem
 
 
 config.section_("Site")
@@ -52,11 +54,11 @@ if collisionSystem == 'pO':
 
 elif collisionSystem == 'OO':
     config.Data.runRange = '394153-394217'
-    config.Data.lumiMask = 'DCSjson_OO.json' # preliminary json from DCS (local file)
+    config.Data.lumiMask = 'https://cms-service-dqmdc.web.cern.ch/CAF/certification/Collisions25OO/Cert_Collisions2025OO_394153_394217_muon.json'
 
 elif collisionSystem == 'NeNe':
     config.Data.runRange = '394269-394272'
-    config.Data.lumiMask = 'DCSjson_NeNe.json' # preliminary json from DCS (local file)
+    config.Data.lumiMask = 'https://cms-service-dqmdc.web.cern.ch/CAF/certification/Collisions25NeNe/Cert_Collisions2025Nene_394269_394272_muon.json'
 
 else:
     print("This config script does not support CRAB job submission for collision name: %s. Check the settings!" % (collisionSystem))

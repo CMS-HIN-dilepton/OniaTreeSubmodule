@@ -56,7 +56,7 @@ options = VarParsing.VarParsing ('analysis')
 
 options.inputFiles = [ '/store/hidata/OORun2025/IonPhysics24/USER/IonDimuon-PromptReco-v1/000/394/184/00000/0d4c22fa-4077-413b-8f31-174b6e01f44b.root',  '/store/hidata/OORun2025/IonPhysics25/USER/IonDimuon-PromptReco-v1/000/394/086/00000/e36235d4-6c76-4602-80be-f17b3452a44b.root']
 
-options.outputFile = "oniatreeIonDimuon_L1SingleMuOpen.root" # "/eos/cms/store/group/phys_heavyions/dileptons/Data2025/OO/FastOniatrees/oniatreeIonDimuon_L1SingleMu.root"
+options.outputFile = "oniatreeIonDimuon_L1SingleMuOpen.root"
 
 options.maxEvents = -1 # -1 means all events
 
