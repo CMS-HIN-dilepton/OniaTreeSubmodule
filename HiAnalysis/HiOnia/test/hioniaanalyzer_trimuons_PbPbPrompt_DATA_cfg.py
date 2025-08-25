@@ -43,7 +43,7 @@ print( "[INFO] OneMatchedHLTMu      = " + ("True" if OneMatchedHLTMu > -1 else "
 print( " " )
 
 # set up process
-process = cms.Process("HIOnia", eras.Run3_pp_on_PbPb)
+process = cms.Process("HIOnia", eras.Run3_pp_on_PbPb_2024)
 
 # setup 'analysis'  options
 options = VarParsing.VarParsing ('analysis')
@@ -74,13 +74,6 @@ triggerList    = {
                         "HLT_HIL2DoubleMuOpen_Centrality40to100_v",#9
                         "HLT_HIL2DoubleMuOpen_OS_v",#10
                         "HLT_HIL2DoubleMuOpen_SS_v",#11
-                        #"HLT_HIL3DoubleMu0_M0toInf_Open_v",#8
-                        #"HLT_HIL3DoubleMu0_Quarkonia_Open_v",#9
-                        #"HLT_HIL3DoubleMu2_Quarkonia_Open_v",#10
-                        #"HLT_HIL3DoubleMu0_M2to4p5_Open_v",#11
-                        #"HLT_HIL3DoubleMu2_M2to4p5_Open_v",#12
-                        #"HLT_HIL3DoubleMu0_M7to15_Open_v",#13
-                        #"HLT_HIL3DoubleMu2_M7to15_Open_v",#14
                         ),
                 # Single Muon Trigger List
                 'SingleMuonTrigger' : cms.vstring(
@@ -128,14 +121,14 @@ process.GlobalTag = GlobalTag(process.GlobalTag, globalTag, '')
 ### For Centrality
 process.load("RecoHI.HiCentralityAlgos.CentralityBin_cfi")
 process.centralityBin.Centrality = cms.InputTag("hiCentrality")
-process.centralityBin.centralityVariable = cms.string("HFtowers")
-print('\n\033[31m~*~ USING NOMINAL CENTRALITY TABLE FOR 2023 PbPb DATA ~*~\033[0m\n')
+process.centralityBin.centralityVariable = cms.string("PFhf")
+print('\n\033[31m~*~ USING NOMINAL CENTRALITY TABLE FOR 2024 PbPb DATA ~*~\033[0m\n')
 process.GlobalTag.snapshotTime = cms.string("9999-12-31 23:59:59.000")
 process.GlobalTag.toGet.extend([
     cms.PSet(record = cms.string("HeavyIonRcd"),
-        tag = cms.string("CentralityTable_HFtowers200_DataPbPb_periHYDJETshape_Run3v1302x04_Nominal_Offline"),
-        connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
-        label = cms.untracked.string("HFtowers")
+        tag = cms.string("CentralityTable_HFtowers200_DataPbPb_periHYDJETshape_run3v140x01_offline_Nominal""),
+        connect = cms.string("sqlite_file:/afs/cern.ch/work/n/nsaha/public/for_GO/DBfiles_2024/CentralityTable_HFtowers200_DataPbPb_periHYDJETshape_run3v140x01_offline_Nominal.db"),
+        label = cms.untracked.string("PFhf")
         ),
     ])
 
@@ -174,7 +167,7 @@ process.oniaTreeAna.replace(process.hionia, process.centralityBin * process.hion
 if applyEventSel:
   # Offline event filters
   process.load('HeavyIonsAnalysis.EventAnalysis.collisionEventSelection_cff')
-  process.load('HeavyIonsAnalysis.EventAnalysis.hffilter_cfi')
+  process.load('HeavyIonsAnalysis.EventAnalysis.hffilterPF_cfi')
   #process.oniaTreeAna.replace(process.hionia, process.phfCoincFilter2Th4 * process.primaryVertexFilter * process.clusterCompatibilityFilter * process.hionia )
 
   # HLT trigger firing events
@@ -184,7 +177,7 @@ if applyEventSel:
   process.hltHI.throw = False
   process.hltHI.andOr = True
   
-  process.oniaTreeAna.replace(process.patMuonSequence, process.phfCoincFilter2Th4 * process.primaryVertexFilter * process.hltHI * process.clusterCompatibilityFilter * process.patMuonSequence )
+  process.oniaTreeAna.replace(process.patMuonSequence, process.phfCoincFilterPF2Th4 * process.primaryVertexFilter * process.hltHI * process.clusterCompatibilityFilter * process.patMuonSequence )
 
 if atLeastOneCand:
   if doTrimuons:
