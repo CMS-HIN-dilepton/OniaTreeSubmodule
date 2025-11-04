@@ -3,14 +3,14 @@ from WMCore.Configuration import Configuration
 config = Configuration()
 
 config.section_("General")
-config.General.requestName = "PromptJpsi_pileup5"
+config.General.requestName = "PromptJpsiEmbedded"
 config.General.workArea = 'crab_projects'
 config.General.transferOutputs = True
 config.General.transferLogs = False
 
 config.section_("JobType")
 config.JobType.pluginName = "Analysis"
-config.JobType.psetName = "hioniaanalyzer_ppRef_MC_cfg.py"
+config.JobType.psetName = "hioniaanalyzer_PbPbPrompt_MC_cfg.py"
 config.JobType.maxMemoryMB = 2000         # request high memory machines.
 #config.JobType.numCores = 4
 config.JobType.allowUndistributedCMSSW = True #Problems with slc7
@@ -18,7 +18,7 @@ config.JobType.maxJobRuntimeMin = 1200 #2750    # request longer runtime, ~48 ho
 
 
 config.section_("Data")
-config.Data.inputDataset = '/Jpsi_pTHatMin4/fdamas-jpsi_pileupAverage5_RECOMINIAOD-0c806ad3487008402bfb8366cb730906/USER'
+config.Data.inputDataset = '/JpsiDimuon_pTHatMin3_HydjetEmbedded_Pythia8_TuneCP5_1510pre6/fdamas-PAT_151X_mcRun3_2025_realistic_HI_v1-5249b5d2d214ceff3b59bef72e572410/USER'
 config.Data.inputDBS = 'phys03'
 config.Data.unitsPerJob = 40
 #config.Data.totalUnits = -1

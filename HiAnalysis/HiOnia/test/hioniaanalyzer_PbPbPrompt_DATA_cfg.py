@@ -4,7 +4,7 @@ from Configuration.StandardSequences.Eras import eras
 
 #----------------------------------------------------------------------------
 
-# Setup Settings for ONIA TREE: 2024 PbPb data
+# Setup Settings for ONIA TREE: 2025 PbPb data
 
 HLTProcess     = "HLT" # Name of HLT process
 isMC           = False # if input is MONTECARLO: True or if it's DATA: False
@@ -50,7 +50,7 @@ print( "[INFO] addEventPlane        = " + ("True" if addEventPlane else "False")
 print( " " )
 
 # set up process
-process = cms.Process("HIOnia", eras.Run3_pp_on_PbPb_2024)
+process = cms.Process("HIOnia", eras.Run3_pp_on_PbPb_2025)
 
 # setup 'analysis'  options
 options = VarParsing.VarParsing ('analysis')
@@ -58,12 +58,10 @@ options = VarParsing.VarParsing ('analysis')
 # Input and Output File Name
 
 options.inputFiles = [
-  '/store/hidata/HIRun2024A/HIPhysicsRawPrime0/MINIAOD/PromptReco-v1/000/387/879/00000/7e0923e7-cb0c-4be3-8d0f-5d93cc3e880e.root',
-  '/store/hidata/HIRun2024A/HIPhysicsRawPrime0/MINIAOD/PromptReco-v1/000/387/939/00000/ccae3ab3-d57b-462b-b69b-f77fa16cbf72.root',
-  '/store/hidata/HIRun2024A/HIPhysicsRawPrime3/MINIAOD/PromptReco-v1/000/387/879/00000/60bf4d21-c62f-47ca-b368-0fa9984e018b.root'
+  '/store/backfill/1/hidata/Tier0_HIREPLAY_2025/HIPhysicsRawPrime0/MINIAOD/PromptReco-v31100030/000/388/621/00000/570abef9-7256-4176-b6bc-3bb78c37b955.root'
 ]
 
-options.outputFile = 'Oniatree_PbPb2024PromptRecoData_141X_miniAOD.root'
+options.outputFile = 'Oniatree_PbPb2024PromptRecoData_151XREPLAY_miniAOD.root'
 options.secondaryOutputFile = "Jpsi_Dataset.root"
 
 options.maxEvents = -1 # -1 means all events
@@ -86,13 +84,6 @@ triggerList    = {
                         "HLT_HIL2DoubleMuOpen_Centrality40to100_v",#9
                         "HLT_HIL2DoubleMuOpen_OS_v",#10
                         "HLT_HIL2DoubleMuOpen_SS_v",#11
-                        #"HLT_HIL3DoubleMu0_M0toInf_Open_v",#8
-                        #"HLT_HIL3DoubleMu0_Quarkonia_Open_v",#9
-                        #"HLT_HIL3DoubleMu2_Quarkonia_Open_v",#10
-                        #"HLT_HIL3DoubleMu0_M2to4p5_Open_v",#11
-                        #"HLT_HIL3DoubleMu2_M2to4p5_Open_v",#12
-                        #"HLT_HIL3DoubleMu0_M7to15_Open_v",#13
-                        #"HLT_HIL3DoubleMu2_M7to15_Open_v",#14
                         ),
                 # Single Muon Trigger List
                 'SingleMuonTrigger' : cms.vstring(
@@ -100,29 +91,26 @@ triggerList    = {
                         "HLT_HIL1SingleMu0_v",#13
                         "HLT_HIL1SingleMu0_Centrality40to100_v",#14
                         "HLT_HIL1SingleMu0_Centrality30to100_v",#15
-                        "HLT_HIL1SingleMuOpen_Centrality30to100_v",#16
-                        "HLT_HIL2SingleMu3_Open_v",#17
-                        "HLT_HIL2SingleMu5_v",#18
-                        "HLT_HIL2SingleMu7_v",#19
-                        "HLT_HIL2SingleMu12_v",#20
-                        "HLT_HIL2SingleMu0_Centrality40to100_v",#21
-                        "HLT_HIL2SingleMu0_Centrality30to100_v",#22
-                        "HLT_HIL2SingleMuOpen_Centrality30to100_v",#23
-                        #"HLT_HIL3SingleMu3_Open_v",#24
-                        #"HLT_HIL3SingleMu5_v",#25
-                        #"HLT_HIL3SingleMu7_v",#26
-                        #"HLT_HIL3SingleMu12_v",#27
-                        "HLT_HIMinimumBiasHF1AND_v", #28
-                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #29
-                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #30
+                        "HLT_HIL1SingleMuOpen_Centrality40to100_v",#16
+                        "HLT_HIL1SingleMuOpen_Centrality30to100_v",#17
+                        "HLT_HIL2SingleMu3_Open_v",#18
+                        "HLT_HIL2SingleMu5_v",#19
+                        "HLT_HIL2SingleMu7_v",#20
+                        "HLT_HIL2SingleMu12_v",#21
+                        "HLT_HIL2SingleMu0_Centrality40to100_v",#22
+                        "HLT_HIL2SingleMu0_Centrality30to100_v",#23
+                        "HLT_HIL2SingleMuOpen_Centrality30to100_v",#24
+                        "HLT_HIMinimumBiasHF1AND_v", #25
+                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #26
+                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #27
 			)
-                }
+}
 
 # Global tag, see https://github.com/cms-sw/cmssw/blob/master/Configuration/AlCa/python/autoCond.py
 if isMC:
   globalTag = 'auto:phase1_2024_realistic_hi' #for Run3 MC : phase1_2023_realistic_hi
 else:
-  globalTag = '141X_dataRun3_Prompt_v3'
+  globalTag = '151X_dataRun3_Prompt_HCALZDC_forT0Replay'
 
 #----------------------------------------------------------------------------
 
@@ -141,12 +129,13 @@ process.GlobalTag = GlobalTag(process.GlobalTag, globalTag, '')
 process.load("RecoHI.HiCentralityAlgos.CentralityBin_cfi")
 process.centralityBin.Centrality = cms.InputTag("hiCentrality")
 process.centralityBin.centralityVariable = cms.string("HFtowers")
-print('\n\033[31m~*~ USING NOMINAL CENTRALITY TABLE FOR 2023 PbPb DATA ~*~\033[0m\n')
+print('\n\033[31m~*~ USING NOMINAL CENTRALITY TABLE FOR 2024 PbPb DATA ~*~\033[0m\n')
 process.GlobalTag.snapshotTime = cms.string("9999-12-31 23:59:59.000")
 process.GlobalTag.toGet.extend([
     cms.PSet(record = cms.string("HeavyIonRcd"),
         tag = cms.string("CentralityTable_HFtowers200_DataPbPb_periHYDJETshape_Run3v1302x04_Nominal_Offline"),
-        connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
+        #connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
+        connect = cms.string("sqlite_file:/afs/cern.ch/work/n/nsaha/public/for_GO/DBfiles_2024/CentralityTable_HFtowers200_DataPbPb2024_periHYDJETshape_run3v140x01_offline_Nominal.db"),
         label = cms.untracked.string("HFtowers")
         ),
     ])
@@ -199,7 +188,7 @@ if applyEventSel:
   process.hltHI.andOr = True
 
   # Muon filtering
-  SuperLooseMuonCut = "(isTrackerMuon || isGlobalMuon) && pt > 1. && abs(eta) < 2.4"
+  SuperLooseMuonCut = "(isTrackerMuon || isGlobalMuon) && pt > 1.2 && abs(eta) < 2.4"
 
   MUONCUT = SuperLooseMuonCut
   

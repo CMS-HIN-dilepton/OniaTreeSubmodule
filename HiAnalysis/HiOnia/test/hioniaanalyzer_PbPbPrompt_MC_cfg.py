@@ -4,7 +4,7 @@ from Configuration.StandardSequences.Eras import eras
 
 #----------------------------------------------------------------------------
 
-# Setup Settings for ONIA TREE: 2024 PbPb MC
+# Setup Settings for ONIA TREE: 2025 PbPb MC
 
 HLTProcess     = "HLT" # Name of HLT process
 isMC           = True # if input is MONTECARLO: True or if it's DATA: False
@@ -46,7 +46,7 @@ print( "[INFO] UsePropToMuonSt      = " + ("True" if UsePropToMuonSt else "False
 print( " " )
 
 # set up process
-process = cms.Process("HIOnia", eras.Run3_pp_on_PbPb)
+process = cms.Process("HIOnia", eras.Run3_pp_on_PbPb_2025)
 
 # setup 'analysis'  options
 options = VarParsing.VarParsing ('analysis')
@@ -55,7 +55,7 @@ options = VarParsing.VarParsing ('analysis')
 options.outputFile = "Oniatree_MC_miniAOD.root"
 options.secondaryOutputFile = "Jpsi_DataSet.root"
 options.inputFiles =[
-  '/store/mc/HINPbPbSpring23MiniAOD/PromptJPsiToMuMu_Pthat2_TuneCP5_HydjetDrumMB_5p36TeV_pythia8/MINIAODSIM/132X_mcRun3_2023_realistic_HI_v9-v2/130000/0c311838-da71-4010-b4f9-313c7fef7745.root'
+  '/store/user/fdamas/PbPb2025/RunPrepMC/JpsiDimuon_pTHatMin3_HydjetEmbedded_Pythia8_TuneCP5_1510pre6/PAT_151X_mcRun3_2025_realistic_HI_v1/251001_111608/0000/step4_PAT_102.root'
 ]
 options.maxEvents = 100 # -1 means all events
 
@@ -77,13 +77,6 @@ triggerList    = {
                         "HLT_HIL2DoubleMuOpen_Centrality40to100_v",#9
                         "HLT_HIL2DoubleMuOpen_OS_v",#10
                         "HLT_HIL2DoubleMuOpen_SS_v",#11
-                        #"HLT_HIL3DoubleMu0_M0toInf_Open_v",#8
-                        #"HLT_HIL3DoubleMu0_Quarkonia_Open_v",#9
-                        #"HLT_HIL3DoubleMu2_Quarkonia_Open_v",#10
-                        #"HLT_HIL3DoubleMu0_M2to4p5_Open_v",#11
-                        #"HLT_HIL3DoubleMu2_M2to4p5_Open_v",#12
-                        #"HLT_HIL3DoubleMu0_M7to15_Open_v",#13
-                        #"HLT_HIL3DoubleMu2_M7to15_Open_v",#14
                         ),
                 # Single Muon Trigger List
                 'SingleMuonTrigger' : cms.vstring(
@@ -91,27 +84,24 @@ triggerList    = {
                         "HLT_HIL1SingleMu0_v",#13
                         "HLT_HIL1SingleMu0_Centrality40to100_v",#14
                         "HLT_HIL1SingleMu0_Centrality30to100_v",#15
-                        "HLT_HIL1SingleMuOpen_Centrality30to100_v",#16
-                        "HLT_HIL2SingleMu3_Open_v",#17
-                        "HLT_HIL2SingleMu5_v",#18
-                        "HLT_HIL2SingleMu7_v",#19
-                        "HLT_HIL2SingleMu12_v",#20
-                        "HLT_HIL2SingleMu0_Centrality40to100_v",#21
-                        "HLT_HIL2SingleMu0_Centrality30to100_v",#22
-                        "HLT_HIL2SingleMuOpen_Centrality30to100_v",#23
-                        #"HLT_HIL3SingleMu3_Open_v",#24
-                        #"HLT_HIL3SingleMu5_v",#25
-                        #"HLT_HIL3SingleMu7_v",#26
-                        #"HLT_HIL3SingleMu12_v",#27
-                        "HLT_HIMinimumBiasHF1AND_v", #28
-                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #29
-                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #30
+                        "HLT_HIL1SingleMuOpen_Centrality40to100_v",#16
+                        "HLT_HIL1SingleMuOpen_Centrality30to100_v",#17
+                        "HLT_HIL2SingleMu3_Open_v",#18
+                        "HLT_HIL2SingleMu5_v",#19
+                        "HLT_HIL2SingleMu7_v",#20
+                        "HLT_HIL2SingleMu12_v",#21
+                        "HLT_HIL2SingleMu0_Centrality40to100_v",#22
+                        "HLT_HIL2SingleMu0_Centrality30to100_v",#23
+                        "HLT_HIL2SingleMuOpen_Centrality30to100_v",#24
+                        "HLT_HIMinimumBiasHF1AND_v", #25
+                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #26
+                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #27
 			)
-                }
+}
 
 ## Global tag
 if isMC:
-  globalTag = 'auto:phase1_2024_realistic_hi' #for Run3 MC : phase1_2023_realistic_hi
+  globalTag = '151X_mcRun3_2025_realistic_HI_v1' #for Run3 MC : phase1_2023_realistic_hi
 else:
   globalTag = '132X_dataRun3_Prompt_v7' # 'auto:run3_data_prompt'
 
@@ -131,7 +121,7 @@ process.GlobalTag = GlobalTag(process.GlobalTag, globalTag, '')
 process.load("RecoHI.HiCentralityAlgos.CentralityBin_cfi")
 process.centralityBin.Centrality = cms.InputTag("hiCentrality")
 process.centralityBin.centralityVariable = cms.string("HFtowers")
-print('\n\033[31m~*~ USING OFFICIAL MC CENTRALITY TABLE FOR PbPb 2023 ~*~\033[0m\n')
+print('\n\033[31m~*~ USING OFFICIAL MC CENTRALITY TABLE FOR PbPb 2024 ~*~\033[0m\n')
 process.GlobalTag.snapshotTime = cms.string("9999-12-31 23:59:59.000")
 process.GlobalTag.toGet.extend([
     cms.PSet(record = cms.string("HeavyIonRcd"),
