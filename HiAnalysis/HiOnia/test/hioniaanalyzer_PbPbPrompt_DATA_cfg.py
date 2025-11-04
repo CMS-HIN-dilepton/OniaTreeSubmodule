@@ -133,7 +133,7 @@ print('\n\033[31m~*~ USING NOMINAL CENTRALITY TABLE FOR 2024 PbPb DATA ~*~\033[0
 process.GlobalTag.snapshotTime = cms.string("9999-12-31 23:59:59.000")
 process.GlobalTag.toGet.extend([
     cms.PSet(record = cms.string("HeavyIonRcd"),
-        tag = cms.string("CentralityTable_HFtowers200_DataPbPb_periHYDJETshape_Run3v1302x04_Nominal_Offline"),
+        tag = cms.string("CentralityTable_HFtowers200_DataPbPb_periHYDJETshape_run3v140x01_offline_Nominal"),
         #connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
         connect = cms.string("sqlite_file:/afs/cern.ch/work/n/nsaha/public/for_GO/DBfiles_2024/CentralityTable_HFtowers200_DataPbPb2024_periHYDJETshape_run3v140x01_offline_Nominal.db"),
         label = cms.untracked.string("HFtowers")
