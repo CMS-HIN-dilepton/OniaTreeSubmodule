@@ -46,7 +46,7 @@ print( "[INFO] UsePropToMuonSt      = " + ("True" if UsePropToMuonSt else "False
 print( " " )
 
 # set up process
-process = cms.Process("HIOnia", eras.Run3_pp_on_PbPb)
+process = cms.Process("HIOnia", eras.Run3_pp_on_PbPb_2024)
 
 # setup 'analysis'  options
 options = VarParsing.VarParsing ('analysis')
@@ -55,7 +55,7 @@ options = VarParsing.VarParsing ('analysis')
 options.outputFile = "Oniatree_MC_miniAOD.root"
 options.secondaryOutputFile = "Jpsi_DataSet.root"
 options.inputFiles =[
-  '/store/mc/HINPbPbSpring23MiniAOD/PromptJPsiToMuMu_Pthat2_TuneCP5_HydjetDrumMB_5p36TeV_pythia8/MINIAODSIM/132X_mcRun3_2023_realistic_HI_v9-v2/130000/0c311838-da71-4010-b4f9-313c7fef7745.root'
+  '/store/mc/HINPbPbWinter24MiniAOD/PromptJPsiToMuMu_pThat-2_TuneCP5_5p36TeV_pythia8/MINIAODSIM/141X_mcRun3_2024_realistic_HI_v14-v2/110000/053b4c15-131b-4184-885f-9368f8a388b0.root'
 ]
 options.maxEvents = 100 # -1 means all events
 
@@ -77,13 +77,6 @@ triggerList    = {
                         "HLT_HIL2DoubleMuOpen_Centrality40to100_v",#9
                         "HLT_HIL2DoubleMuOpen_OS_v",#10
                         "HLT_HIL2DoubleMuOpen_SS_v",#11
-                        #"HLT_HIL3DoubleMu0_M0toInf_Open_v",#8
-                        #"HLT_HIL3DoubleMu0_Quarkonia_Open_v",#9
-                        #"HLT_HIL3DoubleMu2_Quarkonia_Open_v",#10
-                        #"HLT_HIL3DoubleMu0_M2to4p5_Open_v",#11
-                        #"HLT_HIL3DoubleMu2_M2to4p5_Open_v",#12
-                        #"HLT_HIL3DoubleMu0_M7to15_Open_v",#13
-                        #"HLT_HIL3DoubleMu2_M7to15_Open_v",#14
                         ),
                 # Single Muon Trigger List
                 'SingleMuonTrigger' : cms.vstring(
@@ -99,19 +92,15 @@ triggerList    = {
                         "HLT_HIL2SingleMu0_Centrality40to100_v",#21
                         "HLT_HIL2SingleMu0_Centrality30to100_v",#22
                         "HLT_HIL2SingleMuOpen_Centrality30to100_v",#23
-                        #"HLT_HIL3SingleMu3_Open_v",#24
-                        #"HLT_HIL3SingleMu5_v",#25
-                        #"HLT_HIL3SingleMu7_v",#26
-                        #"HLT_HIL3SingleMu12_v",#27
-                        "HLT_HIMinimumBiasHF1AND_v", #28
-                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #29
-                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #30
+                        "HLT_HIMinimumBiasHF1AND_v", #24
+                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #25
+                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #26
 			)
                 }
 
 ## Global tag
 if isMC:
-  globalTag = 'auto:phase1_2024_realistic_hi' #for Run3 MC : phase1_2023_realistic_hi
+  globalTag = '141X_mcRun3_2024_realistic_HI_v14' #for Run3 MC : phase1_2023_realistic_hi
 else:
   globalTag = '132X_dataRun3_Prompt_v7' # 'auto:run3_data_prompt'
 
@@ -131,12 +120,13 @@ process.GlobalTag = GlobalTag(process.GlobalTag, globalTag, '')
 process.load("RecoHI.HiCentralityAlgos.CentralityBin_cfi")
 process.centralityBin.Centrality = cms.InputTag("hiCentrality")
 process.centralityBin.centralityVariable = cms.string("HFtowers")
-print('\n\033[31m~*~ USING OFFICIAL MC CENTRALITY TABLE FOR PbPb 2023 ~*~\033[0m\n')
+print('\n\033[31m~*~ USING OFFICIAL MC CENTRALITY TABLE FOR PbPb 2024 ~*~\033[0m\n')
 process.GlobalTag.snapshotTime = cms.string("9999-12-31 23:59:59.000")
 process.GlobalTag.toGet.extend([
     cms.PSet(record = cms.string("HeavyIonRcd"),
-        tag = cms.string("CentralityTable_HFtowers200_HydjetDrum5F_Run3v1302x04_Official_MC"),
-        connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
+        tag = cms.string("CentralityTable_HFtowers200_HydjetCello_v1401x0_official_MC2024"),
+        #connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
+        connect = cms.string("sqlite_file:/afs/cern.ch/work/n/nsaha/public/for_GO/DBfiles_2024/CentralityTable_HFtowers200_HydjetCello_v1401x0_official_MC2024.db"),
         label = cms.untracked.string("HFtowers")
         ),
     ])
@@ -217,8 +207,8 @@ process.oniaTreeAna.replace(process.hionia, process.centralityBin * process.hion
 
 if applyEventSel:
   process.load('HeavyIonsAnalysis.EventAnalysis.collisionEventSelection_cff')
-  process.load('HeavyIonsAnalysis.EventAnalysis.hffilter_cfi')
-  process.oniaTreeAna.replace(process.patMuonSequence, process.phfCoincFilter2Th4 * process.primaryVertexFilter * process.clusterCompatibilityFilter * process.patMuonSequence )
+  process.load('HeavyIonsAnalysis.EventAnalysis.hffilterPF_cfi')
+  process.oniaTreeAna.replace(process.patMuonSequence, process.phfCoincFilterPF2Th4 * process.primaryVertexFilter * process.clusterCompatibilityFilter * process.patMuonSequence )
 
 if atLeastOneCand:
   if doTrimuons:

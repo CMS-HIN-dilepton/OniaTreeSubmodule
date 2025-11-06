@@ -49,10 +49,10 @@ process = cms.Process("HIOnia", eras.Run3_pp_on_PbPb_2024)
 options = VarParsing.VarParsing ('analysis')
 
 # Input and Output File Names
-options.outputFile = 'Oniatree_trimuons_2023PbPbPromptRecoData_132X_miniAOD.root'
+options.outputFile = 'Oniatree_trimuons_2024PbPbPromptRecoData_141X_miniAOD.root'
 options.secondaryOutputFile = "Jpsi_DataSet.root"
 options.inputFiles =[
-  '/store/hidata/HIRun2023A/HIPhysicsRawPrime13/MINIAOD/PromptReco-v2/000/374/730/00000/05ee12dc-0ce8-407a-8b13-e310e3678400.root'
+  '/store/hidata/HIRun2024A/HIPhysicsRawPrime0/MINIAOD/PromptReco-v1/000/387/939/00000/ccae3ab3-d57b-462b-b69b-f77fa16cbf72.root',
 ]
 options.maxEvents = 100 # -1 means all events
 
@@ -89,21 +89,17 @@ triggerList    = {
                         "HLT_HIL2SingleMu0_Centrality40to100_v",#21
                         "HLT_HIL2SingleMu0_Centrality30to100_v",#22
                         "HLT_HIL2SingleMuOpen_Centrality30to100_v",#23
-                        #"HLT_HIL3SingleMu3_Open_v",#24
-                        #"HLT_HIL3SingleMu5_v",#25
-                        #"HLT_HIL3SingleMu7_v",#26
-                        #"HLT_HIL3SingleMu12_v",#27
-                        "HLT_HIMinimumBiasHF1AND_v", #28
-                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #29
-                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #30
+                        "HLT_HIMinimumBiasHF1AND_v", #24
+                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #25
+                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #26
 			)
                 }
 
-## Global tag
+# Global tag, see https://github.com/cms-sw/cmssw/blob/master/Configuration/AlCa/python/autoCond.py
 if isMC:
-  globalTag = '132X_mcRun3_2023_realistic_HI_v10' #for Run3 MC : phase1_2023_realistic_hi
+  globalTag = 'auto:phase1_2024_realistic_hi' #for Run3 MC : phase1_2023_realistic_hi
 else:
-  globalTag = 'auto:phase1_2024_realistic_hi'
+  globalTag = '141X_dataRun3_Prompt_v3'
 
 #----------------------------------------------------------------------------
 
@@ -121,14 +117,15 @@ process.GlobalTag = GlobalTag(process.GlobalTag, globalTag, '')
 ### For Centrality
 process.load("RecoHI.HiCentralityAlgos.CentralityBin_cfi")
 process.centralityBin.Centrality = cms.InputTag("hiCentrality")
-process.centralityBin.centralityVariable = cms.string("PFhf")
+process.centralityBin.centralityVariable = cms.string("HFtowers")
 print('\n\033[31m~*~ USING NOMINAL CENTRALITY TABLE FOR 2024 PbPb DATA ~*~\033[0m\n')
 process.GlobalTag.snapshotTime = cms.string("9999-12-31 23:59:59.000")
 process.GlobalTag.toGet.extend([
     cms.PSet(record = cms.string("HeavyIonRcd"),
-        tag = cms.string("CentralityTable_HFtowers200_DataPbPb_periHYDJETshape_run3v140x01_offline_Nominal""),
-        connect = cms.string("sqlite_file:/afs/cern.ch/work/n/nsaha/public/for_GO/DBfiles_2024/CentralityTable_HFtowers200_DataPbPb_periHYDJETshape_run3v140x01_offline_Nominal.db"),
-        label = cms.untracked.string("PFhf")
+        tag = cms.string("CentralityTable_HFtowers200_DataPbPb_periHYDJETshape_run3v140x01_offline_Nominal"),
+        #connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
+        connect = cms.string("sqlite_file:/afs/cern.ch/work/n/nsaha/public/for_GO/DBfiles_2024/CentralityTable_HFtowers200_DataPbPb2024_periHYDJETshape_run3v140x01_offline_Nominal.db"),
+        label = cms.untracked.string("HFtowers")
         ),
     ])
 
