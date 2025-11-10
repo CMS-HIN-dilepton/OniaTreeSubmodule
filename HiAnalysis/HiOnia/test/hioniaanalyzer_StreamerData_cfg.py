@@ -1,6 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 import FWCore.ParameterSet.VarParsing as VarParsing
 from Configuration.StandardSequences.Eras import eras
+import os
 
 #----------------------------------------------------------------------------
 
@@ -23,7 +24,7 @@ keepExtraColl  = False # General Tracks + Stand Alone Muons + Converted Photon c
 miniAOD        = True # whether the input file is in miniAOD format (default is AOD)
 UsePropToMuonSt = True # whether to use L1 propagated muons (works only for miniAOD now)
 pdgId = 443 # J/Psi : 443, Y(1S) : 553
-useMomFormat = "array" # default "array" for TClonesArray of TLorentzVector. Use "vector" for std::vector<float> of pt, eta, phi, M
+useMomFormat = "vector" # default "array" for TClonesArray of TLorentzVector. Use "vector" for std::vector<float> of pt, eta, phi, M
 
 addEventPlane = False
 #----------------------------------------------------------------------------
@@ -57,12 +58,28 @@ options = VarParsing.VarParsing ('analysis')
 
 # Input and Output File Name
 
-options.inputFiles = [
-  '/store/backfill/1/hidata/Tier0_HIREPLAY_2025/HIPhysicsRawPrime0/MINIAOD/PromptReco-v31100030/000/388/621/00000/570abef9-7256-4176-b6bc-3bb78c37b955.root'
-]
+runNb = 387973
 
-options.outputFile = 'Oniatree_PbPb2024PromptRecoData_151XREPLAY_miniAOD.root'
-options.secondaryOutputFile = "Jpsi_Dataset.root"
+PDname = 'HIPhysicsRawPrime0'
+
+recoFormat = 'mini' # simply '' for AOD
+
+inputPath = f'/eos/cms/store/group/phys_heavyions/vavladim/RECO2024/CRAB_UserFiles/crab_{recoFormat}AOD_Physics{PDname}_{runNb}/241109_092437/0000/'
+
+print(inputPath)
+
+fileList = [f"file:{os.path.join(inputPath, f)}" for f in os.listdir(inputPath) if f.endswith(".root")]
+
+
+options.inputFiles = fileList
+
+
+options.maxEvents = -1 # -1 means all events
+
+
+outputName = f'Oniatree_{PDname}_Run{runNb}_{recoFormat}AOD'
+
+options.outputFile = f"/eos/cms/store/group/phys_heavyions/dileptons/Data2025/PbPb/FastOniatrees/{outputName}.root"
 
 options.maxEvents = -1 # -1 means all events
 
@@ -110,7 +127,7 @@ triggerList    = {
 if isMC:
   globalTag = 'auto:phase1_2024_realistic_hi' #for Run3 MC : phase1_2023_realistic_hi
 else:
-  globalTag = '151X_dataRun3_Prompt_v1'
+  globalTag = '151X_dataRun3_Prompt_v1' # or Express, TBC
 
 #----------------------------------------------------------------------------
 
@@ -150,11 +167,11 @@ oniaTreeAnalyzer(process,
                  OnlySingleMuons=False
 )
 
-process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 2.0 && charge==0 && abs(daughter('muon1').innerTrack.dz - daughter('muon2').innerTrack.dz) < 25")
+process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 2.4 && charge==0 && abs(daughter('muon1').innerTrack.dz - daughter('muon2').innerTrack.dz) < 25")
 process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 1. && abs(eta) < 2.4 && isTrackerMuon")
 
 #if applyCuts:
-process.onia2MuMuPatGlbGlb.LateDimuonSel = cms.string("userFloat(\"vProb\")>0.01")
+process.onia2MuMuPatGlbGlb.LateDimuonSel = cms.string("userFloat(\"vProb\")>0.005")
 
 process.onia2MuMuPatGlbGlb.onlySoftMuons = cms.bool(OnlySoftMuons)
 process.hionia.minimumFlag      = cms.bool(keepExtraColl)           #for Reco_trk_*

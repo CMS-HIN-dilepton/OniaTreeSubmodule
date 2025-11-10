@@ -184,7 +184,7 @@ if applyEventSel:
   process.hltHI.throw = False
   process.hltHI.andOr = True
   
-  process.oniaTreeAna.replace(process.patMuonSequence, process.phfCoincFilter2Th4 * process.primaryVertexFilter * process.hltHI * process.clusterCompatibilityFilter * process.patMuonSequence )
+  process.oniaTreeAna.replace(process.patMuonSequence, process.phfCoincFilterPF2Th4 * process.primaryVertexFilter * process.hltHI * process.clusterCompatibilityFilter * process.patMuonSequence )
 
 if atLeastOneCand:
   if doTrimuons:
