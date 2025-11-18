@@ -50,7 +50,11 @@ def submit(config):
 # Submit the jobs: 60 HIRawPrime PDs, ~140k files each, average of 100k events/file
 config.Data.outLFNDirBase = '/store/user/fdamas/PbPb2024/'
 
-for i in range(16):
+
+### First, HIRun2024A
+
+# The first 15 HIPhysicsRawPrime PDs were promptly reconstructed
+for i in range(15): # 0 -> 14
     config.General.requestName = f'EraA_RawPrime{i}'
     config.Data.inputDataset = f"/HIPhysicsRawPrime{i}/HIRun2024A-PromptReco-v1/MINIAOD"
     config.Data.outputDatasetTag = config.General.requestName
@@ -58,11 +62,38 @@ for i in range(16):
     print("Submitting CRAB job for: "+ config.Data.inputDataset)
     submit(config)
 
-for i in range(60):
+# The other 45 PDs were reconstructed later "offline"
+for i in range(15, 60):
 
-    config.General.requestName = f'EraB_RawPrime{i}'
-    config.Data.inputDataset = f"/HIPhysicsRawPrime{i}/HIRun2024B-PromptReco-v1/MINIAOD"
-    config.Data.outputDatasetTag = 'EraB'
+    # with a "glitch" for number 36 which is promoted to v2, see below...
+    if i == 36:
+        continue
+
+    config.General.requestName = f'EraA_RawPrime{i}'
+    config.Data.inputDataset = f"/HIPhysicsRawPrime{i}/HIRun2024A-OfflinePromptReco-v1/MINIAOD"
+    config.Data.outputDatasetTag = config.General.requestName
 
     print("Submitting CRAB job for: "+ config.Data.inputDataset)
     submit(config)
+
+# with a "glitch" for number 36 which is promoted to v2...
+config.General.requestName = 'EraA_RawPrime36'
+config.Data.inputDataset = "/HIPhysicsRawPrime36/HIRun2024A-OfflinePromptReco-v2/MINIAOD"
+config.Data.outputDatasetTag = config.General.requestName
+
+print("Submitting CRAB job for: "+ config.Data.inputDataset)
+submit(config)
+
+
+
+### HIRun2024B was completely reconstructed promptly, but there are two independent versions
+
+for i in range(60):
+
+    for k in range(1,3):
+        config.General.requestName = f'EraB_RawPrime{i}_v{k}'
+        config.Data.inputDataset = f"/HIPhysicsRawPrime{i}/HIRun2024B-PromptReco-v{k}/MINIAOD"
+        config.Data.outputDatasetTag = config.General.requestName
+
+        print("Submitting CRAB job for: "+ config.Data.inputDataset)
+        submit(config)

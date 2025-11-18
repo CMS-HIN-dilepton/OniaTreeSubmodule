@@ -56,10 +56,13 @@ for i in range(20):
 
     # for each era
     for era in eras:
-        config.General.requestName = f'Era{era}_Forward{i}'
-        config.Data.inputDataset = f"/HIForward{i}/HIRun2024{era}-PromptReco-v1/MINIAOD"
-        config.Data.outputDatasetTag = f"Era{era}"
+
+        # and for the two versions
+        for k in range(1,2):
+            config.General.requestName = f'Era{era}_Forward{i}_v{k}'
+            config.Data.inputDataset = f"/HIForward{i}/HIRun2024{era}-PromptReco-v{k}/MINIAOD"
+            config.Data.outputDatasetTag = config.General.requestName
     
 
-        print("Submitting CRAB job for: "+ config.Data.inputDataset)
-        submit(config)
+            print("Submitting CRAB job for: "+ config.Data.inputDataset)
+            submit(config)
