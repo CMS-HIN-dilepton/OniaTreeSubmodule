@@ -93,8 +93,7 @@ triggerList    = {
                         "HLT_HIL2SingleMu0_Centrality30to100_v",#22
                         "HLT_HIL2SingleMuOpen_Centrality30to100_v",#23
                         "HLT_HIMinimumBiasHF1AND_v", #24
-                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #25
-                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #26
+                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #25
 			)
                 }
 

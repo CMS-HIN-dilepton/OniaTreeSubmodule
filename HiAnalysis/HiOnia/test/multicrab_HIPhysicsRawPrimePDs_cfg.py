@@ -16,8 +16,8 @@ config.General.transferLogs = False
 config.section_("JobType")
 config.JobType.pluginName = "Analysis"
 config.JobType.psetName = "hioniaanalyzer_PbPbPrompt_DATA_cfg.py"
-config.JobType.maxMemoryMB = 2000         # request high memory machines.
-config.JobType.numCores = 4
+config.JobType.maxMemoryMB = 2400         # request high memory machines.
+#config.JobType.numCores = 4
 config.JobType.allowUndistributedCMSSW = True #Problems with slc7
 #config.JobType.maxJobRuntimeMin = 2000 # max = 2750
 
@@ -25,7 +25,7 @@ config.section_("Data")
 config.Data.inputDBS = 'global'
 #config.Data.totalUnits = -1
 config.Data.splitting = "EventAwareLumiBased"
-config.Data.unitsPerJob = 600
+config.Data.unitsPerJob = 4000000
 
 config.Data.allowNonValidInputDataset = True
 config.Data.publication = False
