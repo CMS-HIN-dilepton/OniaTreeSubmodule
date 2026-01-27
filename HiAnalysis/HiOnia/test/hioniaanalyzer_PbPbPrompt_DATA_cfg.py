@@ -23,7 +23,7 @@ keepExtraColl  = False # General Tracks + Stand Alone Muons + Converted Photon c
 miniAOD        = True # whether the input file is in miniAOD format (default is AOD)
 UsePropToMuonSt = True # whether to use L1 propagated muons (works only for miniAOD now)
 pdgId = 443 # J/Psi : 443, Y(1S) : 553
-useMomFormat = "array" # default "array" for TClonesArray of TLorentzVector. Use "vector" for std::vector<float> of pt, eta, phi, M
+useMomFormat = "vector" # default "array" for TClonesArray of TLorentzVector. Use "vector" for std::vector<float> of pt, eta, phi, M
 
 addEventPlane = False
 #----------------------------------------------------------------------------
@@ -76,39 +76,28 @@ triggerList    = {
                         "HLT_HIL1DoubleMu0_v",#1
                         "HLT_HIL1DoubleMu0_SQ_v",#2
                         "HLT_HIL2DoubleMu0_Open_v",#3
-                        "HLT_HIL2DoubleMu0_M1p5to6_Open_v",#4
-                        "HLT_HIL2DoubleMu2p8_M1p5to6_Open_v",#5
-                        "HLT_HIL2DoubleMu0_M7to15_Open_v",#6
-                        "HLT_HIL2DoubleMu3_M7to15_Open_v",#7
-                        "HLT_HIL2DoubleMu0_SQ_v",#8
-                        "HLT_HIL2DoubleMuOpen_Centrality40to100_v",#9
-                        "HLT_HIL2DoubleMuOpen_OS_v",#10
-                        "HLT_HIL2DoubleMuOpen_SS_v",#11
                         ),
                 # Single Muon Trigger List
                 'SingleMuonTrigger' : cms.vstring(
-                        "HLT_HIL1SingleMu0_Open_v",#12
-                        "HLT_HIL1SingleMu0_v",#13
-                        "HLT_HIL1SingleMu0_Centrality40to100_v",#14
-                        "HLT_HIL1SingleMu0_Centrality30to100_v",#15
-                        "HLT_HIL1SingleMuOpen_Centrality40to100_v",#16
-                        "HLT_HIL1SingleMuOpen_Centrality30to100_v",#17
-                        "HLT_HIL2SingleMu3_Open_v",#18
-                        "HLT_HIL2SingleMu5_v",#19
-                        "HLT_HIL2SingleMu7_v",#20
-                        "HLT_HIL2SingleMu12_v",#21
-                        "HLT_HIL2SingleMu0_Centrality40to100_v",#22
-                        "HLT_HIL2SingleMu0_Centrality30to100_v",#23
-                        "HLT_HIL2SingleMuOpen_Centrality30to100_v",#24
-                        "HLT_HIMinimumBiasHF1AND_v", #25
-                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #26
-                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #27
+                        "HLT_HIL1SingleMu0_Open_v",#4
+                        "HLT_HIL1SingleMu0_v",#5
+                        "HLT_HIL1SingleMu0_Centrality40to100_v",#6
+                        "HLT_HIL1SingleMu0_Centrality30to100_v",#7
+                        "HLT_HIL1SingleMuOpen_Centrality40to100_v",#8
+                        "HLT_HIL1SingleMuOpen_Centrality30to100_v",#9
+                        "HLT_HIL2SingleMu3_Open_v",#10
+                        "HLT_HIL2SingleMu5_v",#11
+                        "HLT_HIL2SingleMu7_v",#12
+                        "HLT_HIL2SingleMu12_v",#13
+                        "HLT_HIL2SingleMuOpen_Centrality30to100_v",#14
+                        "HLT_HIMinimumBiasHF1AND_v", #15
+                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #16
 			)
 }
 
 # Global tag, see https://github.com/cms-sw/cmssw/blob/master/Configuration/AlCa/python/autoCond.py
 if isMC:
-  globalTag = 'auto:phase1_2024_realistic_hi' #for Run3 MC : phase1_2023_realistic_hi
+  globalTag = 'auto:phase1_2025_realistic_hi'
 else:
   globalTag = '151X_dataRun3_Prompt_v1'
 
@@ -247,7 +236,7 @@ process.TFileService = cms.Service("TFileService",
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxEvents) )
 process.options   = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 
-process.options.numberOfThreads = 4
+#process.options.numberOfThreads = 4
 
 
 process.schedule  = cms.Schedule( process.oniaTreeAna )

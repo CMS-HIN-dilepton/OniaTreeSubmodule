@@ -66,42 +66,15 @@ triggerList    = {
                         "HLT_HIL1DoubleMu0_v",#1
                         "HLT_HIL1DoubleMu0_SQ_v",#2
                         "HLT_HIL2DoubleMu0_Open_v",#3
-                        "HLT_HIL2DoubleMu0_M1p5to6_Open_v",#4
-                        "HLT_HIL2DoubleMu2p8_M1p5to6_Open_v",#5
-                        "HLT_HIL2DoubleMu0_M7to15_Open_v",#6
-                        "HLT_HIL2DoubleMu3_M7to15_Open_v",#7
-                        "HLT_HIL2DoubleMu0_SQ_v",#8
-                        "HLT_HIL2DoubleMuOpen_Centrality40to100_v",#9
+                        "HLT_HIL2DoubleMu0_SQ_v",#4
                         "HLT_HIL2DoubleMuOpen_OS_v",#10
                         "HLT_HIL2DoubleMuOpen_SS_v",#11
-                        #"HLT_HIL3DoubleMu0_M0toInf_Open_v",#8
-                        #"HLT_HIL3DoubleMu0_Quarkonia_Open_v",#9
-                        #"HLT_HIL3DoubleMu2_Quarkonia_Open_v",#10
-                        #"HLT_HIL3DoubleMu0_M2to4p5_Open_v",#11
-                        #"HLT_HIL3DoubleMu2_M2to4p5_Open_v",#12
-                        #"HLT_HIL3DoubleMu0_M7to15_Open_v",#13
-                        #"HLT_HIL3DoubleMu2_M7to15_Open_v",#14
                         ),
                 # Single Muon Trigger List
                 'SingleMuonTrigger' : cms.vstring(
                         "HLT_HIL1SingleMu0_Open_v",#12
                         "HLT_HIL1SingleMu0_v",#13
-                        "HLT_HIL1SingleMu0_Centrality40to100_v",#14
-                        "HLT_HIL1SingleMu0_Centrality30to100_v",#15
-                        "HLT_HIL1SingleMuOpen_Centrality30to100_v",#16
-                        "HLT_HIL2SingleMu3_Open_v",#17
-                        "HLT_HIL2SingleMu5_v",#18
-                        "HLT_HIL2SingleMu7_v",#19
-                        "HLT_HIL2SingleMu12_v",#20
-                        "HLT_HIL2SingleMu0_Centrality40to100_v",#21
-                        "HLT_HIL2SingleMu0_Centrality30to100_v",#22
-                        "HLT_HIL2SingleMuOpen_Centrality30to100_v",#23
-                        #"HLT_HIL3SingleMu3_Open_v",#24
-                        #"HLT_HIL3SingleMu5_v",#25
-                        #"HLT_HIL3SingleMu7_v",#26
-                        #"HLT_HIL3SingleMu12_v",#27
                         "HLT_HIMinimumBiasHF1AND_v", #28
-                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #29
                         "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #30
 			)
                 }
@@ -270,6 +243,6 @@ process.TFileService = cms.Service("TFileService",
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxEvents) )
 process.options   = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 
-process.options.numberOfThreads = 4
+#process.options.numberOfThreads = 4
 
 process.schedule  = cms.Schedule( process.oniaTreeAna )

@@ -22,23 +22,23 @@ config.section_("JobType")
 config.JobType.pluginName = "Analysis"
 config.JobType.psetName = "hioniaanalyzer_PbPbPrompt_DATA_cfg.py"
 
-config.JobType.maxMemoryMB = 4000         # request high memory machines.
-config.JobType.numCores = 4
+config.JobType.maxMemoryMB = 2400         # request high memory machines.
+#config.JobType.numCores = 4
 config.JobType.allowUndistributedCMSSW = True
-config.JobType.maxJobRuntimeMin = 200 # max = 2750
+config.JobType.maxJobRuntimeMin = 1200 # max = 2750
 
 config.section_("Data")
 config.Data.inputDBS = 'global'
 #config.Data.totalUnits = -1
-config.Data.splitting = "FileBased"
-config.Data.unitsPerJob = 50
+config.Data.splitting = "EventAwareLumiBased"
+config.Data.unitsPerJob = 5000000
 
 config.Data.allowNonValidInputDataset = True
 config.Data.publication = False
-config.Data.runRange = '387853-388784'
-config.Data.lumiMask = 'https://cms-service-dqmdc.web.cern.ch/CAF/certification/Collisions24HI/Cert_Collisions2024_HI_387853_388784_Muon.json'
+config.Data.runRange = '399465-400426'
+config.Data.lumiMask = 'https://cms-service-dqmdc.web.cern.ch/CAF/certification/Collisions25HI/Cert_Collisions2025_HI_399465_400426_Muon.json'
 
-config.Data.outLFNDirBase = '/store/user/' + username + '/PbPb2025/ReplayOf2024'
+config.Data.outLFNDirBase = '/store/user/' + username + '/PbPb2025/'
 
 
 config.section_("Site")
@@ -60,7 +60,7 @@ def submit(config):
 for i in range(60):
 
     config.General.requestName = f'RawPrime{i}'
-    config.Data.inputDataset = f"/HIPhysicsRawPrime{i}/Tier0_HIREPLAY_2025-PromptReco-v31100030/MINIAOD"
+    config.Data.inputDataset = f"/HIPhysicsRawPrime{i}/HIRun2025A-PromptReco-v1/MINIAOD"
     config.Data.outputDatasetTag = config.General.requestName
 
     print("Submitting CRAB job for: "+ config.Data.inputDataset)
