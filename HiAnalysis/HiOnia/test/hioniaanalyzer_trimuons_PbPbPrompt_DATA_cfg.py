@@ -4,7 +4,7 @@ from Configuration.StandardSequences.Eras import eras
 
 #----------------------------------------------------------------------------
 
-# Settings to analyze 2024 PbPb Prompt Reco data
+# Settings to analyze 2025 PbPb Prompt Reco data
 
 HLTProcess     = "HLT" # Name of HLT process 
 isMC           = False # if input is MONTECARLO: True or if it's DATA: False
@@ -52,7 +52,7 @@ options = VarParsing.VarParsing ('analysis')
 options.outputFile = 'Oniatree_trimuons_2023PbPbPromptRecoData_132X_miniAOD.root'
 options.secondaryOutputFile = "Jpsi_DataSet.root"
 options.inputFiles =[
-  '/store/hidata/HIRun2023A/HIPhysicsRawPrime13/MINIAOD/PromptReco-v2/000/374/730/00000/05ee12dc-0ce8-407a-8b13-e310e3678400.root'
+  '/store/hidata/HIRun2025A/HIPhysicsRawPrime11/MINIAOD/PromptReco-v1/000/399/587/00000/a52cc265-1ebb-4064-888e-789120a71951.root'
 ]
 options.maxEvents = 100 # -1 means all events
 
@@ -83,7 +83,7 @@ triggerList    = {
 if isMC:
   globalTag = '132X_mcRun3_2023_realistic_HI_v10' #for Run3 MC : phase1_2023_realistic_hi
 else:
-  globalTag = 'auto:phase1_2024_realistic_hi'
+  globalTag = '151X_dataRun3_Prompt_v1'
 
 #----------------------------------------------------------------------------
 
@@ -102,11 +102,11 @@ process.GlobalTag = GlobalTag(process.GlobalTag, globalTag, '')
 process.load("RecoHI.HiCentralityAlgos.CentralityBin_cfi")
 process.centralityBin.Centrality = cms.InputTag("hiCentrality")
 process.centralityBin.centralityVariable = cms.string("HFtowers")
-print('\n\033[31m~*~ USING NOMINAL CENTRALITY TABLE FOR 2023 PbPb DATA ~*~\033[0m\n')
+print('\n\033[31m~*~ USING NOMINAL CENTRALITY TABLE FOR 2024 PbPb DATA ~*~\033[0m\n')
 process.GlobalTag.snapshotTime = cms.string("9999-12-31 23:59:59.000")
 process.GlobalTag.toGet.extend([
     cms.PSet(record = cms.string("HeavyIonRcd"),
-        tag = cms.string("CentralityTable_HFtowers200_DataPbPb_periHYDJETshape_Run3v1302x04_Nominal_Offline"),
+        tag = cms.string("CentralityTable_HFtowers200_DataPbPb_periHYDJETshape_run3v140x01_offline_Nominal"),
         connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
         label = cms.untracked.string("HFtowers")
         ),
@@ -157,7 +157,7 @@ if applyEventSel:
   process.hltHI.throw = False
   process.hltHI.andOr = True
   
-  process.oniaTreeAna.replace(process.patMuonSequence, process.phfCoincFilterPF2Th4 * process.primaryVertexFilter * process.hltHI * process.clusterCompatibilityFilter * process.patMuonSequence )
+  process.oniaTreeAna.replace(process.patMuonSequence, process.phfCoincFilterPF2Th4 * process.primaryVertexFilter * process.hltHI * process.patMuonSequence )
 
 if atLeastOneCand:
   if doTrimuons:

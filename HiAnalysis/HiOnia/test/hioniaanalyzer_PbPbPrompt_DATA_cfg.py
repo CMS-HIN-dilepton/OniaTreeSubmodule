@@ -58,10 +58,10 @@ options = VarParsing.VarParsing ('analysis')
 # Input and Output File Name
 
 options.inputFiles = [
-  '/store/backfill/1/hidata/Tier0_HIREPLAY_2025/HIPhysicsRawPrime0/MINIAOD/PromptReco-v31100030/000/388/621/00000/570abef9-7256-4176-b6bc-3bb78c37b955.root'
+  '/store/hidata/HIRun2025A/HIPhysicsRawPrime11/MINIAOD/PromptReco-v1/000/399/587/00000/a52cc265-1ebb-4064-888e-789120a71951.root'
 ]
 
-options.outputFile = 'Oniatree_PbPb2024PromptRecoData_151XREPLAY_miniAOD.root'
+options.outputFile = 'Oniatree_PbPb2025PromptRecoData.root'
 options.secondaryOutputFile = "Jpsi_Dataset.root"
 
 options.maxEvents = -1 # -1 means all events
@@ -123,8 +123,7 @@ process.GlobalTag.snapshotTime = cms.string("9999-12-31 23:59:59.000")
 process.GlobalTag.toGet.extend([
     cms.PSet(record = cms.string("HeavyIonRcd"),
         tag = cms.string("CentralityTable_HFtowers200_DataPbPb_periHYDJETshape_run3v140x01_offline_Nominal"),
-        #connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
-        connect = cms.string("sqlite_file:/afs/cern.ch/work/n/nsaha/public/for_GO/DBfiles_2024/CentralityTable_HFtowers200_DataPbPb2024_periHYDJETshape_run3v140x01_offline_Nominal.db"),
+        connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
         label = cms.untracked.string("HFtowers")
         ),
     ])
@@ -143,7 +142,7 @@ process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 2.0 && cha
 process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 1. && abs(eta) < 2.4 && isTrackerMuon")
 
 #if applyCuts:
-process.onia2MuMuPatGlbGlb.LateDimuonSel = cms.string("userFloat(\"vProb\")>0.01")
+process.onia2MuMuPatGlbGlb.LateDimuonSel = cms.string("userFloat(\"vProb\")>0.001")
 
 process.onia2MuMuPatGlbGlb.onlySoftMuons = cms.bool(OnlySoftMuons)
 process.hionia.minimumFlag      = cms.bool(keepExtraColl)           #for Reco_trk_*
@@ -204,7 +203,7 @@ if applyEventSel:
                                         minNumber = cms.uint32(1)
                                         )
   
-  process.oniaTreeAna.replace(process.patMuonSequence,process.muonSelector * process.atLeastTwoMuons * process.dimuonSelection * process.atLeastOneDimuon * process.phfCoincFilterPF2Th4 * process.primaryVertexFilter * process.hltHI * process.clusterCompatibilityFilter * process.patMuonSequence )
+  process.oniaTreeAna.replace(process.patMuonSequence,process.muonSelector * process.atLeastTwoMuons * process.dimuonSelection * process.atLeastOneDimuon * process.phfCoincFilterPF2Th4 * process.primaryVertexFilter * process.hltHI * process.patMuonSequence )
 
 if atLeastOneCand:
   if doTrimuons:

@@ -69,39 +69,34 @@ triggerList    = {
                         "HLT_HIL1DoubleMu0_v",#1
                         "HLT_HIL1DoubleMu0_SQ_v",#2
                         "HLT_HIL2DoubleMu0_Open_v",#3
-                        "HLT_HIL2DoubleMu0_M1p5to6_Open_v",#4
-                        "HLT_HIL2DoubleMu2p8_M1p5to6_Open_v",#5
-                        "HLT_HIL2DoubleMu0_M7to15_Open_v",#6
-                        "HLT_HIL2DoubleMu3_M7to15_Open_v",#7
-                        "HLT_HIL2DoubleMu0_SQ_v",#8
-                        "HLT_HIL2DoubleMuOpen_Centrality40to100_v",#9
-                        "HLT_HIL2DoubleMuOpen_OS_v",#10
-                        "HLT_HIL2DoubleMuOpen_SS_v",#11
+                        "HLT_HIL2DoubleMu0_SQ_v",#4
+                        "HLT_HIL2DoubleMuOpen_Centrality40to100_v",#5
+                        "HLT_HIL2DoubleMuOpen_OS_v",#6
+                        "HLT_HIL2DoubleMuOpen_SS_v",#7
                         ),
                 # Single Muon Trigger List
                 'SingleMuonTrigger' : cms.vstring(
-                        "HLT_HIL1SingleMu0_Open_v",#12
-                        "HLT_HIL1SingleMu0_v",#13
-                        "HLT_HIL1SingleMu0_Centrality40to100_v",#14
-                        "HLT_HIL1SingleMu0_Centrality30to100_v",#15
-                        "HLT_HIL1SingleMuOpen_Centrality40to100_v",#16
-                        "HLT_HIL1SingleMuOpen_Centrality30to100_v",#17
-                        "HLT_HIL2SingleMu3_Open_v",#18
-                        "HLT_HIL2SingleMu5_v",#19
-                        "HLT_HIL2SingleMu7_v",#20
-                        "HLT_HIL2SingleMu12_v",#21
-                        "HLT_HIL2SingleMu0_Centrality40to100_v",#22
-                        "HLT_HIL2SingleMu0_Centrality30to100_v",#23
-                        "HLT_HIL2SingleMuOpen_Centrality30to100_v",#24
-                        "HLT_HIMinimumBiasHF1AND_v", #25
-                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #26
-                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #27
+                        "HLT_HIL1SingleMu0_Open_v",#8
+                        "HLT_HIL1SingleMu0_v",#9
+                        "HLT_HIL1SingleMu0_Centrality40to100_v",#10
+                        "HLT_HIL1SingleMu0_Centrality30to100_v",#11
+                        "HLT_HIL1SingleMuOpen_Centrality40to100_v",#12
+                        "HLT_HIL1SingleMuOpen_Centrality30to100_v",#13
+                        "HLT_HIL2SingleMu3_Open_v",#14
+                        "HLT_HIL2SingleMu5_v",#15
+                        "HLT_HIL2SingleMu7_v",#16
+                        "HLT_HIL2SingleMu12_v",#17
+                        "HLT_HIL2SingleMu0_Centrality40to100_v",#18
+                        "HLT_HIL2SingleMu0_Centrality30to100_v",#19
+                        "HLT_HIL2SingleMuOpen_Centrality30to100_v",#20
+                        "HLT_HIMinimumBiasHF1AND_v", #21
+                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #22
 			)
 }
 
 ## Global tag
 if isMC:
-  globalTag = '151X_mcRun3_2025_realistic_HI_v1' #for Run3 MC : phase1_2023_realistic_hi
+  globalTag = '151X_mcRun3_2025_realistic_HI_v3' #for Run3 MC : phase1_2023_realistic_hi
 else:
   globalTag = '132X_dataRun3_Prompt_v7' # 'auto:run3_data_prompt'
 
@@ -125,7 +120,7 @@ print('\n\033[31m~*~ USING OFFICIAL MC CENTRALITY TABLE FOR PbPb 2024 ~*~\033[0m
 process.GlobalTag.snapshotTime = cms.string("9999-12-31 23:59:59.000")
 process.GlobalTag.toGet.extend([
     cms.PSet(record = cms.string("HeavyIonRcd"),
-        tag = cms.string("CentralityTable_HFtowers200_HydjetDrum5F_Run3v1302x04_Official_MC"),
+        tag = cms.string("CentralityTable_HFtowers200_HydjetCello_v1401x0_official_MC2024"),
         connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
         label = cms.untracked.string("HFtowers")
         ),
@@ -239,7 +234,5 @@ process.TFileService = cms.Service("TFileService",
 		)
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxEvents) )
 process.options   = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
-
-process.options.numberOfThreads = 4
 
 process.schedule  = cms.Schedule( process.oniaTreeAna )
