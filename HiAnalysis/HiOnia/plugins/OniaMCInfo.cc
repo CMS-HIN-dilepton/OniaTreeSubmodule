@@ -103,6 +103,7 @@ void HiOniaAnalyzer::fillGenInfo() {
           new ((*Gen_QQ_4mom)[Gen_QQ_size]) TLorentzVector(vJpsi);
           Gen_QQ_4mom_pt.push_back(vJpsi.Pt());
           Gen_QQ_4mom_eta.push_back(vJpsi.Eta());
+          Gen_QQ_4mom_y.push_back(vJpsi.Rapidity());
           Gen_QQ_4mom_phi.push_back(vJpsi.Phi());
           Gen_QQ_4mom_m.push_back(vJpsi.M());
 
@@ -161,6 +162,7 @@ void HiOniaAnalyzer::fillGenInfo() {
                   new ((*Gen_Bc_4mom)[Gen_Bc_size]) TLorentzVector(vBc);
                   Gen_Bc_4mom_pt.push_back(vBc.Pt());
                   Gen_Bc_4mom_eta.push_back(vBc.Eta());
+                  Gen_Bc_4mom_y.push_back(vBc.Rapidity());
                   Gen_Bc_4mom_phi.push_back(vBc.Phi());
                   Gen_Bc_4mom_m.push_back(vBc.M());
 
@@ -171,6 +173,7 @@ void HiOniaAnalyzer::fillGenInfo() {
                   new ((*Gen_Bc_nuW_4mom)[Gen_Bc_size]) TLorentzVector(vnuW);
                   Gen_Bc_nuW_4mom_pt.push_back(vnuW.Pt());
                   Gen_Bc_nuW_4mom_eta.push_back(vnuW.Eta());
+                  Gen_Bc_nuW_4mom_y.push_back(vnuW.Rapidity());
                   Gen_Bc_nuW_4mom_phi.push_back(vnuW.Phi());
                   Gen_Bc_nuW_4mom_m.push_back(vnuW.M());
 

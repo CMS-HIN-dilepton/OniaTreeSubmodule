@@ -239,6 +239,13 @@ private:
   std::vector<float> Gen_mu_4mom_eta;
   std::vector<float> Gen_QQ_4mom_eta;
 
+  std::vector<float> Gen_QQ_4mom_y;
+  std::vector<float> Reco_QQ_4mom_y;
+  std::vector<float> Gen_Bc_4mom_y;
+  std::vector<float> Gen_Bc_nuW_4mom_y;
+  std::vector<float> Gen_3mu_4mom_y;
+  std::vector<float> Reco_3mu_4mom_y;
+
   std::vector<float> Reco_mu_4mom_phi;
   std::vector<float> Reco_mu_L1_4mom_phi;
   std::vector<float> Reco_QQ_4mom_phi;
