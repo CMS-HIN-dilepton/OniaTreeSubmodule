@@ -33,7 +33,6 @@ HiOniaAnalyzer::HiOniaAnalyzer(const edm::ParameterSet& iConfig)
       _SofterSgMuAcceptance(iConfig.getParameter<bool>("SofterSgMuAcceptance")),
       _SumETvariables(iConfig.getParameter<bool>("SumETvariables")),
       _selTightGlobalMuon(iConfig.getParameter<bool>("selTightGlobalMuon")),
-      _storeefficiency(iConfig.getParameter<bool>("storeEfficiency")),
       _muonLessPrimaryVertex(iConfig.getParameter<bool>("muonLessPV")),
       _useSVfinder(iConfig.getParameter<bool>("useSVfinder")),
       _useBS(iConfig.getParameter<bool>("useBeamSpot")),

@@ -84,6 +84,7 @@ private:
   converter::TrackToCandidate Converter_;
   int trackType_;
   double trackMass_;
+  double dimuonMass_;
   GreaterByPt<pat::CompositeCandidate> pTComparator_;
   GreaterByVProb<pat::CompositeCandidate> vPComparator_;
 

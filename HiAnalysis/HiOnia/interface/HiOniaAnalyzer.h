@@ -551,7 +551,6 @@ private:
   bool _SofterSgMuAcceptance;
   bool _SumETvariables;
   bool _selTightGlobalMuon;
-  bool _storeefficiency;
   bool _muonLessPrimaryVertex;
   bool _useSVfinder;
   bool _useBS;
@@ -608,8 +607,8 @@ private:
   float JpsiPtMax;   // DEFINITION
   float JpsiRapMin;  // OF BIN
   float JpsiRapMax;  // LIMITS
-  float JpsiPDGMass = 3.096916;
-  float BcPDGMass = 6.276;
+  float JpsiPDGMass = 3.09609;
+  float BcPDGMass = 6.2745;
 
   math::XYZPoint RefVtx;
   float RefVtx_xError;
