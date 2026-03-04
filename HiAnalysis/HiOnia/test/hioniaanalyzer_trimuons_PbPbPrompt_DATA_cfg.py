@@ -12,7 +12,7 @@ muonSelection  = "TwoGlbAmongThree" # Single muon selection: Glb(isGlobal), GlbT
 applyEventSel  = True # Only apply Event Selection if the required collections are present
 OnlySoftMuons  = True # Keep only isSoftMuon's (with highPurity because this is pp config) from the beginning of HiSkim. In any case, if applyCuts=True, isSoftMuon is required at HiAnalysis level for muons of selected dimuons.
 applyCuts      = True # At HiAnalysis level, apply kinematic acceptance cuts + identification cuts (isSoftMuon or isTightMuon, depending on TightGlobalMuon flag) for muons from selected di(tri)muons + hard-coded cuts on the di(tri)muon that you would want to add (but recommended to add everything in LateDimuonSelection, applied at the end of HiSkim)
-SumETvariables = False  # Whether to write out SumET-related variables
+SumETvariables = True  # Whether to write out SumET-related variables
 SofterSgMuAcceptance = True # Whether to accept muons with a softer acceptance cuts than the usual (pt>3.5GeV at central eta, pt>1.8 at high |eta|). Applies when applyCuts=True
 doTrimuons     = True # Make collections of trimuon candidates in addition to dimuons, and keep only events with >0 trimuons
 flipJpsiDirection = 0 # (number of) Flip direction of Jpsi momentum and PV-SV, before combining it with a third muon
@@ -49,12 +49,12 @@ process = cms.Process("HIOnia", eras.Run3_pp_on_PbPb)
 options = VarParsing.VarParsing ('analysis')
 
 # Input and Output File Names
-options.outputFile = 'Oniatree_trimuons_2023PbPbPromptRecoData_132X_miniAOD.root'
+options.outputFile = 'Oniatree_trimuons_2025PbPbPromptRecoData.root'
 options.secondaryOutputFile = "Jpsi_DataSet.root"
 options.inputFiles =[
   '/store/hidata/HIRun2025A/HIPhysicsRawPrime11/MINIAOD/PromptReco-v1/000/399/587/00000/a52cc265-1ebb-4064-888e-789120a71951.root'
 ]
-options.maxEvents = 100 # -1 means all events
+options.maxEvents = -1 # -1 means all events
 
 # Get and parse the command line arguments
 options.parseArguments()
@@ -147,7 +147,7 @@ process.oniaTreeAna.replace(process.hionia, process.centralityBin * process.hion
 if applyEventSel:
   # Offline event filters
   process.load('HeavyIonsAnalysis.EventAnalysis.collisionEventSelection_cff')
-  process.load('HeavyIonsAnalysis.EventAnalysis.hffilter_cfi')
+  process.load('HeavyIonsAnalysis.EventAnalysis.hffilterPF_cfi')
   #process.oniaTreeAna.replace(process.hionia, process.phfCoincFilter2Th4 * process.primaryVertexFilter * process.clusterCompatibilityFilter * process.hionia )
 
   # HLT trigger firing events
