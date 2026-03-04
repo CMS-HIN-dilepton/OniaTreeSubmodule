@@ -1394,12 +1394,16 @@ void HiOniaAnalyzer::InitTree() {
     if (_doTrimuons || _doDimuTrk) {
       myTree->Branch("Reco_3mu_size", &Reco_3mu_size, "Reco_3mu_size/S");
       myTree->Branch("Reco_3mu_charge", Reco_3mu_charge, "Reco_3mu_charge[Reco_3mu_size]/S");
-      myTree->Branch("Reco_3mu_4mom", "TClonesArray", &Reco_3mu_4mom, 32000, 0);
-      myTree->Branch("Reco_3mu_4mom_pt", &Reco_3mu_4mom_pt, 32000, 0);
-      myTree->Branch("Reco_3mu_4mom_eta", &Reco_3mu_4mom_eta, 32000, 0);
-      myTree->Branch("Reco_3mu_4mom_y", &Reco_3mu_4mom_y, 32000, 0);
-      myTree->Branch("Reco_3mu_4mom_phi", &Reco_3mu_4mom_phi, 32000, 0);
-      myTree->Branch("Reco_3mu_4mom_m", &Reco_3mu_4mom_m, 32000, 0);
+      if (std::strcmp("array", _mom4format.c_str()) == 0)
+        myTree->Branch("Reco_3mu_4mom", "TClonesArray", &Reco_3mu_4mom, 32000, 0);
+      if (std::strcmp("vector", _mom4format.c_str()) == 0){
+        myTree->Branch("Reco_3mu_4mom_pt", &Reco_3mu_4mom_pt, 32000, 0);
+        myTree->Branch("Reco_3mu_4mom_eta", &Reco_3mu_4mom_eta, 32000, 0);
+        myTree->Branch("Reco_3mu_4mom_y", &Reco_3mu_4mom_y, 32000, 0);
+        myTree->Branch("Reco_3mu_4mom_phi", &Reco_3mu_4mom_phi, 32000, 0);
+        myTree->Branch("Reco_3mu_4mom_m", &Reco_3mu_4mom_m, 32000, 0);
+      }
+      
       myTree->Branch("Reco_3mu_mupl_idx", Reco_3mu_mupl_idx, "Reco_3mu_mupl_idx[Reco_3mu_size]/S");
       myTree->Branch("Reco_3mu_mumi_idx", Reco_3mu_mumi_idx, "Reco_3mu_mumi_idx[Reco_3mu_size]/S");
       myTree->Branch("Reco_3mu_muW_idx", Reco_3mu_muW_idx, "Reco_3mu_muW_idx[Reco_3mu_size]/S");
