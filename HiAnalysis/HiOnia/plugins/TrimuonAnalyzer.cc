@@ -112,6 +112,7 @@ void HiOniaAnalyzer::fillTreeBc(int count) {
       new ((*Reco_3mu_4mom)[Reco_3mu_size]) TLorentzVector(vBc);
       Reco_3mu_4mom_pt.push_back(vBc.Pt());
       Reco_3mu_4mom_eta.push_back(vBc.Eta());
+      Reco_3mu_4mom_y.push_back(vBc.Rapidity());
       Reco_3mu_4mom_phi.push_back(vBc.Phi());
       Reco_3mu_4mom_m.push_back(vBc.M());
       // if(_flipJpsiDirection>0){
@@ -457,6 +458,7 @@ void HiOniaAnalyzer::fillBcMatchingInfo() {
     new ((*Gen_3mu_4mom)[igen]) TLorentzVector(gen_3mu_4mom);
     Gen_3mu_4mom_pt.push_back(gen_3mu_4mom.Pt());
     Gen_3mu_4mom_eta.push_back(gen_3mu_4mom.Eta());
+    Gen_3mu_4mom_y.push_back(gen_3mu_4mom.Rapidity());
     Gen_3mu_4mom_phi.push_back(gen_3mu_4mom.Phi());
     Gen_3mu_4mom_m.push_back(gen_3mu_4mom.M());
 

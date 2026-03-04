@@ -12,7 +12,7 @@ muonSelection  = "TwoGlbAmongThree" # Single muon selection: Glb(isGlobal), GlbT
 applyEventSel  = True # Only apply Event Selection if the required collections are present
 OnlySoftMuons  = True # Keep only isSoftMuon's (with highPurity because this is pp config) from the beginning of HiSkim. In any case, if applyCuts=True, isSoftMuon is required at HiAnalysis level for muons of selected dimuons.
 applyCuts      = True # At HiAnalysis level, apply kinematic acceptance cuts + identification cuts (isSoftMuon or isTightMuon, depending on TightGlobalMuon flag) for muons from selected di(tri)muons + hard-coded cuts on the di(tri)muon that you would want to add (but recommended to add everything in LateDimuonSelection, applied at the end of HiSkim)
-SumETvariables = False  # Whether to write out SumET-related variables
+SumETvariables = True  # Whether to write out SumET-related variables
 SofterSgMuAcceptance = True # Whether to accept muons with a softer acceptance cuts than the usual (pt>3.5GeV at central eta, pt>1.8 at high |eta|). Applies when applyCuts=True
 doTrimuons     = True # Make collections of trimuon candidates in addition to dimuons, and keep only events with >0 trimuons
 flipJpsiDirection = 0 # (number of) Flip direction of Jpsi momentum and PV-SV, before combining it with a third muon
@@ -78,15 +78,8 @@ triggerList    = {
                         "HLT_HIL1SingleMu0_Centrality40to100_v",#10
                         "HLT_HIL1SingleMu0_Centrality30to100_v",#11
                         "HLT_HIL1SingleMuOpen_Centrality30to100_v",#12
-                        "HLT_HIL2SingleMu3_Open_v",#13
-                        "HLT_HIL2SingleMu5_v",#14
-                        "HLT_HIL2SingleMu7_v",#15
-                        "HLT_HIL2SingleMu12_v",#16
-                        "HLT_HIL2SingleMu0_Centrality40to100_v",#17
-                        "HLT_HIL2SingleMu0_Centrality30to100_v",#18
-                        "HLT_HIL2SingleMuOpen_Centrality30to100_v",#19
-                        "HLT_HIMinimumBiasHF1AND_v", #20
-                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #21
+                        "HLT_HIMinimumBiasHF1AND_v", #13
+                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #14
 			)
                 }
 
@@ -118,8 +111,7 @@ process.GlobalTag.snapshotTime = cms.string("9999-12-31 23:59:59.000")
 process.GlobalTag.toGet.extend([
     cms.PSet(record = cms.string("HeavyIonRcd"),
         tag = cms.string("CentralityTable_HFtowers200_DataPbPb_periHYDJETshape_run3v140x01_offline_Nominal"),
-        #connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
-        connect = cms.string("sqlite_file:/afs/cern.ch/work/n/nsaha/public/for_GO/DBfiles_2024/CentralityTable_HFtowers200_DataPbPb2024_periHYDJETshape_run3v140x01_offline_Nominal.db"),
+        connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
         label = cms.untracked.string("HFtowers")
         ),
     ])

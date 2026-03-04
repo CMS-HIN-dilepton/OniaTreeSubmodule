@@ -33,7 +33,6 @@ HiOniaAnalyzer::HiOniaAnalyzer(const edm::ParameterSet& iConfig)
       _SofterSgMuAcceptance(iConfig.getParameter<bool>("SofterSgMuAcceptance")),
       _SumETvariables(iConfig.getParameter<bool>("SumETvariables")),
       _selTightGlobalMuon(iConfig.getParameter<bool>("selTightGlobalMuon")),
-      _storeefficiency(iConfig.getParameter<bool>("storeEfficiency")),
       _muonLessPrimaryVertex(iConfig.getParameter<bool>("muonLessPV")),
       _useSVfinder(iConfig.getParameter<bool>("useSVfinder")),
       _useBS(iConfig.getParameter<bool>("useBeamSpot")),
@@ -715,6 +714,7 @@ void HiOniaAnalyzer::fillTreeJpsi(int count) {
       new ((*Reco_QQ_4mom)[Reco_QQ_size]) TLorentzVector(vJpsi);
       Reco_QQ_4mom_pt.push_back(vJpsi.Pt());
       Reco_QQ_4mom_eta.push_back(vJpsi.Eta());
+      Reco_QQ_4mom_y.push_back(vJpsi.Rapidity());
       Reco_QQ_4mom_phi.push_back(vJpsi.Phi());
       Reco_QQ_4mom_m.push_back(vJpsi.M());
 
@@ -996,6 +996,7 @@ void HiOniaAnalyzer::InitEvent() {
   Reco_QQ_4mom->Clear();
   Reco_QQ_4mom_pt.clear();
   Reco_QQ_4mom_eta.clear();
+  Reco_QQ_4mom_y.clear();
   Reco_QQ_4mom_phi.clear();
   Reco_QQ_4mom_m.clear();
   Reco_QQ_mupl_4mom->Clear();
@@ -1033,6 +1034,7 @@ void HiOniaAnalyzer::InitEvent() {
     Gen_QQ_4mom->Clear();
     Gen_QQ_4mom_pt.clear();
     Gen_QQ_4mom_eta.clear();
+    Gen_QQ_4mom_y.clear();
     Gen_QQ_4mom_phi.clear();
     Gen_QQ_4mom_m.clear();
     Gen_mu_4mom->Clear();
@@ -1058,6 +1060,7 @@ void HiOniaAnalyzer::InitEvent() {
     Reco_3mu_4mom->Clear();
     Reco_3mu_4mom_pt.clear();
     Reco_3mu_4mom_eta.clear();
+    Reco_3mu_4mom_y.clear();
     Reco_3mu_4mom_phi.clear();
     Reco_3mu_4mom_m.clear();
 
@@ -1066,16 +1069,19 @@ void HiOniaAnalyzer::InitEvent() {
       Gen_Bc_4mom->Clear();
       Gen_Bc_4mom_pt.clear();
       Gen_Bc_4mom_eta.clear();
+      Gen_Bc_4mom_y.clear();
       Gen_Bc_4mom_phi.clear();
       Gen_Bc_4mom_m.clear();
       Gen_Bc_nuW_4mom->Clear();
       Gen_Bc_nuW_4mom_pt.clear();
       Gen_Bc_nuW_4mom_eta.clear();
+      Gen_Bc_nuW_4mom_y.clear();
       Gen_Bc_nuW_4mom_phi.clear();
       Gen_Bc_nuW_4mom_m.clear();
       Gen_3mu_4mom->Clear();
       Gen_3mu_4mom_pt.clear();
       Gen_3mu_4mom_eta.clear();
+      Gen_3mu_4mom_y.clear();
       Gen_3mu_4mom_phi.clear();
       Gen_3mu_4mom_m.clear();
     }
@@ -1388,11 +1394,16 @@ void HiOniaAnalyzer::InitTree() {
     if (_doTrimuons || _doDimuTrk) {
       myTree->Branch("Reco_3mu_size", &Reco_3mu_size, "Reco_3mu_size/S");
       myTree->Branch("Reco_3mu_charge", Reco_3mu_charge, "Reco_3mu_charge[Reco_3mu_size]/S");
-      myTree->Branch("Reco_3mu_4mom", "TClonesArray", &Reco_3mu_4mom, 32000, 0);
-      myTree->Branch("Reco_3mu_4mom_pt", &Reco_3mu_4mom_pt, 32000, 0);
-      myTree->Branch("Reco_3mu_4mom_eta", &Reco_3mu_4mom_eta, 32000, 0);
-      myTree->Branch("Reco_3mu_4mom_phi", &Reco_3mu_4mom_phi, 32000, 0);
-      myTree->Branch("Reco_3mu_4mom_m", &Reco_3mu_4mom_m, 32000, 0);
+      if (std::strcmp("array", _mom4format.c_str()) == 0)
+        myTree->Branch("Reco_3mu_4mom", "TClonesArray", &Reco_3mu_4mom, 32000, 0);
+      if (std::strcmp("vector", _mom4format.c_str()) == 0){
+        myTree->Branch("Reco_3mu_4mom_pt", &Reco_3mu_4mom_pt, 32000, 0);
+        myTree->Branch("Reco_3mu_4mom_eta", &Reco_3mu_4mom_eta, 32000, 0);
+        myTree->Branch("Reco_3mu_4mom_y", &Reco_3mu_4mom_y, 32000, 0);
+        myTree->Branch("Reco_3mu_4mom_phi", &Reco_3mu_4mom_phi, 32000, 0);
+        myTree->Branch("Reco_3mu_4mom_m", &Reco_3mu_4mom_m, 32000, 0);
+      }
+      
       myTree->Branch("Reco_3mu_mupl_idx", Reco_3mu_mupl_idx, "Reco_3mu_mupl_idx[Reco_3mu_size]/S");
       myTree->Branch("Reco_3mu_mumi_idx", Reco_3mu_mumi_idx, "Reco_3mu_mumi_idx[Reco_3mu_size]/S");
       myTree->Branch("Reco_3mu_muW_idx", Reco_3mu_muW_idx, "Reco_3mu_muW_idx[Reco_3mu_size]/S");
@@ -1460,6 +1471,7 @@ void HiOniaAnalyzer::InitTree() {
     if (std::strcmp("vector", _mom4format.c_str()) == 0) {
       myTree->Branch("Reco_QQ_4mom_pt", &Reco_QQ_4mom_pt, 32000, 0);
       myTree->Branch("Reco_QQ_4mom_eta", &Reco_QQ_4mom_eta, 32000, 0);
+      myTree->Branch("Reco_QQ_4mom_y", &Reco_QQ_4mom_y, 32000, 0);
       myTree->Branch("Reco_QQ_4mom_phi", &Reco_QQ_4mom_phi, 32000, 0);
       myTree->Branch("Reco_QQ_4mom_m", &Reco_QQ_4mom_m, 32000, 0);
     }
@@ -1627,6 +1639,7 @@ genOnly2:
       if (std::strcmp("vector", _mom4format.c_str()) == 0) {
 	      myTree->Branch("Gen_QQ_4mom_pt", &Gen_QQ_4mom_pt, 32000, 0);
 	      myTree->Branch("Gen_QQ_4mom_eta", &Gen_QQ_4mom_eta, 32000, 0);
+        myTree->Branch("Gen_QQ_4mom_y", &Gen_QQ_4mom_y, 32000, 0);
 	      myTree->Branch("Gen_QQ_4mom_phi", &Gen_QQ_4mom_phi, 32000, 0);
 	      myTree->Branch("Gen_QQ_4mom_m", &Gen_QQ_4mom_m, 32000, 0);
       }
@@ -1650,14 +1663,17 @@ genOnly2:
         if (std::strcmp("vector", _mom4format.c_str()) == 0) {
           myTree->Branch("Gen_Bc_4mom_pt", &Gen_Bc_4mom_pt, 32000, 0);
           myTree->Branch("Gen_Bc_4mom_eta", &Gen_Bc_4mom_eta, 32000, 0);
+          myTree->Branch("Gen_Bc_4mom_y", &Gen_Bc_4mom_y, 32000, 0);
           myTree->Branch("Gen_Bc_4mom_phi", &Gen_Bc_4mom_phi, 32000, 0);
           myTree->Branch("Gen_Bc_4mom_m", &Gen_Bc_4mom_m, 32000, 0);
           myTree->Branch("Gen_Bc_nuW_4mom_pt", &Gen_Bc_nuW_4mom_pt, 32000, 0);
           myTree->Branch("Gen_Bc_nuW_4mom_eta", &Gen_Bc_nuW_4mom_eta, 32000, 0);
+          myTree->Branch("Gen_Bc_nuW_4mom_y", &Gen_Bc_nuW_4mom_y, 32000, 0);
           myTree->Branch("Gen_Bc_nuW_4mom_phi", &Gen_Bc_nuW_4mom_phi, 32000, 0);
           myTree->Branch("Gen_Bc_nuW_4mom_m", &Gen_Bc_nuW_4mom_m, 32000, 0);
           myTree->Branch("Gen_3mu_4mom_pt", &Gen_3mu_4mom_pt, 32000, 0);
           myTree->Branch("Gen_3mu_4mom_eta", &Gen_3mu_4mom_eta, 32000, 0);
+          myTree->Branch("Gen_3mu_4mom_y", &Gen_3mu_4mom_y, 32000, 0);
           myTree->Branch("Gen_3mu_4mom_phi", &Gen_3mu_4mom_phi, 32000, 0);
           myTree->Branch("Gen_3mu_4mom_m", &Gen_3mu_4mom_m, 32000, 0);
         }

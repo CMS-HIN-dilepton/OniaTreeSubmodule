@@ -57,8 +57,7 @@ options.outputFile = "Oniatree_promptJpsi_ppRefMC_141X.root"
 options.secondaryOutputFile = "Jpsi_DataSet.root"
 
 options.inputFiles =[
-  '/store/user/fdamas/RunPrep2024/Jpsi_pTHatMin4/jpsi_pileupAverage5_RECOMINIAOD/241015_115034/0000/miniAOD_101.root',
-  '/store/user/fdamas/RunPrep2024/Jpsi_pTHatMin4/jpsi_pileupAverage5_RECOMINIAOD/241015_115034/0000/miniAOD_122.root'
+  '/store/mc/RunIIIpp5p36Winter24MiniAOD/PromptJPsiToMuMu_pThat-2_TuneCP5_5p36TeV_pythia8/MINIAODSIM/141X_mcRun3_2024_realistic_ppRef5TeV_v7-v2/2810000/54bf79d1-7ea9-4609-87ea-55d2ddaca73a.root'
 ]
 options.maxEvents = -1 # -1 means all events
 
@@ -97,7 +96,7 @@ triggerList    = {
 
 ## Global tag
 if isMC:
-  globalTag = '141X_mcRun3_2024_realistic_ppRef5TeV_v5'
+  globalTag = '141X_mcRun3_2024_realistic_ppRef5TeV_v7'
 else:
   globalTag = 'auto:run3_data'
 
@@ -198,7 +197,7 @@ if applyEventSel:
     process.hltHI.throw = False
     process.hltHI.andOr = True
     
-    process.oniaTreeAna.replace(process.patMuonSequence, process.primaryVertexFilter * process.clusterCompatibilityFilter * process.patMuonSequence )
+    process.oniaTreeAna.replace(process.patMuonSequence, process.primaryVertexFilter * process.patMuonSequence )
 
 
 if atLeastOneCand:

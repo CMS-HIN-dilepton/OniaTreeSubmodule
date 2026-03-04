@@ -3,7 +3,7 @@ from WMCore.Configuration import Configuration
 config = Configuration()
 
 config.section_("General")
-config.General.requestName = "PromptJpsi_pileup5"
+config.General.requestName = "PromptJpsi"
 config.General.workArea = 'crab_projects'
 config.General.transferOutputs = True
 config.General.transferLogs = False
@@ -18,8 +18,8 @@ config.JobType.maxJobRuntimeMin = 1200 #2750    # request longer runtime, ~48 ho
 
 
 config.section_("Data")
-config.Data.inputDataset = '/Jpsi_pTHatMin4/fdamas-jpsi_pileupAverage5_RECOMINIAOD-0c806ad3487008402bfb8366cb730906/USER'
-config.Data.inputDBS = 'phys03'
+config.Data.inputDataset = '/PromptJPsiToMuMu_pThat-2_TuneCP5_5p36TeV_pythia8/RunIIIpp5p36Winter24MiniAOD-141X_mcRun3_2024_realistic_ppRef5TeV_v7-v2/MINIAODSIM'
+config.Data.inputDBS = 'global'
 config.Data.unitsPerJob = 40
 #config.Data.totalUnits = -1
 config.Data.splitting = "FileBased"

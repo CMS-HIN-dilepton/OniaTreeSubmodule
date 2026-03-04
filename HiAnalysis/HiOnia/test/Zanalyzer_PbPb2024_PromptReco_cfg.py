@@ -17,7 +17,7 @@ SofterSgMuAcceptance = False # Whether to accept muons with a softer acceptance 
 doTrimuons     = False # Make collections of trimuon candidates in addition to dimuons, and keep only events with >0 trimuons (if atLeastOneCand)
 doDimuonTrk    = False # Make collections of Jpsi+track candidates in addition to dimuons
 atLeastOneCand = False # Keep only events that have one selected dimuon (or at least one trimuon if doTrimuons = true). BEWARE this can cause trouble in .root output if no event is selected by onia2MuMuPatGlbGlbFilter!
-OneMatchedHLTMu = 20   # Keep only di(tri)muons of which the one(two) muon(s) are matched to the HLT Filter of this number. You can get the desired number in the output of oniaTree. Set to -1 for no matching.
+OneMatchedHLTMu = -1   # Keep only di(tri)muons of which the one(two) muon(s) are matched to the HLT Filter of this number. You can get the desired number in the output of oniaTree. Set to -1 for no matching.
 #############################################################################
 keepExtraColl  = False # General Tracks + Stand Alone Muons + Converted Photon collections
 miniAOD        = False # whether the input file is in miniAOD format (default is AOD)
@@ -151,8 +151,7 @@ process.GlobalTag.snapshotTime = cms.string("9999-12-31 23:59:59.000")
 process.GlobalTag.toGet.extend([
     cms.PSet(record = cms.string("HeavyIonRcd"),
         tag = cms.string("CentralityTable_HFtowers200_DataPbPb_periHYDJETshape_run3v140x01_offline_Nominal"),
-        #connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
-        connect = cms.string("sqlite_file:/afs/cern.ch/work/n/nsaha/public/for_GO/DBfiles_2024/CentralityTable_HFtowers200_DataPbPb2024_periHYDJETshape_run3v140x01_offline_Nominal.db"),
+        connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
         label = cms.untracked.string("HFtowers")
         ),
     ])
@@ -169,7 +168,7 @@ oniaTreeAnalyzer(process,
 
 #if applyCuts:
 
-process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 60 && charge==0")
+process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 60")
 process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 15. && isPFMuon && isGlobalMuon && abs(eta) < 2.4 && (globalTrack().normalizedChi2() < 10) && (globalTrack().hitPattern().numberOfValidMuonHits()>0) && (numberOfMatchedStations() > 1) && (innerTrack().hitPattern().numberOfValidPixelHits() > 0)")
 
 process.onia2MuMuPatGlbGlb.LateDimuonSel = cms.string("userFloat(\"vProb\")>0.001")
@@ -187,6 +186,8 @@ process.hionia.AtLeastOneCand   = cms.bool(atLeastOneCand)
 process.hionia.OneMatchedHLTMu  = cms.int32(OneMatchedHLTMu)
 process.hionia.checkTrigNames   = cms.bool(False)#change this to get the event-level trigger info in hStats output (but creates lots of warnings when fake trigger names are used)
 process.hionia.mom4format       = cms.string(useMomFormat)
+
+process.hionia.storeSameSgin = cms.bool(True)
 
 process.oniaTreeAna.replace(process.hionia, process.centralityBin * process.hionia )
 
@@ -213,7 +214,7 @@ if applyEventSel:
                                  )
 
   # PV and trigger filters already applied to the PbPbZMu skim
-  process.oniaTreeAna.replace(process.patMuonSequence, process.muonSelector * process.atLeastTwoMuons * process.phfCoincFilterPF2Th4 * process.clusterCompatibilityFilter * process.patMuonSequence )
+  process.oniaTreeAna.replace(process.patMuonSequence, process.muonSelector * process.atLeastTwoMuons * process.phfCoincFilterPF2Th4 * process.patMuonSequence )
 
 if atLeastOneCand:
   if doTrimuons:

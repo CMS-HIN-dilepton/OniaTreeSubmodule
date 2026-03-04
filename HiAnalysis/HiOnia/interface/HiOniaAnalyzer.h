@@ -239,6 +239,13 @@ private:
   std::vector<float> Gen_mu_4mom_eta;
   std::vector<float> Gen_QQ_4mom_eta;
 
+  std::vector<float> Gen_QQ_4mom_y;
+  std::vector<float> Reco_QQ_4mom_y;
+  std::vector<float> Gen_Bc_4mom_y;
+  std::vector<float> Gen_Bc_nuW_4mom_y;
+  std::vector<float> Gen_3mu_4mom_y;
+  std::vector<float> Reco_3mu_4mom_y;
+
   std::vector<float> Reco_mu_4mom_phi;
   std::vector<float> Reco_mu_L1_4mom_phi;
   std::vector<float> Reco_QQ_4mom_phi;
@@ -544,7 +551,6 @@ private:
   bool _SofterSgMuAcceptance;
   bool _SumETvariables;
   bool _selTightGlobalMuon;
-  bool _storeefficiency;
   bool _muonLessPrimaryVertex;
   bool _useSVfinder;
   bool _useBS;
@@ -601,8 +607,8 @@ private:
   float JpsiPtMax;   // DEFINITION
   float JpsiRapMin;  // OF BIN
   float JpsiRapMax;  // LIMITS
-  float JpsiPDGMass = 3.096916;
-  float BcPDGMass = 6.276;
+  float JpsiPDGMass = 3.09609;
+  float BcPDGMass = 6.2745;
 
   math::XYZPoint RefVtx;
   float RefVtx_xError;
