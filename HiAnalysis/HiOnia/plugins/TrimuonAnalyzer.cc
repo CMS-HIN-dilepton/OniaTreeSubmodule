@@ -57,7 +57,7 @@ void HiOniaAnalyzer::fillTreeBc(int count) {
 
       else {
         //If Bc charge is OK, write out the QQ indices for the two opposite-sign pairs
-        if (fabs(charge) == 1) {
+        if (std::abs(charge) == 1) {
           int mu_loneCharge = mu1_idx;
           int mu_SameCharge1 = mu2_idx;
           int mu_SameCharge2 = mu3_idx;
@@ -320,10 +320,10 @@ void HiOniaAnalyzer::makeBcCuts(bool keepWrongSign) {
             continue;
           }
 
-          if (fabs(RefVtx.Z()) > _iConfig.getParameter<double>("maxAbsZ"))
+          if (std::abs(RefVtx.Z()) > _iConfig.getParameter<double>("maxAbsZ"))
             continue;
 
-          if (fabs(muon1->eta()) >= etaMax || fabs(muon2->eta()) >= etaMax || fabs(muon3->eta()) >= etaMax)
+          if (std::abs(muon1->eta()) >= etaMax || std::abs(muon2->eta()) >= etaMax || std::abs(muon3->eta()) >= etaMax)
             continue;
 
           //Pass muon selection?
@@ -430,7 +430,7 @@ std::pair<bool, reco::GenParticleRef> HiOniaAnalyzer::findBcMotherRef(reco::GenP
                                                                       int BcPDG) {
   bool FoundBc = false;
   for (int i = 0; i < 1000; ++i) {
-    if ((fabs(GenParticleMother->pdgId()) == BcPDG) && (GenParticleMother->status() == 2) &&
+    if ((std::abs(GenParticleMother->pdgId()) == BcPDG) && (GenParticleMother->status() == 2) &&
         (GenParticleMother->numberOfDaughters() >= 2)) {
       FoundBc = true;
       break;
@@ -530,8 +530,8 @@ void HiOniaAnalyzer::fillBcMatchingInfo() {
       //If the muon is fake, match it to whatever generated particles
       if (genMuWidx == -1) {
         TLorentzVector* recmuW = (TLorentzVector*)Reco_mu_4mom->ConstructedAt(newmuWidx);
-        bool SureDecayInFlight = (fabs(Reco_mu_simExtType[newmuWidx]) == 4);
-        bool Unmatched = (fabs(Reco_mu_simExtType[newmuWidx]) == 0);
+        bool SureDecayInFlight = (std::abs(Reco_mu_simExtType[newmuWidx]) == 4);
+        bool Unmatched = (std::abs(Reco_mu_simExtType[newmuWidx]) == 0);
         float dRmax = SureDecayInFlight ? 0.3 : (Unmatched ? 0.15 : 0.1);
         float dRmin = dRmax;
         float matchedPhi = 5;
@@ -565,7 +565,7 @@ void HiOniaAnalyzer::fillBcMatchingInfo() {
         //If the Jpsi is true, check if the matched gen particle was part of the B-parent process
         if (genQQidx > -1) {
           for (auto&& bro : _Gen_QQ_MomAndTrkBro[genQQidx]) {
-            if (fabs(bro->phi() - matchedPhi) < 1e-6 && isChargedTrack(bro->pdgId())) {
+            if (std::abs(bro->phi() - matchedPhi) < 1e-6 && isChargedTrack(bro->pdgId())) {
               Reco_3mu_muW_isGenJpsiBro[irec] = true;
               //cout<<"   !!!!!!!!!!!!    FAKE muW is from B parent"<<endl;
               break;
@@ -580,8 +580,8 @@ void HiOniaAnalyzer::fillBcMatchingInfo() {
 
         if (genQQidx > -1) {
           for (auto&& bro : _Gen_QQ_MomAndTrkBro[genQQidx]) {
-            if (fabs(bro->pdgId()) == 13 &&
-                fabs(bro->phi() - ((TLorentzVector*)Gen_mu_4mom->ConstructedAt(genMuWidx))->Phi()) < 1e-6) {
+            if (std::abs(bro->pdgId()) == 13 &&
+                std::abs(bro->phi() - ((TLorentzVector*)Gen_mu_4mom->ConstructedAt(genMuWidx))->Phi()) < 1e-6) {
               Reco_3mu_muW_isGenJpsiBro[irec] = true;
               break;
             }

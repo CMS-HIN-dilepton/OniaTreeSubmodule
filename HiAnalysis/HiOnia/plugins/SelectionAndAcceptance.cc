@@ -67,7 +67,7 @@ bool HiOniaAnalyzer::isMuonInAccept(const pat::Muon* aMuon, const std::string mu
 bool HiOniaAnalyzer::isSoftMuonBase(const pat::Muon* aMuon) {
   return (aMuon->isTrackerMuon() && aMuon->innerTrack()->hitPattern().trackerLayersWithMeasurement() > 5 &&
           aMuon->innerTrack()->hitPattern().pixelLayersWithMeasurement() > 0 &&
-          fabs(aMuon->innerTrack()->dxy(RefVtx)) < 0.3 && fabs(aMuon->innerTrack()->dz(RefVtx)) < 20.);
+          abs(aMuon->innerTrack()->dxy(RefVtx)) < 0.3 && abs(aMuon->innerTrack()->dz(RefVtx)) < 20.);
 };
 
 bool HiOniaAnalyzer::isHybridSoftMuon(const pat::Muon* aMuon) {
@@ -127,7 +127,7 @@ bool HiOniaAnalyzer::selTrk(const reco::TrackRef aTrk) {
 
   bool isInAcc =
       aTrk->pt() > 1.2 &&
-      fabs(aTrk->eta()) <
+      abs(aTrk->eta()) <
           2.4;  //(aTrk->pt())>0.2 && fabs(aTrk->eta())<2.4 && aTrk->ptError()/aTrk->pt()<0.1 && fabs(aTrk->dxy(RefVtx))<0.35 && fabs(aTrk->dz(RefVtx))<20; //keep margin in dxy and dz, if the RefVtx is not the good one due to muonlessPV
 
   return (isInAcc);
@@ -140,8 +140,8 @@ bool HiOniaAnalyzer::isAbHadron(int pdgID) {
 bool HiOniaAnalyzer::isNeutrino(int pdgID) { return (abs(pdgID) == 14 || abs(pdgID) == 16 || abs(pdgID) == 18); };
 
 bool HiOniaAnalyzer::isChargedTrack(int pdgId) {
-  return ((fabs(pdgId) == 211) || (fabs(pdgId) == 321) || (fabs(pdgId) == 2212) || (fabs(pdgId) == 11) ||
-          (fabs(pdgId) == 13));
+  return ((abs(pdgId) == 211) || (abs(pdgId) == 321) || (abs(pdgId) == 2212) || (abs(pdgId) == 11) ||
+          (abs(pdgId) == 13));
 };
 
 bool HiOniaAnalyzer::isAMixedbHadron(int pdgID, int momPdgID) {

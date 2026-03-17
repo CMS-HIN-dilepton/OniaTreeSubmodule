@@ -78,7 +78,7 @@ HiOnia2MuMuPAT::~HiOnia2MuMuPAT(){};
 bool HiOnia2MuMuPAT::isSoftMuonBase(const pat::Muon *aMuon) {
   return (aMuon->isTrackerMuon() && aMuon->innerTrack()->hitPattern().trackerLayersWithMeasurement() > 5 &&
           aMuon->innerTrack()->hitPattern().pixelLayersWithMeasurement() > 0 &&
-          fabs(aMuon->innerTrack()->dxy(RefVtx)) < 0.3 && fabs(aMuon->innerTrack()->dz(RefVtx)) < 20.);
+          std::abs(aMuon->innerTrack()->dxy(RefVtx)) < 0.3 && std::abs(aMuon->innerTrack()->dz(RefVtx)) < 20.);
 }
 
 //1: $z -> -z$ and $\phi -> \phi+\pi$ (mirror)
@@ -227,8 +227,8 @@ void HiOnia2MuMuPAT::produce(edm::Event &iEvent, const edm::EventSetup &iSetup) 
       Ntrk = 0;
       for (unsigned int tidx = 0; tidx < collTracks->size(); tidx++) {
         const reco::TrackRef track(collTracks, tidx);
-        if (track->qualityByName("highPurity") && track->eta() < 2.4 && fabs(track->dxy(RefVtx)) < 0.3 &&
-            fabs(track->dz(RefVtx)) < 20) {
+        if (track->qualityByName("highPurity") && std::(track->eta()) < 2.4 && std::abs(track->dxy(RefVtx)) < 0.3 &&
+            std::abs(track->dz(RefVtx)) < 20) {
           Ntrk++;
           if (DimuonTrk_) {
             ourTracks.push_back(track);
@@ -332,9 +332,9 @@ void HiOnia2MuMuPAT::produce(edm::Event &iEvent, const edm::EventSetup &iSetup) 
 
           for (VertexCollection::const_iterator itv = priVtxs->begin(), itvend = priVtxs->end(); itv != itvend; ++itv) {
             // only consider good vertices
-            if (itv->isFake() || itv->tracksSize() < 2 || fabs(itv->position().z()) > 25 || itv->position().Rho() > 2)
+            if (itv->isFake() || itv->tracksSize() < 2 || std::abs(itv->position().z()) > 25 || itv->position().Rho() > 2)
               continue;
-            float deltaZ = fabs(extrapZ - itv->position().z());
+            float deltaZ = std::abs(extrapZ - itv->position().z());
             if (deltaZ < minDz) {
               minDz = deltaZ;
               thePrimaryV = Vertex(*itv);
@@ -716,8 +716,8 @@ void HiOnia2MuMuPAT::produce(edm::Event &iEvent, const edm::EventSetup &iSetup) 
           piCand3.setPdgId(trackType_);
           piCand3.setMass(trackMass_);  //usually pion or muon mass
 
-          if ((fabs((it3->pt() - (it.track())->pt())) < 1e-4 && fabs((it3->eta() - (it.track())->eta())) < 1e-6) ||
-              (fabs((it3->pt() - (it2.track())->pt())) < 1e-4 && (fabs(it3->eta() - (it2.track())->eta())) < 1e-6)) {
+          if ((std::abs((it3->pt() - (it.track())->pt())) < 1e-4 && std::abs((it3->eta() - (it.track())->eta())) < 1e-6) ||
+              (std::abs((it3->pt() - (it2.track())->pt())) < 1e-4 && (std::abs(it3->eta() - (it2.track())->eta())) < 1e-6)) {
             continue;
           }
           pat::CompositeCandidate BcCand;

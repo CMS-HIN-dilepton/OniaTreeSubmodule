@@ -392,9 +392,9 @@ void HiOniaAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     if (collTracks.isValid()) {
       for (unsigned int tidx = 0; tidx < collTracks->size(); tidx++) {
         const reco::TrackRef track(collTracks, tidx);
-        if (track->qualityByName("highPurity") && track->eta() < 2.4 &&
-            fabs(track->dxy(RefVtx) / track->dxyError()) < 3 && fabs(track->dz(RefVtx) / track->dzError()) < 3 &&
-            track->dz(RefVtx) < 0.5 && fabs(track->ptError() / track->pt()) < 0.1) {
+        if (track->qualityByName("highPurity") && std::abs(track->eta()) < 2.4 &&
+            std::abs(track->dxy(RefVtx) / track->dxyError()) < 3 && std::abs(track->dz(RefVtx) / track->dzError()) < 3 &&
+            track->dz(RefVtx) < 0.5 && std::abs(track->ptError() / track->pt()) < 0.1) {
           Ntracks++;
         }
       }
@@ -822,8 +822,8 @@ void HiOniaAnalyzer::fillTreeJpsi(int count) {
             double dxy = track->dxy(RefVtx);
             double dxysigma = sqrt(track->dxyError() * track->dxyError() + RefVtx_xError * RefVtx_yError);
 
-            if (track->qualityByName("highPurity") && track->pt() > 0.2 && fabs(track->eta()) < 2.4 &&
-                track->ptError() / track->pt() < 0.1 && fabs(dz / dzsigma) < 3.0 && fabs(dxy / dxysigma) < 3.0) {
+            if (track->qualityByName("highPurity") && track->pt() > 0.2 && std::abs(track->eta()) < 2.4 &&
+                track->ptError() / track->pt() < 0.1 && std::abs(dz / dzsigma) < 3.0 && std::abs(dxy / dxysigma) < 3.0) {
               Reco_QQ_NtrkPt02[Reco_QQ_size]++;
               if (track->pt() > 0.3)
                 Reco_QQ_NtrkPt03[Reco_QQ_size]++;
@@ -889,11 +889,11 @@ void HiOniaAnalyzer::fillRecoJpsi(int count, std::string trigName, std::string c
 
   std::string theLabel = trigName + "_" + centName + "_" + theSign.at(iSign);
 
-  bool isBarrel = (fabs(aJpsiCand->rapidity()) < 1.2);
+  bool isBarrel = (std::abs(aJpsiCand->rapidity()) < 1.2);
 
   if (iSign == 0 && aJpsiCand->mass() >= JpsiMassMin && aJpsiCand->mass() < JpsiMassMax &&
-      aJpsiCand->pt() >= JpsiPtMin && aJpsiCand->pt() < JpsiPtMax && abs(aJpsiCand->rapidity()) >= JpsiRapMin &&
-      fabs(aJpsiCand->rapidity()) < JpsiRapMax)
+      aJpsiCand->pt() >= JpsiPtMin && aJpsiCand->pt() < JpsiPtMax && std::abs(aJpsiCand->rapidity()) >= JpsiRapMin &&
+      std::abs(aJpsiCand->rapidity()) < JpsiRapMax)
     passedCandidates++;
 
   if (_fillHistos) {
@@ -1114,7 +1114,7 @@ void HiOniaAnalyzer::fillRecoTracks() {
     }
     bool WantedTrack = false;
     for (int k = 0; k < (int)EtaOfWantedTracks.size(); k++) {
-      if (fabs(track->eta() - EtaOfWantedTracks[k]) < 1e-5) {
+      if (std::abs(track->eta() - EtaOfWantedTracks[k]) < 1e-5) {
         WantedTrack = true;
         break;
       }
@@ -1132,7 +1132,7 @@ void HiOniaAnalyzer::fillRecoTracks() {
       vTrack.SetPtEtaPhiM(track->pt(), track->eta(), track->phi(), 0.13957018);  //0.13957018 for the pion
 
       if (_isMC) {
-	Reco_trk_whichGenmu[Reco_trk_size] = -1;
+	      Reco_trk_whichGenmu[Reco_trk_size] = -1;
 
         float dRmax = 0.05;  //dR max of the matching to gen muons//same than for reco-gen muon matching
         float dR;
@@ -1141,13 +1141,13 @@ void HiOniaAnalyzer::fillRecoTracks() {
           TLorentzVector* genmu = (TLorentzVector*)Gen_mu_4mom->ConstructedAt(igen);
           dR = genmu->DeltaR(vTrack);
           if (dR <= dRmax && track->charge() == Gen_mu_charge[igen] &&
-              fabs(genmu->Pt() - vTrack.Pt()) / genmu->Pt() < dPtmax) {
+              std::abs(genmu->Pt() - vTrack.Pt()) / genmu->Pt() < dPtmax) {
             dRmax = dR;
             Reco_trk_whichGenmu[Reco_trk_size] = igen;
           }
         }
 
-	if (Reco_trk_whichGenmu[Reco_trk_size] == -1) continue;
+	      if (Reco_trk_whichGenmu[Reco_trk_size] == -1) continue;
       }
 
       Reco_trk_charge[Reco_trk_size] = track->charge();
@@ -1210,7 +1210,7 @@ void HiOniaAnalyzer::fillRecoMuons(int iCent) {
       if (!_fillSingleMuons) {
         bool WantedMuon = false;
         for (int k = 0; k < (int)EtaOfWantedMuons.size(); k++) {
-          if (fabs(muon->eta() - EtaOfWantedMuons[k]) < 1e-5) {
+          if (std::abs(muon->eta() - EtaOfWantedMuons[k]) < 1e-5) {
             WantedMuon = true;
             break;
           }
@@ -1219,7 +1219,7 @@ void HiOniaAnalyzer::fillRecoMuons(int iCent) {
           continue;
       }
 
-      bool isBarrel = (fabs(muon->eta() < 1.2));
+      bool isBarrel = std::abs(muon->eta() < 1.2);
       std::string theLabel = theTriggerNames.at(0) + "_" + theCentralities.at(iCent);
 
       if (_fillHistos) {

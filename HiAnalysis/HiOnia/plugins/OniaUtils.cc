@@ -19,7 +19,7 @@ void HiOniaAnalyzer::fillMuMatchingInfo() {
     if (Reco_mu_pTrue[irec] >= 0) {  //if pTrue=-1, then the reco muon is a fake
       for (int igen = 0; igen < Gen_mu_size; igen++) {
         TLorentzVector* genmuMom = (TLorentzVector*)Gen_mu_4mom->ConstructedAt(igen);
-        if (fabs(genmuMom->P() - Reco_mu_pTrue[irec]) / Reco_mu_pTrue[irec] < 1e-6 &&
+        if (std::abs(genmuMom->P() - Reco_mu_pTrue[irec]) / Reco_mu_pTrue[irec] < 1e-6 &&
             Gen_mu_charge[igen] == Reco_mu_charge[irec]) {
           foundGen = igen;
           break;
@@ -76,10 +76,10 @@ void HiOniaAnalyzer::makeCuts(bool keepSameSign) {
             continue;
           }
 
-          if (fabs(RefVtx.Z()) > _iConfig.getParameter<double>("maxAbsZ"))
+          if (std::abs(RefVtx.Z()) > _iConfig.getParameter<double>("maxAbsZ"))
             continue;
 
-          if (fabs(muon1->eta()) >= etaMax || fabs(muon2->eta()) >= etaMax)
+          if (std::abs(muon1->eta()) >= etaMax || std::abs(muon2->eta()) >= etaMax)
             continue;
 
           //Pass muon selection?
@@ -276,10 +276,10 @@ void HiOniaAnalyzer::makeDimutrkCuts(bool keepWrongSign) {
             continue;
           }
 
-          if (fabs(RefVtx.Z()) > _iConfig.getParameter<double>("maxAbsZ"))
+          if (std::abs(RefVtx.Z()) > _iConfig.getParameter<double>("maxAbsZ"))
             continue;
 
-          if (fabs(muon1->eta()) >= etaMax || fabs(muon2->eta()) >= etaMax || fabs(trk->eta()) >= etaMax)
+          if (std::abs(muon1->eta()) >= etaMax || std::abs(muon2->eta()) >= etaMax || std::abs(trk->eta()) >= etaMax)
             continue;
 
           //Pass muon selection?
@@ -408,7 +408,7 @@ Short_t HiOniaAnalyzer::MuInSV(TLorentzVector v1, TLorentzVector v2, TLorentzVec
     const reco::Vertex* vtx = &(*vt);
     int nTrksInSV = 0;
     for (reco::Vertex::trackRef_iterator it = vtx->tracks_begin(); it != vtx->tracks_end(); ++it) {
-      if ((fabs((*it)->pt() - v1.Pt()) < 1e-3 && fabs((*it)->eta() - v1.Eta()) < 1e-4) ||
+      if ((std::abs((*it)->pt() - v1.Pt()) < 1e-3 && fabs((*it)->eta() - v1.Eta()) < 1e-4) ||
           (fabs((*it)->pt() - v2.Pt()) < 1e-3 && fabs((*it)->eta() - v2.Eta()) < 1e-4) ||
           (fabs((*it)->pt() - v3.Pt()) < 1e-3 && fabs((*it)->eta() - v3.Eta()) < 1e-4)) {
         nTrksInSV += 1;
@@ -515,7 +515,7 @@ int HiOniaAnalyzer::muonIDmask(const pat::Muon* muon) {
 };
 
 long int HiOniaAnalyzer::FloatToIntkey(float v) {
-  float vres = fabs(v);
+  float vres = std::abs(v);
   while (vres > 0.1)
     vres = vres / 10;                  //Assume argument v is always above 0.1, true for abs(Pt)
   return (long int)(10000000 * vres);  // Precision 10^-6 (i.e. 7-1) on the comparison
