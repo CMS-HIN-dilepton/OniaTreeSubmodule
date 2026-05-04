@@ -110,11 +110,11 @@ void HiOniaAnalyzer::fillGenInfo() {
           TLorentzVector vMuon2 = lorentzMomentum(genMuon2->p4());
 
           if (genMuon1->charge() > genMuon2->charge()) {
-            Gen_QQ_mupl_idx[Gen_QQ_size] = IndexOfThisMuon(vMuon1.pt(), true);
-            Gen_QQ_mumi_idx[Gen_QQ_size] = IndexOfThisMuon(vMuon2.pt(), true);
+            Gen_QQ_mupl_idx[Gen_QQ_size] = IndexOfThisMuon(vMuon1.Pt(), true);
+            Gen_QQ_mumi_idx[Gen_QQ_size] = IndexOfThisMuon(vMuon2.Pt(), true);
           } else {
-            Gen_QQ_mupl_idx[Gen_QQ_size] = IndexOfThisMuon(vMuon2.pt(), true);
-            Gen_QQ_mumi_idx[Gen_QQ_size] = IndexOfThisMuon(vMuon1.pt(), true);
+            Gen_QQ_mupl_idx[Gen_QQ_size] = IndexOfThisMuon(vMuon2.Pt(), true);
+            Gen_QQ_mumi_idx[Gen_QQ_size] = IndexOfThisMuon(vMuon1.Pt(), true);
           }
 
           if (_doTrimuons) {
@@ -164,8 +164,8 @@ void HiOniaAnalyzer::fillGenInfo() {
                   Gen_Bc_4mom_phi.push_back(vBc.Phi());
                   Gen_Bc_4mom_m.push_back(vBc.M());
 
-                  TLorentzVector vmuW = lorentzMomentum(genmuW->p4());
-                  Gen_Bc_muW_idx[Gen_Bc_size] = IndexOfThisMuon(&vmuW, true);
+                  //TLorentzVector vmuW = lorentzMomentum(genmuW->p4());
+                  Gen_Bc_muW_idx[Gen_Bc_size] = IndexOfThisMuon(genmuW->pt(), true);
 
                   TLorentzVector vnuW = lorentzMomentum(gennuW->p4());
                   new ((*Gen_Bc_nuW_4mom)[Gen_Bc_size]) TLorentzVector(vnuW);

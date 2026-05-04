@@ -650,8 +650,8 @@ void HiOniaAnalyzer::fillTreeJpsi(int count) {
       }
 
       if (muon1->charge() > muon2->charge()) {
-        Reco_QQ_mupl_idx[Reco_QQ_size] = IndexOfThisMuon(vMuon1.pt());  //needs the non-flipped muon momentum
-        Reco_QQ_mumi_idx[Reco_QQ_size] = IndexOfThisMuon(vMuon2.pt());
+        Reco_QQ_mupl_idx[Reco_QQ_size] = IndexOfThisMuon(vMuon1.Pt());  //needs the non-flipped muon momentum
+        Reco_QQ_mumi_idx[Reco_QQ_size] = IndexOfThisMuon(vMuon2.Pt());
 
         if (_flipJpsiDirection > 0) {
           iTrack_mupl = mu1Trk;
@@ -675,8 +675,8 @@ void HiOniaAnalyzer::fillTreeJpsi(int count) {
         }
 
       } else {
-        Reco_QQ_mupl_idx[Reco_QQ_size] = IndexOfThisMuon(vMuon2.pt());  //needs the non-flipped muon momentum
-        Reco_QQ_mumi_idx[Reco_QQ_size] = IndexOfThisMuon(vMuon1.pt());
+        Reco_QQ_mupl_idx[Reco_QQ_size] = IndexOfThisMuon(vMuon2.Pt());  //needs the non-flipped muon momentum
+        Reco_QQ_mumi_idx[Reco_QQ_size] = IndexOfThisMuon(vMuon1.Pt());
 
         if (_flipJpsiDirection > 0) {
           iTrack_mupl = mu2Trk;
