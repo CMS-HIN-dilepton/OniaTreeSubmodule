@@ -208,9 +208,9 @@ bool HiOniaAnalyzer::checkBcCuts(const pat::CompositeCandidate* cand,
     return false;
 };
 
-int HiOniaAnalyzer::IndexOfThisMuon(TLorentzVector* v1, bool isGen) {
+int HiOniaAnalyzer::IndexOfThisMuon(const float muonPt, bool isGen) {
   const auto& mapMuIdx = (isGen ? mapGenMuonMomToIndex_ : mapMuonMomToIndex_);
-  const long int& muPt = FloatToIntkey(v1->Pt());
+  const long int& muPt = FloatToIntkey(muonPt);
 
   if (mapMuIdx.count(muPt) == 0)
     return -1;

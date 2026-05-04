@@ -71,31 +71,18 @@ triggerList    = {
                         "HLT_HIL2DoubleMu0_M1p5to6_Open_v",#4
                         "HLT_HIL2DoubleMu2p8_M1p5to6_Open_v",#5
                         "HLT_HIL2DoubleMu0_M7to15_Open_v",#6
-                        "HLT_HIL2DoubleMu3_M7to15_Open_v",#7
-                        "HLT_HIL3DoubleMu0_M0toInf_Open_v",#8
-                        "HLT_HIL3DoubleMu0_Quarkonia_Open_v",#9
-                        "HLT_HIL3DoubleMu2_Quarkonia_Open_v",#10
-                        "HLT_HIL3DoubleMu0_M2to4p5_Open_v",#11
-                        "HLT_HIL3DoubleMu2_M2to4p5_Open_v",#12
-                        "HLT_HIL3DoubleMu0_M7to15_Open_v",#13
-                        "HLT_HIL3DoubleMu2_M7to15_Open_v",#14
                         ),
                 # Single Muon Trigger List
                 'SingleMuonTrigger' : cms.vstring(
-                        "HLT_HIL1SingleMu0_Open_v",#15
-                        "HLT_HIL1SingleMu0_v",#16
-                        "HLT_HIL2SingleMu3_Open_v",#17
-                        "HLT_HIL2SingleMu5_v",#18
-                        "HLT_HIL2SingleMu7_v",#19
-                        "HLT_HIL3SingleMu3_Open_v",#20
-                        "HLT_HIL3SingleMu5_v",#21
-                        "HLT_HIL3SingleMu7_v",#22
-                        "HLT_HIL3SingleMu12_v",#23
-                        "HLT_HIMinimumBiasHF1AND_v", #24
-                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #25
-                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #26
+                        "HLT_HIL1SingleMu0_Open_v",#7
+                        "HLT_HIL1SingleMu0_v",#8
+                        "HLT_HIL2SingleMu3_Open_v",#9
+                        "HLT_HIL2SingleMu5_v",#10
+                        "HLT_HIL2SingleMu7_v",#11
+                        "HLT_HIMinimumBiasHF1AND_v", #12
+                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #13
 			)
-                }
+}
 
 ## Global tag
 if isMC:
@@ -171,7 +158,7 @@ if applyEventSel:
   # HLT trigger firing events
   import HLTrigger.HLTfilters.hltHighLevel_cfi
   process.hltHI = HLTrigger.HLTfilters.hltHighLevel_cfi.hltHighLevel.clone()
-  process.hltHI.HLTPaths = ["HLT_HIL*SingleMu*_v*", "HLT_HIL*DoubleMu*_v*", "HLT_HIMinimumBiasHF1AND*_v*"]
+  process.hltHI.HLTPaths = ["HLT_HIMinimumBiasHF1AND*_v*"]
   process.hltHI.throw = False
   process.hltHI.andOr = True
   

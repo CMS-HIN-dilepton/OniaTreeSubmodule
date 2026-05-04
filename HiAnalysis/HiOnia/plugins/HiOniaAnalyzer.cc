@@ -385,7 +385,7 @@ void HiOniaAnalyzer::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     if (collTracks.isValid()) {
       for (unsigned int tidx = 0; tidx < collTracks->size(); tidx++) {
         const reco::TrackRef track(collTracks, tidx);
-        if (track->qualityByName("highPurity") && track->eta() < 2.4 &&
+        if (track->qualityByName("highPurity") && abs(track->eta()) < 2.4 &&
             fabs(track->dxy(RefVtx) / track->dxyError()) < 3 && fabs(track->dz(RefVtx) / track->dzError()) < 3 &&
             track->dz(RefVtx) < 0.5 && fabs(track->ptError() / track->pt()) < 0.1) {
           Ntracks++;
@@ -650,8 +650,8 @@ void HiOniaAnalyzer::fillTreeJpsi(int count) {
       }
 
       if (muon1->charge() > muon2->charge()) {
-        Reco_QQ_mupl_idx[Reco_QQ_size] = IndexOfThisMuon(&vMuon1);  //needs the non-flipped muon momentum
-        Reco_QQ_mumi_idx[Reco_QQ_size] = IndexOfThisMuon(&vMuon2);
+        Reco_QQ_mupl_idx[Reco_QQ_size] = IndexOfThisMuon(vMuon1.pt());  //needs the non-flipped muon momentum
+        Reco_QQ_mumi_idx[Reco_QQ_size] = IndexOfThisMuon(vMuon2.pt());
 
         if (_flipJpsiDirection > 0) {
           iTrack_mupl = mu1Trk;
@@ -675,8 +675,8 @@ void HiOniaAnalyzer::fillTreeJpsi(int count) {
         }
 
       } else {
-        Reco_QQ_mupl_idx[Reco_QQ_size] = IndexOfThisMuon(&vMuon2);  //needs the non-flipped muon momentum
-        Reco_QQ_mumi_idx[Reco_QQ_size] = IndexOfThisMuon(&vMuon1);
+        Reco_QQ_mupl_idx[Reco_QQ_size] = IndexOfThisMuon(vMuon2.pt());  //needs the non-flipped muon momentum
+        Reco_QQ_mumi_idx[Reco_QQ_size] = IndexOfThisMuon(vMuon1.pt());
 
         if (_flipJpsiDirection > 0) {
           iTrack_mupl = mu2Trk;

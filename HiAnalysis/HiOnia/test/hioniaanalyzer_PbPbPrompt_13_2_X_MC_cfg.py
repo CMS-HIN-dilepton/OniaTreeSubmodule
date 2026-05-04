@@ -22,7 +22,7 @@ OneMatchedHLTMu = -1   # Keep only di(tri)muons of which the one(two) muon(s) ar
 keepExtraColl  = False # General Tracks + Stand Alone Muons + Converted Photon collections
 miniAOD        = True # whether the input file is in miniAOD format (default is AOD)
 UsePropToMuonSt = True # whether to use L1 propagated muons (works only for miniAOD now)
-pdgId = 443 # J/Psi : 443, Y(1S) : 553
+pdgId = 443 # J/Psi : 443, Y(1S) : 553, Z : 23
 useMomFormat = "vector" # default "array" for TClonesArray of TLorentzVector. Use "vector" for std::vector<float> of pt, eta, phi, M
 
 addEventPlaneAngles = True
@@ -76,29 +76,16 @@ triggerList    = {
                         "HLT_HIL2DoubleMu0_M1p5to6_Open_v",#4
                         "HLT_HIL2DoubleMu2p8_M1p5to6_Open_v",#5
                         "HLT_HIL2DoubleMu0_M7to15_Open_v",#6
-                        "HLT_HIL2DoubleMu3_M7to15_Open_v",#7
-                        "HLT_HIL3DoubleMu0_M0toInf_Open_v",#8
-                        "HLT_HIL3DoubleMu0_Quarkonia_Open_v",#9
-                        "HLT_HIL3DoubleMu2_Quarkonia_Open_v",#10
-                        "HLT_HIL3DoubleMu0_M2to4p5_Open_v",#11
-                        "HLT_HIL3DoubleMu2_M2to4p5_Open_v",#12
-                        "HLT_HIL3DoubleMu0_M7to15_Open_v",#13
-                        "HLT_HIL3DoubleMu2_M7to15_Open_v",#14
                         ),
                 # Single Muon Trigger List
                 'SingleMuonTrigger' : cms.vstring(
-                        "HLT_HIL1SingleMu0_Open_v",#15
-                        "HLT_HIL1SingleMu0_v",#16
-                        "HLT_HIL2SingleMu3_Open_v",#17
-                        "HLT_HIL2SingleMu5_v",#18
-                        "HLT_HIL2SingleMu7_v",#19
-                        "HLT_HIL3SingleMu3_Open_v",#20
-                        "HLT_HIL3SingleMu5_v",#21
-                        "HLT_HIL3SingleMu7_v",#22
-                        "HLT_HIL3SingleMu12_v",#23
-                        "HLT_HIMinimumBiasHF1AND_v", #24
-                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #25
-                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #26
+                        "HLT_HIL1SingleMu0_Open_v",#7
+                        "HLT_HIL1SingleMu0_v",#8
+                        "HLT_HIL2SingleMu3_Open_v",#9
+                        "HLT_HIL2SingleMu5_v",#10
+                        "HLT_HIL2SingleMu7_v",#11
+                        "HLT_HIMinimumBiasHF1AND_v", #12
+                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #13
 			)
 }
 
@@ -144,11 +131,12 @@ oniaTreeAnalyzer(process,
                  OnlySingleMuons=False
 )
 
-#process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("8 < mass && mass < 14 && charge==0 && abs(daughter('muon1').innerTrack.dz - daughter('muon2').innerTrack.dz) < 25")
+process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 1.0 && abs(daughter('muon1').innerTrack.dz - daughter('muon2').innerTrack.dz) < 25")
 #process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 5 || isPFMuon || (pt>1.2 && (isGlobalMuon || isStandAloneMuon)) || (isTrackerMuon && track.quality('highPurity'))")
 #process.onia2MuMuPatGlbGlb.higherPuritySelection = cms.string("") ## No need to repeat lowerPuritySelection in there, already included
 if applyCuts:
   process.onia2MuMuPatGlbGlb.LateDimuonSel         = cms.string("userFloat(\"vProb\")>0.01")
+
 process.onia2MuMuPatGlbGlb.onlySoftMuons         = cms.bool(OnlySoftMuons)
 process.hionia.minimumFlag      = cms.bool(False)           #for Reco_trk_*
 process.hionia.useGeTracks      = cms.untracked.bool(keepExtraColl) #for Reco_trk_*

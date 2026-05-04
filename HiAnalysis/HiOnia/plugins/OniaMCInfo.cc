@@ -110,11 +110,11 @@ void HiOniaAnalyzer::fillGenInfo() {
           TLorentzVector vMuon2 = lorentzMomentum(genMuon2->p4());
 
           if (genMuon1->charge() > genMuon2->charge()) {
-            Gen_QQ_mupl_idx[Gen_QQ_size] = IndexOfThisMuon(&vMuon1, true);
-            Gen_QQ_mumi_idx[Gen_QQ_size] = IndexOfThisMuon(&vMuon2, true);
+            Gen_QQ_mupl_idx[Gen_QQ_size] = IndexOfThisMuon(vMuon1.pt(), true);
+            Gen_QQ_mumi_idx[Gen_QQ_size] = IndexOfThisMuon(vMuon2.pt(), true);
           } else {
-            Gen_QQ_mupl_idx[Gen_QQ_size] = IndexOfThisMuon(&vMuon2, true);
-            Gen_QQ_mumi_idx[Gen_QQ_size] = IndexOfThisMuon(&vMuon1, true);
+            Gen_QQ_mupl_idx[Gen_QQ_size] = IndexOfThisMuon(vMuon2.pt(), true);
+            Gen_QQ_mumi_idx[Gen_QQ_size] = IndexOfThisMuon(vMuon1.pt(), true);
           }
 
           if (_doTrimuons) {
