@@ -51,7 +51,7 @@ print( "[INFO] addEventPlane        = " + ("True" if addEventPlane else "False")
 print( " " )
 
 # set up process
-process = cms.Process("HIOnia", eras.Run3_pp_on_PbPb_2025)
+process = cms.Process("HIOnia", eras.Run3_pp_on_PbPb_2026)
 
 # setup 'analysis'  options
 options = VarParsing.VarParsing ('analysis')
@@ -93,33 +93,28 @@ triggerList    = {
                         "HLT_HIL1DoubleMu0_v",#1
                         "HLT_HIL1DoubleMu0_SQ_v",#2
                         "HLT_HIL2DoubleMu0_Open_v",#3
-                        "HLT_HIL2DoubleMu0_M1p5to6_Open_v",#4
-                        "HLT_HIL2DoubleMu2p8_M1p5to6_Open_v",#5
-                        "HLT_HIL2DoubleMu0_M7to15_Open_v",#6
-                        "HLT_HIL2DoubleMu3_M7to15_Open_v",#7
-                        "HLT_HIL2DoubleMu0_SQ_v",#8
-                        "HLT_HIL2DoubleMuOpen_Centrality40to100_v",#9
-                        "HLT_HIL2DoubleMuOpen_OS_v",#10
-                        "HLT_HIL2DoubleMuOpen_SS_v",#11
+                        "HLT_HIL2DoubleMu0_SQ_v",#4
+                        "HLT_HIL2DoubleMuOpen_Centrality40to100_v",#5
+                        "HLT_HIL2DoubleMuOpen_OS_v",#6
+                        "HLT_HIL2DoubleMuOpen_SS_v",#7
                         ),
                 # Single Muon Trigger List
                 'SingleMuonTrigger' : cms.vstring(
-                        "HLT_HIL1SingleMu0_Open_v",#12
-                        "HLT_HIL1SingleMu0_v",#13
-                        "HLT_HIL1SingleMu0_Centrality40to100_v",#14
-                        "HLT_HIL1SingleMu0_Centrality30to100_v",#15
-                        "HLT_HIL1SingleMuOpen_Centrality40to100_v",#16
-                        "HLT_HIL1SingleMuOpen_Centrality30to100_v",#17
-                        "HLT_HIL2SingleMu3_Open_v",#18
-                        "HLT_HIL2SingleMu5_v",#19
-                        "HLT_HIL2SingleMu7_v",#20
-                        "HLT_HIL2SingleMu12_v",#21
-                        "HLT_HIL2SingleMu0_Centrality40to100_v",#22
-                        "HLT_HIL2SingleMu0_Centrality30to100_v",#23
-                        "HLT_HIL2SingleMuOpen_Centrality30to100_v",#24
-                        "HLT_HIMinimumBiasHF1AND_v", #25
-                        "HLT_HIMinimumBiasHF1ANDZDC2nOR_v", #26
-                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #27
+                        "HLT_HIL1SingleMu0_Open_v",#8
+                        "HLT_HIL1SingleMu0_v",#9
+                        "HLT_HIL1SingleMu0_Centrality40to100_v",#10
+                        "HLT_HIL1SingleMu0_Centrality30to100_v",#11
+                        "HLT_HIL1SingleMuOpen_Centrality40to100_v",#12
+                        "HLT_HIL1SingleMuOpen_Centrality30to100_v",#13
+                        "HLT_HIL2SingleMu3_Open_v",#14
+                        "HLT_HIL2SingleMu5_v",#15
+                        "HLT_HIL2SingleMu7_v",#16
+                        "HLT_HIL2SingleMu12_v",#17
+                        "HLT_HIL2SingleMu0_Centrality40to100_v",#18
+                        "HLT_HIL2SingleMu0_Centrality30to100_v",#19
+                        "HLT_HIL2SingleMuOpen_Centrality30to100_v",#20
+                        "HLT_HIMinimumBiasHF1AND_v", #21
+                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #22
 			)
 }
 
@@ -127,7 +122,7 @@ triggerList    = {
 if isMC:
   globalTag = 'auto:phase1_2024_realistic_hi' #for Run3 MC : phase1_2023_realistic_hi
 else:
-  globalTag = '151X_dataRun3_Prompt_v1' # or Express, TBC
+  globalTag = '161X_dataRun3_Prompt_v1' # or Express, TBC
 
 #----------------------------------------------------------------------------
 
@@ -151,8 +146,7 @@ process.GlobalTag.snapshotTime = cms.string("9999-12-31 23:59:59.000")
 process.GlobalTag.toGet.extend([
     cms.PSet(record = cms.string("HeavyIonRcd"),
         tag = cms.string("CentralityTable_HFtowers200_DataPbPb_periHYDJETshape_run3v140x01_offline_Nominal"),
-        #connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
-        connect = cms.string("sqlite_file:/afs/cern.ch/work/n/nsaha/public/for_GO/DBfiles_2024/CentralityTable_HFtowers200_DataPbPb2024_periHYDJETshape_run3v140x01_offline_Nominal.db"),
+        connect = cms.string("frontier://FrontierProd/CMS_CONDITIONS"),
         label = cms.untracked.string("HFtowers")
         ),
     ])
@@ -232,7 +226,7 @@ if applyEventSel:
                                         minNumber = cms.uint32(1)
                                         )
   
-  process.oniaTreeAna.replace(process.patMuonSequence,process.muonSelector * process.atLeastTwoMuons * process.dimuonSelection * process.atLeastOneDimuon * process.phfCoincFilterPF2Th4 * process.primaryVertexFilter * process.hltHI * process.clusterCompatibilityFilter * process.patMuonSequence )
+  process.oniaTreeAna.replace(process.patMuonSequence,process.muonSelector * process.atLeastTwoMuons * process.dimuonSelection * process.atLeastOneDimuon * process.phfCoincFilterPF2Th4 * process.primaryVertexFilter * process.hltHI * process.patMuonSequence )
 
 if atLeastOneCand:
   if doTrimuons:

@@ -167,7 +167,6 @@ HiOniaAnalyzer::~HiOniaAnalyzer() {
   // do anything here that needs to be done at destruction time
   // (e.g. close files, deallocate resources etc.)
   Reco_mu_4mom->Delete();
-  Reco_mu_L1_4mom->Delete();
   Reco_QQ_4mom->Delete();
   Reco_QQ_mumi_4mom->Delete();
   Reco_QQ_mupl_4mom->Delete();
@@ -497,17 +496,8 @@ void HiOniaAnalyzer::fillTreeMuon(const pat::Muon* muon, int iType, ULong64_t tr
     Reco_mu_4mom_phi.push_back(vMuon.Phi());
     Reco_mu_4mom_m.push_back(vMuon.M());
 
-    TLorentzVector vMuonL1;
-    if (muon->hasUserFloat("l1Eta") && muon->hasUserFloat("l1Phi")) {
-      vMuonL1.SetPtEtaPhiM(vMuon.Pt(), muon->userFloat("l1Eta"), muon->userFloat("l1Phi"), vMuon.M());
-    } else {
-      vMuonL1.SetPtEtaPhiM(0, 0, 0, 0);
-    }
-    new ((*Reco_mu_L1_4mom)[Reco_mu_size]) TLorentzVector(vMuonL1);
-    Reco_mu_L1_4mom_pt.push_back(vMuonL1.Pt());
-    Reco_mu_L1_4mom_eta.push_back(vMuonL1.Eta());
-    Reco_mu_L1_4mom_phi.push_back(vMuonL1.Phi());
-    Reco_mu_L1_4mom_m.push_back(vMuonL1.M());
+    Reco_mu_L1_4mom_eta.push_back(muon->hasUserFloat("l1Eta") ? muon->userFloat("l1Eta") : -99);
+    Reco_mu_L1_4mom_phi.push_back(muon->hasUserFloat("l1Phi") ? muon->userFloat("l1Phi") : -99);
 
     //Fill map of the muon indices. Use long int keys, to avoid rounding errors on a float key. Implies a precision of 10^-6
     mapMuonMomToIndex_[FloatToIntkey(vMuon.Pt())] = Reco_mu_size;
@@ -655,8 +645,8 @@ void HiOniaAnalyzer::fillTreeJpsi(int count) {
       }
 
       if (muon1->charge() > muon2->charge()) {
-        Reco_QQ_mupl_idx[Reco_QQ_size] = IndexOfThisMuon(&vMuon1);  //needs the non-flipped muon momentum
-        Reco_QQ_mumi_idx[Reco_QQ_size] = IndexOfThisMuon(&vMuon2);
+        Reco_QQ_mupl_idx[Reco_QQ_size] = IndexOfThisMuon(vMuon1.Pt());  //needs the non-flipped muon momentum
+        Reco_QQ_mumi_idx[Reco_QQ_size] = IndexOfThisMuon(vMuon2.Pt());
 
         if (_flipJpsiDirection > 0) {
           iTrack_mupl = mu1Trk;
@@ -680,8 +670,8 @@ void HiOniaAnalyzer::fillTreeJpsi(int count) {
         }
 
       } else {
-        Reco_QQ_mupl_idx[Reco_QQ_size] = IndexOfThisMuon(&vMuon2);  //needs the non-flipped muon momentum
-        Reco_QQ_mumi_idx[Reco_QQ_size] = IndexOfThisMuon(&vMuon1);
+        Reco_QQ_mupl_idx[Reco_QQ_size] = IndexOfThisMuon(vMuon2.Pt());  //needs the non-flipped muon momentum
+        Reco_QQ_mumi_idx[Reco_QQ_size] = IndexOfThisMuon(vMuon1.Pt());
 
         if (_flipJpsiDirection > 0) {
           iTrack_mupl = mu2Trk;
@@ -1015,11 +1005,8 @@ void HiOniaAnalyzer::InitEvent() {
   Reco_mu_4mom_eta.clear();
   Reco_mu_4mom_phi.clear();
   Reco_mu_4mom_m.clear();
-  Reco_mu_L1_4mom->Clear();
-  Reco_mu_L1_4mom_pt.clear();
   Reco_mu_L1_4mom_eta.clear();
   Reco_mu_L1_4mom_phi.clear();
-  Reco_mu_L1_4mom_m.clear();
 
   if (_useGeTracks && _fillRecoTracks) {
     Reco_trk_4mom->Clear();
@@ -1315,7 +1302,6 @@ void HiOniaAnalyzer::fillRecoMuons(int iCent) {
 
 void HiOniaAnalyzer::InitTree() {
   Reco_mu_4mom = new TClonesArray("TLorentzVector", Max_mu_size);
-  Reco_mu_L1_4mom = new TClonesArray("TLorentzVector", Max_mu_size);
   Reco_QQ_4mom = new TClonesArray("TLorentzVector", Max_QQ_size);
   Reco_QQ_mumi_4mom = new TClonesArray("TLorentzVector", Max_QQ_size);
   Reco_QQ_mupl_4mom = new TClonesArray("TLorentzVector", Max_QQ_size);
@@ -1530,17 +1516,14 @@ void HiOniaAnalyzer::InitTree() {
   myTree->Branch("Reco_mu_charge", Reco_mu_charge, "Reco_mu_charge[Reco_mu_size]/S");
   if (std::strcmp("array", _mom4format.c_str()) == 0) {
     myTree->Branch("Reco_mu_4mom", "TClonesArray", &Reco_mu_4mom, 32000, 0);
-    myTree->Branch("Reco_mu_L1_4mom", "TClonesArray", &Reco_mu_L1_4mom, 32000, 0);
   }
   if (std::strcmp("vector", _mom4format.c_str()) == 0) {
     myTree->Branch("Reco_mu_4mom_pt", &Reco_mu_4mom_pt, 32000, 0);
     myTree->Branch("Reco_mu_4mom_eta", &Reco_mu_4mom_eta, 32000, 0);
     myTree->Branch("Reco_mu_4mom_phi", &Reco_mu_4mom_phi, 32000, 0);
     myTree->Branch("Reco_mu_4mom_m", &Reco_mu_4mom_m, 32000, 0);
-    myTree->Branch("Reco_mu_L1_4mom_pt", &Reco_mu_L1_4mom_pt, 32000, 0);
     myTree->Branch("Reco_mu_L1_4mom_eta", &Reco_mu_L1_4mom_eta, 32000, 0);
     myTree->Branch("Reco_mu_L1_4mom_phi", &Reco_mu_L1_4mom_phi, 32000, 0);
-    myTree->Branch("Reco_mu_L1_4mom_m", &Reco_mu_L1_4mom_m, 32000, 0);
   }
   myTree->Branch("Reco_mu_trig", Reco_mu_trig, "Reco_mu_trig[Reco_mu_size]/l");
 

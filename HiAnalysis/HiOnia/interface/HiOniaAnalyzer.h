@@ -102,8 +102,8 @@ private:
                         bool (HiOniaAnalyzer::*callFunc3)(const reco::TrackRef));
 
   reco::GenParticleRef findDaughterRef(reco::GenParticleRef GenParticleDaughter, int GenParticlePDG);
-  int IndexOfThisMuon(TLorentzVector* v1, bool isGen = false);
-  int IndexOfThisTrack(TLorentzVector* v1, bool isGen = false);
+  int IndexOfThisMuon(const float pt, bool isGen = false);
+  int IndexOfThisTrack(const float pt, bool isGen = false);
   int IndexOfThisJpsi(int mu1_idx, int mu2_idx, int flipJpsi = 0);
   void fillGenInfo();
   void fillMuMatchingInfo();
@@ -195,7 +195,6 @@ private:
   TTree* myTree;
 
   TClonesArray* Reco_mu_4mom;
-  TClonesArray* Reco_mu_L1_4mom;
   TClonesArray* Reco_QQ_4mom;
   TClonesArray* Reco_QQ_mumi_4mom;
   TClonesArray* Reco_QQ_mupl_4mom;
@@ -212,7 +211,6 @@ private:
   TClonesArray* Gen_QQ_4mom;
 
   std::vector<float> Reco_mu_4mom_pt;
-  std::vector<float> Reco_mu_L1_4mom_pt;
   std::vector<float> Reco_QQ_4mom_pt;
   std::vector<float> Reco_QQ_mumi_4mom_pt;
   std::vector<float> Reco_QQ_mupl_4mom_pt;
@@ -261,7 +259,6 @@ private:
   std::vector<float> Gen_QQ_4mom_phi;
 
   std::vector<float> Reco_mu_4mom_m;
-  std::vector<float> Reco_mu_L1_4mom_m;
   std::vector<float> Reco_QQ_4mom_m;
   std::vector<float> Reco_QQ_mumi_4mom_m;
   std::vector<float> Reco_QQ_mupl_4mom_m;
@@ -437,7 +434,7 @@ private:
   float Reco_mu_ptErr_global[Max_mu_size];     // pT error for global muons
   float Reco_mu_pTrue[Max_mu_size];  // P of the associated generated muon, used to match the Reco_mu with the Gen_mu
   float Reco_mu_validFraction[Max_mu_size];
-  int Reco_mu_simExtType[Max_Bc_size];  //
+  int Reco_mu_simExtType[Max_mu_size];  //
 
   Short_t muType;  // type of muon (GlbTrk=0, Trk=1, Glb=2, none=-1)
   std::vector<float>

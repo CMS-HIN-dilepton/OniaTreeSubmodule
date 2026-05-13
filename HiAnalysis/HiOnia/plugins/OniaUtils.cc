@@ -208,9 +208,9 @@ bool HiOniaAnalyzer::checkBcCuts(const pat::CompositeCandidate* cand,
     return false;
 };
 
-int HiOniaAnalyzer::IndexOfThisMuon(TLorentzVector* v1, bool isGen) {
+int HiOniaAnalyzer::IndexOfThisMuon(const float pt, bool isGen) {
   const auto& mapMuIdx = (isGen ? mapGenMuonMomToIndex_ : mapMuonMomToIndex_);
-  const long int& muPt = FloatToIntkey(v1->Pt());
+  const long int& muPt = FloatToIntkey(pt);
 
   if (mapMuIdx.count(muPt) == 0)
     return -1;
@@ -218,9 +218,9 @@ int HiOniaAnalyzer::IndexOfThisMuon(TLorentzVector* v1, bool isGen) {
     return mapMuIdx.at(muPt);
 };
 
-int HiOniaAnalyzer::IndexOfThisTrack(TLorentzVector* v1, bool isGen) {
+int HiOniaAnalyzer::IndexOfThisTrack(const float pt, bool isGen) {
   const auto& mapTrkIdx = (isGen ? mapTrkMomToIndex_ : mapTrkMomToIndex_);
-  const long int& trkPt = FloatToIntkey(v1->Pt());
+  const long int& trkPt = FloatToIntkey(pt);
 
   if (mapTrkIdx.count(trkPt) == 0)
     return -1;
