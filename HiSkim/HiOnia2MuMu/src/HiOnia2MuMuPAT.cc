@@ -227,7 +227,7 @@ void HiOnia2MuMuPAT::produce(edm::Event &iEvent, const edm::EventSetup &iSetup) 
       Ntrk = 0;
       for (unsigned int tidx = 0; tidx < collTracks->size(); tidx++) {
         const reco::TrackRef track(collTracks, tidx);
-        if (track->qualityByName("highPurity") && std::(track->eta()) < 2.4 && std::abs(track->dxy(RefVtx)) < 0.3 &&
+        if (track->qualityByName("highPurity") && std::abs(track->eta()) < 2.4 && std::abs(track->dxy(RefVtx)) < 0.3 &&
             std::abs(track->dz(RefVtx)) < 20) {
           Ntrk++;
           if (DimuonTrk_) {
