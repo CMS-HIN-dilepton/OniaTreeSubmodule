@@ -18,7 +18,7 @@ config.JobType.maxJobRuntimeMin = 1200 #2750    # request longer runtime, ~48 ho
 
 
 config.section_("Data")
-config.Data.inputDataset = '/JpsiDimuon_pTHatMin3_HydjetEmbedded_Pythia8_TuneCP5_1510pre6/fdamas-PAT_151X_mcRun3_2025_realistic_HI_v1-5249b5d2d214ceff3b59bef72e572410/USER'
+config.Data.inputDataset = '/JpsiDimuon_HydjetEmbedded_1610pre3/fdamas-PATwith161pre3_151X_mcRun3_2025_realistic_HI_v5-5c048b2d868b98d3d5d21d398292d46c/USER'
 config.Data.inputDBS = 'phys03'
 config.Data.unitsPerJob = 40
 #config.Data.totalUnits = -1
@@ -26,9 +26,9 @@ config.Data.splitting = "FileBased"
 config.Data.allowNonValidInputDataset = True
 config.Data.outputDatasetTag = config.General.requestName
 
-config.Data.outLFNDirBase = '/store/user/fdamas/PPRef2024/RunPrepMC/'
+config.Data.outLFNDirBase = '/store/user/fdamas/PbPb2026/RunPrepMC/'
 config.Data.publication = False
 
 config.section_("Site")
 config.Site.storageSite = "T3_CH_CERNBOX"
-config.Site.whitelist = ["T2_US_*","T1_US_*","T2_CH_CERN","T2_FR_*"]
+#config.Site.whitelist = ["T2_US_*","T1_US_*","T2_CH_CERN","T2_FR_*"]
