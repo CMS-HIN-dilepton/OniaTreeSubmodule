@@ -20,12 +20,12 @@ config.General.transferLogs = False
 
 config.section_("JobType")
 config.JobType.pluginName = "Analysis"
-config.JobType.psetName = "Zanalyzer_PbPb2026_Data_cfg.py"
+config.JobType.psetName = "hioniaanalyzer_PbPb2026_DATA_cfg.py"
 
-config.JobType.maxMemoryMB = 2400         # request high memory machines.
+config.JobType.maxMemoryMB = 2000         # request high memory machines.
 #config.JobType.numCores = 4
 config.JobType.allowUndistributedCMSSW = True
-config.JobType.maxJobRuntimeMin = 200 # max = 2750
+config.JobType.maxJobRuntimeMin = 500 # max = 2750
 
 config.section_("Data")
 config.Data.inputDBS = 'global'
@@ -35,10 +35,10 @@ config.Data.unitsPerJob = 5000000
 
 config.Data.allowNonValidInputDataset = True
 config.Data.publication = False
-config.Data.runRange = '404423-404511'
-config.Data.lumiMask = 'https://cms-service-dqmdc.web.cern.ch/CAF/certification/Collisions26HI/DCSOnly_JSONS/dailyDCSOnlyJSON/Collisions26HI_5p36TeV_404337_404529_DCSOnly_TkPx.json'
+config.Data.runRange = '404469-404764'
+config.Data.lumiMask = 'https://cms-service-dqmdc.web.cern.ch/CAF/certification/Collisions26HI/DCSOnly_JSONS/dailyDCSOnlyJSON/Collisions26HI_5p36TeV_Latest.json'
 
-config.Data.outLFNDirBase = '/store/group/phys_heavyions/dileptons/Data2026/Z/'
+config.Data.outLFNDirBase = '/store/group/phys_heavyions/dileptons/Data2026/Oniatrees/'
 
 
 config.section_("Site")
@@ -59,8 +59,8 @@ def submit(config):
 
 for i in range(60):
 
-    config.General.requestName = f'RawPrime{i}'
-    config.Data.inputDataset = f"/HIPhysicsRawPrime{i}/HIRun2026A-PbPbEW-PromptReco-v1/MINIAOD"
+    config.General.requestName = f'Dimuons_RawPrime{i}'
+    config.Data.inputDataset = f"/HIPhysicsRawPrime{i}/HIRun2026A-PromptReco-v1/MINIAOD"
     config.Data.outputDatasetTag = config.General.requestName
 
     print("Submitting CRAB job for: "+ config.Data.inputDataset)

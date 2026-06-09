@@ -58,10 +58,11 @@ options = VarParsing.VarParsing ('analysis')
 # Input and Output File Name
 
 options.inputFiles = [
-  '/store/backfill/1/hidata/Tier0_HIREPLAY_2026/HIPhysicsRawPrime11/MINIAOD/PromptReco-v13115338/000/400/007/00000/277a584e-9997-4b81-8c47-b2ee751d280b.root'
+  '/store/hidata/HIRun2026A/HIPhysicsRawPrime12/MINIAOD/PromptReco-v1/000/404/489/00000/f33d7008-57ae-4ea8-87bf-b30cc541b327.root',
+  '/store/hidata/HIRun2026A/HIPhysicsRawPrime12/MINIAOD/PromptReco-v1/000/404/489/00000/de3c1b2a-ab9e-49d7-a39c-e3d72aaaa877.root'
 ]
 
-options.outputFile = 'Oniatree_PbPb2026_ReplayOf2025RawPrime.root'
+options.outputFile = 'Oniatree_PbPb2026_RawPrime.root'
 options.secondaryOutputFile = "Jpsi_Dataset.root"
 
 options.maxEvents = -1 # -1 means all events
@@ -80,18 +81,16 @@ triggerList    = {
                 # Single Muon Trigger List
                 'SingleMuonTrigger' : cms.vstring(
                         "HLT_HIL1SingleMu0_Open_v",#4
-                        "HLT_HIL1SingleMu0_v",#5
-                        "HLT_HIL1SingleMu0_Centrality40to100_v",#6
-                        "HLT_HIL1SingleMu0_Centrality30to100_v",#7
-                        "HLT_HIL1SingleMuOpen_Centrality40to100_v",#8
-                        "HLT_HIL1SingleMuOpen_Centrality30to100_v",#9
-                        "HLT_HIL2SingleMu3_Open_v",#10
-                        "HLT_HIL2SingleMu5_v",#11
-                        "HLT_HIL2SingleMu7_v",#12
-                        "HLT_HIL2SingleMu12_v",#13
-                        "HLT_HIL2SingleMuOpen_Centrality30to100_v",#14
-                        "HLT_HIMinimumBiasHF1AND_v", #15
-                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #16
+                        "HLT_HIL1SingleMu0_Centrality40to100_v",#5
+                        "HLT_HIL1SingleMu0_Centrality30to100_v",#6
+                        "HLT_HIL1SingleMuOpen_Centrality40to100_v",#7
+                        "HLT_HIL1SingleMuOpen_Centrality30to100_v",#8
+                        "HLT_HIL2SingleMu3_Open_v",#9
+                        "HLT_HIL2SingleMu5_v",#10
+                        "HLT_HIL2SingleMu7_v",#11
+                        "HLT_HIL2SingleMu12_v",#12
+                        "HLT_HIMinimumBiasHF1AND_v", #13
+                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #14
 			)
 }
 
