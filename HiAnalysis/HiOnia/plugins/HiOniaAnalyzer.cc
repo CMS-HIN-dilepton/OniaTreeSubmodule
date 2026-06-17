@@ -167,7 +167,6 @@ HiOniaAnalyzer::~HiOniaAnalyzer() {
   // do anything here that needs to be done at destruction time
   // (e.g. close files, deallocate resources etc.)
   Reco_mu_4mom->Delete();
-  Reco_mu_L1_4mom->Delete();
   Reco_QQ_4mom->Delete();
   Reco_QQ_mumi_4mom->Delete();
   Reco_QQ_mupl_4mom->Delete();
@@ -490,8 +489,8 @@ void HiOniaAnalyzer::fillTreeMuon(const pat::Muon* muon, int iType, ULong64_t tr
     Reco_mu_4mom_phi.push_back(vMuon.Phi());
     Reco_mu_4mom_m.push_back(vMuon.M());
 
-    Reco_Muon_L1_4mom_eta.push_back(muon->hasUserFloat("l1Eta") ? muon->userFloat("l1Eta") : -99);
-    Reco_Muon_L1_4mom_phi.push_back(muon->hasUserFloat("l1Phi") ? muon->userFloat("l1Phi") : -99);
+    Reco_mu_L1_4mom_eta.push_back(muon->hasUserFloat("l1Eta") ? muon->userFloat("l1Eta") : -99);
+    Reco_mu_L1_4mom_phi.push_back(muon->hasUserFloat("l1Phi") ? muon->userFloat("l1Phi") : -99);
 
     //Fill map of the muon indices. Use long int keys, to avoid rounding errors on a float key. Implies a precision of 10^-6
     mapMuonMomToIndex_[FloatToIntkey(vMuon.Pt())] = Reco_mu_size;
