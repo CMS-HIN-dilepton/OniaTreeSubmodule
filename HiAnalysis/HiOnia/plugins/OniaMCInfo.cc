@@ -103,6 +103,7 @@ void HiOniaAnalyzer::fillGenInfo() {
           new ((*Gen_QQ_4mom)[Gen_QQ_size]) TLorentzVector(vJpsi);
           Gen_QQ_4mom_pt.push_back(vJpsi.Pt());
           Gen_QQ_4mom_eta.push_back(vJpsi.Eta());
+          Gen_QQ_4mom_y.push_back(vJpsi.Rapidity());
           Gen_QQ_4mom_phi.push_back(vJpsi.Phi());
           Gen_QQ_4mom_m.push_back(vJpsi.M());
 

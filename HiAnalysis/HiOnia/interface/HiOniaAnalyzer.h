@@ -195,7 +195,6 @@ private:
   TTree* myTree;
 
   TClonesArray* Reco_mu_4mom;
-  TClonesArray* Reco_mu_L1_4mom;
   TClonesArray* Reco_QQ_4mom;
   TClonesArray* Reco_QQ_mumi_4mom;
   TClonesArray* Reco_QQ_mupl_4mom;
@@ -211,8 +210,11 @@ private:
   TClonesArray* Gen_mu_4mom;
   TClonesArray* Gen_QQ_4mom;
 
+  std::vector<float> Reco_QQ_vtx_xpos;
+  std::vector<float> Reco_QQ_vtx_ypos;
+  std::vector<float> Reco_QQ_vtx_zpos;
+
   std::vector<float> Reco_mu_4mom_pt;
-  std::vector<float> Reco_mu_L1_4mom_pt;
   std::vector<float> Reco_QQ_4mom_pt;
   std::vector<float> Reco_QQ_mumi_4mom_pt;
   std::vector<float> Reco_QQ_mupl_4mom_pt;
@@ -228,6 +230,8 @@ private:
   std::vector<float> Reco_mu_4mom_eta;
   std::vector<float> Reco_mu_L1_4mom_eta;
   std::vector<float> Reco_QQ_4mom_eta;
+  std::vector<float> Reco_QQ_4mom_y;
+
   std::vector<float> Reco_QQ_mumi_4mom_eta;
   std::vector<float> Reco_QQ_mupl_4mom_eta;
   std::vector<float> Reco_3mu_4mom_eta;
@@ -238,6 +242,8 @@ private:
 
   std::vector<float> Gen_mu_4mom_eta;
   std::vector<float> Gen_QQ_4mom_eta;
+  std::vector<float> Gen_QQ_4mom_y;
+
 
   std::vector<float> Reco_mu_4mom_phi;
   std::vector<float> Reco_mu_L1_4mom_phi;
@@ -254,7 +260,6 @@ private:
   std::vector<float> Gen_QQ_4mom_phi;
 
   std::vector<float> Reco_mu_4mom_m;
-  std::vector<float> Reco_mu_L1_4mom_m;
   std::vector<float> Reco_QQ_4mom_m;
   std::vector<float> Reco_QQ_mumi_4mom_m;
   std::vector<float> Reco_QQ_mupl_4mom_m;

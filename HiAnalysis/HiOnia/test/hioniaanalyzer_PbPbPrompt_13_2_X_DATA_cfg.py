@@ -4,11 +4,12 @@ from Configuration.StandardSequences.Eras import eras
 
 #----------------------------------------------------------------------------
 
-# Setup Settings for ONIA TREE: 2023 PbPb data taking, ntuples dimuon skimmed events based on 'PhysicsHIPhysicsRawPrime' streams (thanks to Jing!)
+# Settings to process MB events from 2023 PbPb data
+globalTag = '132X_dataRun3_Prompt_v7'
 
 HLTProcess     = "HLT" # Name of HLT process
 isMC           = False # if input is MONTECARLO: True or if it's DATA: False
-muonSelection  = "GlbTrk" # Single muon selection: All, Glb(isGlobal), GlbTrk(isGlobal&&isTracker), Trk(isTracker), GlbOrTrk, TwoGlbAmongThree (which requires two isGlobal for a trimuon, and one isGlobal for a dimuon) are available
+muonSelection  = "GlbOrTrk" # Single muon selection: All, Glb(isGlobal), GlbTrk(isGlobal&&isTracker), Trk(isTracker), GlbOrTrk, TwoGlbAmongThree (which requires two isGlobal for a trimuon, and one isGlobal for a dimuon) are available
 applyEventSel  = True # Only apply Event Selection if the required collections are present
 OnlySoftMuons  = False # Keep only isSoftMuon's (without highPurity, and without isGlobal which should be put in 'muonSelection' parameter) from the beginning of HiSkim. If you want the full SoftMuon selection, set this flag false and add 'isSoftMuon' in lowerPuritySelection. In any case, if applyCuts=True, isSoftMuon is required at HiAnalysis level for muons of selected dimuons.
 applyCuts      = False # At HiAnalysis level, apply kinematic acceptance cuts + identification cuts (isSoftMuon (without highPurity) or isTightMuon, depending on TightGlobalMuon flag) for muons from selected di(tri)muons + hard-coded cuts on the di(tri)muon that you would want to add (but recommended to add everything in LateDimuonSelection, applied at the end of HiSkim)
@@ -76,27 +77,17 @@ triggerList    = {
                         "HLT_HIL1DoubleMu0_v",#1
                         "HLT_HIL1DoubleMu0_SQ_v",#2
                         "HLT_HIL2DoubleMu0_Open_v",#3
-                        "HLT_HIL2DoubleMu0_M1p5to6_Open_v",#4
-                        "HLT_HIL2DoubleMu2p8_M1p5to6_Open_v",#5
-                        "HLT_HIL2DoubleMu0_M7to15_Open_v",#6
                         ),
                 # Single Muon Trigger List
                 'SingleMuonTrigger' : cms.vstring(
-                        "HLT_HIL1SingleMu0_Open_v",#7
-                        "HLT_HIL1SingleMu0_v",#8
-                        "HLT_HIL2SingleMu3_Open_v",#9
-                        "HLT_HIL2SingleMu5_v",#10
-                        "HLT_HIL2SingleMu7_v",#11
-                        "HLT_HIMinimumBiasHF1AND_v", #12
-                        "HLT_HIMinimumBiasHF1ANDZDC1nOR_v", #13
+                        "HLT_HIL1SingleMu0_Open_v",#4
+                        "HLT_HIL1SingleMu0_v",#5
+                        "HLT_HIL2SingleMu3_Open_v",#6
+                        "HLT_HIL2SingleMu5_v",#7
+                        "HLT_HIL2SingleMu7_v",#8
 			)
 }
 
-## Global tag
-if isMC:
-  globalTag = '132X_mcRun3_2023_realistic_HI_v10' #for Run3 MC : phase1_2023_realistic_hi
-else:
-  globalTag = '132X_dataRun3_Prompt_v7' # 'auto:run3_data_prompt'
 
 #----------------------------------------------------------------------------
 
@@ -137,7 +128,7 @@ oniaTreeAnalyzer(process,
 
 process.onia2MuMuPatGlbGlb.dimuonSelection       = cms.string("mass > 2.5 && abs(daughter('muon1').innerTrack.dz - daughter('muon2').innerTrack.dz) < 20")
 
-process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 1.5 && abs(eta) < 2.4")
+process.onia2MuMuPatGlbGlb.lowerPuritySelection  = cms.string("pt > 1.5 && abs(eta) < 2.4 && isTrackerMuon")
 
 if applyCuts:
   process.onia2MuMuPatGlbGlb.LateDimuonSel = cms.string("userFloat(\"vProb\")>0.01")
@@ -158,6 +149,8 @@ process.hionia.mom4format       = cms.string(useMomFormat)
 
 process.hionia.useEvtPlane      = cms.untracked.bool(addEventPlaneAngles)
 
+process.hionia.storeSameSign = cms.bool(True)
+
 process.oniaTreeAna.replace(process.hionia, process.centralityBin * process.hionia )
 
 if applyEventSel:
@@ -169,12 +162,12 @@ if applyEventSel:
   # HLT trigger firing events
   import HLTrigger.HLTfilters.hltHighLevel_cfi
   process.hltHI = HLTrigger.HLTfilters.hltHighLevel_cfi.hltHighLevel.clone()
-  process.hltHI.HLTPaths = ["HLT_HIMinimumBiasHF1AND*_v*"]
+  process.hltHI.HLTPaths = ["HLT_HIMinimumBiasHF1ANDZDC1nOR_v*"]
   process.hltHI.throw = False
   process.hltHI.andOr = True
   
   # Muon filtering
-  SuperLooseMuonCut = "(isTrackerMuon && isGlobalMuon) && pt > 1.5 && abs(eta) < 2.4"
+  SuperLooseMuonCut = "(isTrackerMuon || isGlobalMuon) && pt > 1.0 && abs(eta) < 2.4"
 
   MUONCUT = SuperLooseMuonCut
   
@@ -192,7 +185,7 @@ if applyEventSel:
 
   process.dimuonSelection = cms.EDProducer("CandViewShallowCloneCombiner",
                                     checkCharge = cms.bool(False),
-                                    cut = cms.string("mass > 2.5"),
+                                    cut = cms.string("mass > 2.0"),
                                     decay = cms.string("muonSelector muonSelector")
                                     )
 
@@ -201,7 +194,7 @@ if applyEventSel:
                                         minNumber = cms.uint32(1)
                                         )
   
-  process.oniaTreeAna.replace(process.patMuonSequence,process.muonSelector * process.atLeastTwoMuons * process.dimuonSelection * process.atLeastOneDimuon * process.phfCoincFilter2Th4 * process.primaryVertexFilter * process.hltHI * process.clusterCompatibilityFilter * process.patMuonSequence )
+  process.oniaTreeAna.replace(process.patMuonSequence,process.muonSelector * process.atLeastTwoMuons * process.dimuonSelection * process.atLeastOneDimuon * process.phfCoincFilter2Th4 * process.primaryVertexFilter * process.hltHI * process.patMuonSequence )
 
 if atLeastOneCand:
   if doTrimuons:
@@ -233,6 +226,6 @@ process.TFileService = cms.Service("TFileService",
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(options.maxEvents) )
 process.options   = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 
-process.options.numberOfThreads = 4
+#process.options.numberOfThreads = 4
 
 process.schedule  = cms.Schedule( process.oniaTreeAna )
